@@ -49,19 +49,9 @@ count = int(count)
 # Close the file
 fh.close
 
-m_z = 0
-m_w = 0
-result = 0
-m_z = (36969+count) * (int((str(m_z) + str(65535)))) + (m_z >> 16);
-m_w = (18000+count) * (int((str(m_w) + str(65535)))) + (m_w >> 16);
-result = ((m_z << 16) + m_w) % 7123489
-
-print result
-
-
 # Iterate rng by count number of times (to keep sync with keyfob)
 for i in range (0, count):
-	rng = random.randint(0,4294967295)
+	rng = random.randint(0, 4294967295)
 
 print rng
 
