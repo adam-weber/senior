@@ -1,0 +1,2054 @@
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"app_UART.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.HandleUartTxTraffic,"ax",%progbits
+  20              		.align	2
+  21              		.global	HandleUartTxTraffic
+  22              		.code	16
+  23              		.thumb_func
+  24              		.type	HandleUartTxTraffic, %function
+  25              	HandleUartTxTraffic:
+  26              	.LFB35:
+  27              		.file 1 "app_UART.c"
+   1:app_UART.c    **** /*****************************************************************************************
+   2:app_UART.c    **** * File Name: app_UART.c
+   3:app_UART.c    **** *
+   4:app_UART.c    **** * Description:
+   5:app_UART.c    **** *  Common BLE application code for client devices.
+   6:app_UART.c    **** *
+   7:app_UART.c    **** *****************************************************************************************
+   8:app_UART.c    **** * Copyright 2015, Cypress Semiconductor Corporation.  All rights reserved.
+   9:app_UART.c    **** * You may use this file only in accordance with the license, terms, conditions,
+  10:app_UART.c    **** * disclaimers, and limitations in the end user license agreement accompanying
+  11:app_UART.c    **** * the software package with which this file was provided.
+  12:app_UART.c    **** *****************************************************************************************/
+  13:app_UART.c    **** 
+  14:app_UART.c    **** #include "app_UART.h"
+  15:app_UART.c    **** #include "app_Ble.h"
+  16:app_UART.c    **** 
+  17:app_UART.c    **** 
+  18:app_UART.c    **** /*****************************************************************************************
+  19:app_UART.c    **** * Function Name: HandleUartTxTraffic
+  20:app_UART.c    **** ******************************************************************************************
+  21:app_UART.c    **** *
+  22:app_UART.c    **** * Summary:
+  23:app_UART.c    **** *  This function takes data from UART RX buffer and pushes it to the server 
+  24:app_UART.c    **** *  as Notifications.
+  25:app_UART.c    **** *
+  26:app_UART.c    **** * Parameters:
+  27:app_UART.c    **** *  uint16 - CCCD for checking if notifications are enabled  
+  28:app_UART.c    **** *
+  29:app_UART.c    **** * Return:
+  30:app_UART.c    **** *   None.
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 2
+
+
+  31:app_UART.c    **** *
+  32:app_UART.c    **** *****************************************************************************************/
+  33:app_UART.c    **** void HandleUartTxTraffic(uint16 txDataClientConfigDesc)
+  34:app_UART.c    **** {
+  28              		.loc 1 34 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 56
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  33              		.cfi_def_cfa_offset 20
+  34              		.cfi_offset 4, -20
+  35              		.cfi_offset 5, -16
+  36              		.cfi_offset 6, -12
+  37              		.cfi_offset 7, -8
+  38              		.cfi_offset 14, -4
+  39 0002 8FB0     		sub	sp, sp, #60
+  40              		.cfi_def_cfa_offset 80
+  41 0004 00AF     		add	r7, sp, #0
+  42              		.cfi_def_cfa_register 7
+  43 0006 0300     		movs	r3, r0
+  44 0008 1620     		movs	r0, #22
+  45 000a 3818     		adds	r0, r7, r0
+  46 000c 9C46     		mov	ip, r3
+  47 000e 6346     		mov	r3, ip
+  48 0010 0380     		strh	r3, [r0]
+  49              		.loc 1 34 0
+  50 0012 6846     		mov	r0, sp
+  51 0014 3861     		str	r0, [r7, #16]
+  35:app_UART.c    ****     uint8   index;
+  36:app_UART.c    ****     uint8   uartTxData[mtuSize - 3];
+  52              		.loc 1 36 0
+  53 0016 7748     		ldr	r0, .L8
+  54 0018 0088     		ldrh	r0, [r0]
+  55 001a 0338     		subs	r0, r0, #3
+  56 001c 431E     		subs	r3, r0, #1
+  57 001e 9C46     		mov	ip, r3
+  58 0020 6346     		mov	r3, ip
+  59 0022 3B63     		str	r3, [r7, #48]
+  60 0024 0300     		movs	r3, r0
+  61 0026 BB60     		str	r3, [r7, #8]
+  62 0028 0023     		movs	r3, #0
+  63 002a FB60     		str	r3, [r7, #12]
+  64 002c BB68     		ldr	r3, [r7, #8]
+  65 002e 5B0F     		lsrs	r3, r3, #29
+  66 0030 9C46     		mov	ip, r3
+  67 0032 FB68     		ldr	r3, [r7, #12]
+  68 0034 DA00     		lsls	r2, r3, #3
+  69 0036 6346     		mov	r3, ip
+  70 0038 1A43     		orrs	r2, r3
+  71 003a BB68     		ldr	r3, [r7, #8]
+  72 003c D900     		lsls	r1, r3, #3
+  73 003e 0200     		movs	r2, r0
+  74 0040 1500     		movs	r5, r2
+  75 0042 0022     		movs	r2, #0
+  76 0044 1600     		movs	r6, r2
+  77 0046 6A0F     		lsrs	r2, r5, #29
+  78 0048 F300     		lsls	r3, r6, #3
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 3
+
+
+  79 004a 7B60     		str	r3, [r7, #4]
+  80 004c 7B68     		ldr	r3, [r7, #4]
+  81 004e 1343     		orrs	r3, r2
+  82 0050 7B60     		str	r3, [r7, #4]
+  83 0052 EB00     		lsls	r3, r5, #3
+  84 0054 3B60     		str	r3, [r7]
+  85 0056 0300     		movs	r3, r0
+  86 0058 0733     		adds	r3, r3, #7
+  87 005a DB08     		lsrs	r3, r3, #3
+  88 005c DB00     		lsls	r3, r3, #3
+  89 005e 6A46     		mov	r2, sp
+  90 0060 D31A     		subs	r3, r2, r3
+  91 0062 9D46     		mov	sp, r3
+  92 0064 6B46     		mov	r3, sp
+  93 0066 0033     		adds	r3, r3, #0
+  94 0068 FB62     		str	r3, [r7, #44]
+  37:app_UART.c    ****     uint16  uartTxDataLength;
+  38:app_UART.c    ****     
+  39:app_UART.c    ****     static uint16 uartIdleCount = UART_IDLE_TIMEOUT;
+  40:app_UART.c    ****     
+  41:app_UART.c    ****     CYBLE_API_RESULT_T                  bleApiResult;
+  42:app_UART.c    ****     CYBLE_GATTS_HANDLE_VALUE_NTF_T      uartTxDataNtf;
+  43:app_UART.c    ****     
+  44:app_UART.c    ****     uartTxDataLength = UART_SpiUartGetRxBufferSize();
+  95              		.loc 1 44 0
+  96 006a FFF7FEFF 		bl	UART_SpiUartGetRxBufferSize
+  97 006e 0200     		movs	r2, r0
+  98 0070 2423     		movs	r3, #36
+  99 0072 1021     		movs	r1, #16
+ 100 0074 8C46     		mov	ip, r1
+ 101 0076 BC44     		add	ip, ip, r7
+ 102 0078 6344     		add	r3, r3, ip
+ 103 007a 1A80     		strh	r2, [r3]
+  45:app_UART.c    ****     
+  46:app_UART.c    ****     #ifdef FLOW_CONTROL
+  47:app_UART.c    ****         if(uartTxDataLength >= (UART_UART_RX_BUFFER_SIZE - (UART_UART_RX_BUFFER_SIZE/2)))
+  48:app_UART.c    ****         {
+  49:app_UART.c    ****             DisableUartRxInt();
+  50:app_UART.c    ****         }
+  51:app_UART.c    ****         else
+  52:app_UART.c    ****         {
+  53:app_UART.c    ****             EnableUartRxInt();
+  54:app_UART.c    ****         }
+  55:app_UART.c    ****     #endif
+  56:app_UART.c    ****     
+  57:app_UART.c    ****     if((0 != uartTxDataLength) && (NOTIFICATON_ENABLED == txDataClientConfigDesc))
+ 104              		.loc 1 57 0
+ 105 007c 2423     		movs	r3, #36
+ 106 007e 1022     		movs	r2, #16
+ 107 0080 9446     		mov	ip, r2
+ 108 0082 BC44     		add	ip, ip, r7
+ 109 0084 6344     		add	r3, r3, ip
+ 110 0086 1B88     		ldrh	r3, [r3]
+ 111 0088 002B     		cmp	r3, #0
+ 112 008a 00D1     		bne	.LCB87
+ 113 008c ABE0     		b	.L2	@long jump
+ 114              	.LCB87:
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 4
+
+
+ 115              		.loc 1 57 0 is_stmt 0 discriminator 1
+ 116 008e 1623     		movs	r3, #22
+ 117 0090 FB18     		adds	r3, r7, r3
+ 118 0092 1B88     		ldrh	r3, [r3]
+ 119 0094 012B     		cmp	r3, #1
+ 120 0096 00D0     		beq	.LCB92
+ 121 0098 A5E0     		b	.L2	@long jump
+ 122              	.LCB92:
+  58:app_UART.c    ****     {
+  59:app_UART.c    ****         if(uartTxDataLength >= (mtuSize - 3))
+ 123              		.loc 1 59 0 is_stmt 1
+ 124 009a 2423     		movs	r3, #36
+ 125 009c 1022     		movs	r2, #16
+ 126 009e 9446     		mov	ip, r2
+ 127 00a0 BC44     		add	ip, ip, r7
+ 128 00a2 6344     		add	r3, r3, ip
+ 129 00a4 1A88     		ldrh	r2, [r3]
+ 130 00a6 534B     		ldr	r3, .L8
+ 131 00a8 1B88     		ldrh	r3, [r3]
+ 132 00aa 033B     		subs	r3, r3, #3
+ 133 00ac 9A42     		cmp	r2, r3
+ 134 00ae 0DDB     		blt	.L3
+  60:app_UART.c    ****         {
+  61:app_UART.c    ****             uartIdleCount       = UART_IDLE_TIMEOUT;
+ 135              		.loc 1 61 0
+ 136 00b0 514B     		ldr	r3, .L8+4
+ 137 00b2 FA22     		movs	r2, #250
+ 138 00b4 9200     		lsls	r2, r2, #2
+ 139 00b6 1A80     		strh	r2, [r3]
+  62:app_UART.c    ****             uartTxDataLength    = mtuSize - 3;
+ 140              		.loc 1 62 0
+ 141 00b8 4E4B     		ldr	r3, .L8
+ 142 00ba 1A88     		ldrh	r2, [r3]
+ 143 00bc 2423     		movs	r3, #36
+ 144 00be 1021     		movs	r1, #16
+ 145 00c0 8C46     		mov	ip, r1
+ 146 00c2 BC44     		add	ip, ip, r7
+ 147 00c4 6344     		add	r3, r3, ip
+ 148 00c6 033A     		subs	r2, r2, #3
+ 149 00c8 1A80     		strh	r2, [r3]
+ 150 00ca 10E0     		b	.L4
+ 151              	.L3:
+  63:app_UART.c    ****         }
+  64:app_UART.c    ****         else
+  65:app_UART.c    ****         {
+  66:app_UART.c    ****             if(--uartIdleCount == 0)
+ 152              		.loc 1 66 0
+ 153 00cc 4A4B     		ldr	r3, .L8+4
+ 154 00ce 1B88     		ldrh	r3, [r3]
+ 155 00d0 013B     		subs	r3, r3, #1
+ 156 00d2 9AB2     		uxth	r2, r3
+ 157 00d4 484B     		ldr	r3, .L8+4
+ 158 00d6 1A80     		strh	r2, [r3]
+ 159 00d8 474B     		ldr	r3, .L8+4
+ 160 00da 1B88     		ldrh	r3, [r3]
+ 161 00dc 002B     		cmp	r3, #0
+ 162 00de 06D0     		beq	.L4
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 5
+
+
+  67:app_UART.c    ****             {
+  68:app_UART.c    ****                 /*uartTxDataLength remains unchanged */;
+  69:app_UART.c    ****             }
+  70:app_UART.c    ****             else
+  71:app_UART.c    ****             {
+  72:app_UART.c    ****                 uartTxDataLength = 0;
+ 163              		.loc 1 72 0
+ 164 00e0 2423     		movs	r3, #36
+ 165 00e2 1022     		movs	r2, #16
+ 166 00e4 9446     		mov	ip, r2
+ 167 00e6 BC44     		add	ip, ip, r7
+ 168 00e8 6344     		add	r3, r3, ip
+ 169 00ea 0022     		movs	r2, #0
+ 170 00ec 1A80     		strh	r2, [r3]
+ 171              	.L4:
+  73:app_UART.c    ****             }
+  74:app_UART.c    ****         }
+  75:app_UART.c    ****         
+  76:app_UART.c    ****         if(0 != uartTxDataLength)
+ 172              		.loc 1 76 0
+ 173 00ee 2423     		movs	r3, #36
+ 174 00f0 1022     		movs	r2, #16
+ 175 00f2 9446     		mov	ip, r2
+ 176 00f4 BC44     		add	ip, ip, r7
+ 177 00f6 6344     		add	r3, r3, ip
+ 178 00f8 1B88     		ldrh	r3, [r3]
+ 179 00fa 002B     		cmp	r3, #0
+ 180 00fc 73D0     		beq	.L2
+  77:app_UART.c    ****         {
+  78:app_UART.c    ****             uartIdleCount       = UART_IDLE_TIMEOUT;
+ 181              		.loc 1 78 0
+ 182 00fe 3E4B     		ldr	r3, .L8+4
+ 183 0100 FA22     		movs	r2, #250
+ 184 0102 9200     		lsls	r2, r2, #2
+ 185 0104 1A80     		strh	r2, [r3]
+  79:app_UART.c    ****             
+  80:app_UART.c    ****             for(index = 0; index < uartTxDataLength; index++)
+ 186              		.loc 1 80 0
+ 187 0106 2723     		movs	r3, #39
+ 188 0108 1022     		movs	r2, #16
+ 189 010a 9446     		mov	ip, r2
+ 190 010c BC44     		add	ip, ip, r7
+ 191 010e 6344     		add	r3, r3, ip
+ 192 0110 0022     		movs	r2, #0
+ 193 0112 1A70     		strb	r2, [r3]
+ 194 0114 18E0     		b	.L5
+ 195              	.L6:
+  81:app_UART.c    ****             {
+  82:app_UART.c    ****                 uartTxData[index] = (uint8) UART_UartGetByte();
+ 196              		.loc 1 82 0 discriminator 3
+ 197 0116 2723     		movs	r3, #39
+ 198 0118 1022     		movs	r2, #16
+ 199 011a 9446     		mov	ip, r2
+ 200 011c BC44     		add	ip, ip, r7
+ 201 011e 6344     		add	r3, r3, ip
+ 202 0120 1C78     		ldrb	r4, [r3]
+ 203 0122 FFF7FEFF 		bl	UART_UartGetByte
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 6
+
+
+ 204 0126 0300     		movs	r3, r0
+ 205 0128 DAB2     		uxtb	r2, r3
+ 206 012a FB6A     		ldr	r3, [r7, #44]
+ 207 012c 1A55     		strb	r2, [r3, r4]
+  80:app_UART.c    ****             {
+ 208              		.loc 1 80 0 discriminator 3
+ 209 012e 2723     		movs	r3, #39
+ 210 0130 1022     		movs	r2, #16
+ 211 0132 9446     		mov	ip, r2
+ 212 0134 BC44     		add	ip, ip, r7
+ 213 0136 6344     		add	r3, r3, ip
+ 214 0138 1A78     		ldrb	r2, [r3]
+ 215 013a 2723     		movs	r3, #39
+ 216 013c 1021     		movs	r1, #16
+ 217 013e 8C46     		mov	ip, r1
+ 218 0140 BC44     		add	ip, ip, r7
+ 219 0142 6344     		add	r3, r3, ip
+ 220 0144 0132     		adds	r2, r2, #1
+ 221 0146 1A70     		strb	r2, [r3]
+ 222              	.L5:
+  80:app_UART.c    ****             {
+ 223              		.loc 1 80 0 is_stmt 0 discriminator 1
+ 224 0148 2723     		movs	r3, #39
+ 225 014a 1022     		movs	r2, #16
+ 226 014c 9446     		mov	ip, r2
+ 227 014e BC44     		add	ip, ip, r7
+ 228 0150 6344     		add	r3, r3, ip
+ 229 0152 1B78     		ldrb	r3, [r3]
+ 230 0154 9BB2     		uxth	r3, r3
+ 231 0156 2422     		movs	r2, #36
+ 232 0158 1021     		movs	r1, #16
+ 233 015a 8C46     		mov	ip, r1
+ 234 015c BC44     		add	ip, ip, r7
+ 235 015e 6244     		add	r2, r2, ip
+ 236 0160 1288     		ldrh	r2, [r2]
+ 237 0162 9A42     		cmp	r2, r3
+ 238 0164 D7D8     		bhi	.L6
+  83:app_UART.c    ****             }
+  84:app_UART.c    ****             
+  85:app_UART.c    ****             uartTxDataNtf.value.val  = uartTxData;
+ 239              		.loc 1 85 0 is_stmt 1
+ 240 0166 FA6A     		ldr	r2, [r7, #44]
+ 241 0168 0C23     		movs	r3, #12
+ 242 016a 1021     		movs	r1, #16
+ 243 016c 8C46     		mov	ip, r1
+ 244 016e BC44     		add	ip, ip, r7
+ 245 0170 6344     		add	r3, r3, ip
+ 246 0172 1A60     		str	r2, [r3]
+  86:app_UART.c    ****             uartTxDataNtf.value.len  = uartTxDataLength;
+ 247              		.loc 1 86 0
+ 248 0174 0C23     		movs	r3, #12
+ 249 0176 1022     		movs	r2, #16
+ 250 0178 9446     		mov	ip, r2
+ 251 017a BC44     		add	ip, ip, r7
+ 252 017c 6344     		add	r3, r3, ip
+ 253 017e 2422     		movs	r2, #36
+ 254 0180 1021     		movs	r1, #16
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 7
+
+
+ 255 0182 8C46     		mov	ip, r1
+ 256 0184 BC44     		add	ip, ip, r7
+ 257 0186 6244     		add	r2, r2, ip
+ 258 0188 1288     		ldrh	r2, [r2]
+ 259 018a 9A80     		strh	r2, [r3, #4]
+  87:app_UART.c    ****             uartTxDataNtf.attrHandle = CYBLE_SERVER_UART_SERVER_UART_TX_DATA_CHAR_HANDLE;
+ 260              		.loc 1 87 0
+ 261 018c 0C23     		movs	r3, #12
+ 262 018e 1022     		movs	r2, #16
+ 263 0190 9446     		mov	ip, r2
+ 264 0192 BC44     		add	ip, ip, r7
+ 265 0194 6344     		add	r3, r3, ip
+ 266 0196 0E22     		movs	r2, #14
+ 267 0198 1A81     		strh	r2, [r3, #8]
+ 268              	.L7:
+  88:app_UART.c    ****             
+  89:app_UART.c    ****             #ifdef FLOW_CONTROL
+  90:app_UART.c    ****                 DisableUartRxInt();
+  91:app_UART.c    ****             #endif
+  92:app_UART.c    ****             
+  93:app_UART.c    ****             do
+  94:app_UART.c    ****             {
+  95:app_UART.c    ****                 bleApiResult = CyBle_GattsNotification(cyBle_connHandle, &uartTxDataNtf);
+ 269              		.loc 1 95 0 discriminator 2
+ 270 019a 1A23     		movs	r3, #26
+ 271 019c 1022     		movs	r2, #16
+ 272 019e BA18     		adds	r2, r7, r2
+ 273 01a0 D418     		adds	r4, r2, r3
+ 274 01a2 0C23     		movs	r3, #12
+ 275 01a4 1022     		movs	r2, #16
+ 276 01a6 BA18     		adds	r2, r7, r2
+ 277 01a8 D118     		adds	r1, r2, r3
+ 278 01aa 144B     		ldr	r3, .L8+8
+ 279 01ac 1A78     		ldrb	r2, [r3]
+ 280 01ae 5B78     		ldrb	r3, [r3, #1]
+ 281 01b0 1B02     		lsls	r3, r3, #8
+ 282 01b2 1A43     		orrs	r2, r3
+ 283 01b4 0023     		movs	r3, #0
+ 284 01b6 1204     		lsls	r2, r2, #16
+ 285 01b8 120C     		lsrs	r2, r2, #16
+ 286 01ba 1B0C     		lsrs	r3, r3, #16
+ 287 01bc 1B04     		lsls	r3, r3, #16
+ 288 01be 1343     		orrs	r3, r2
+ 289 01c0 1800     		movs	r0, r3
+ 290 01c2 FFF7FEFF 		bl	CyBle_GattsNotification
+ 291 01c6 0300     		movs	r3, r0
+ 292 01c8 2380     		strh	r3, [r4]
+  96:app_UART.c    ****                 CyBle_ProcessEvents();
+ 293              		.loc 1 96 0 discriminator 2
+ 294 01ca FFF7FEFF 		bl	CyBle_ProcessEvents
+  97:app_UART.c    ****             }
+  98:app_UART.c    ****             while((CYBLE_ERROR_OK != bleApiResult)  && (CYBLE_STATE_CONNECTED == cyBle_state));
+ 295              		.loc 1 98 0 discriminator 2
+ 296 01ce 1A23     		movs	r3, #26
+ 297 01d0 1022     		movs	r2, #16
+ 298 01d2 9446     		mov	ip, r2
+ 299 01d4 BC44     		add	ip, ip, r7
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 8
+
+
+ 300 01d6 6344     		add	r3, r3, ip
+ 301 01d8 1B88     		ldrh	r3, [r3]
+ 302 01da 002B     		cmp	r3, #0
+ 303 01dc 03D0     		beq	.L2
+ 304              		.loc 1 98 0 is_stmt 0 discriminator 1
+ 305 01de 084B     		ldr	r3, .L8+12
+ 306 01e0 1B78     		ldrb	r3, [r3]
+ 307 01e2 022B     		cmp	r3, #2
+ 308 01e4 D9D0     		beq	.L7
+ 309              	.L2:
+ 310 01e6 3B69     		ldr	r3, [r7, #16]
+ 311 01e8 9D46     		mov	sp, r3
+  99:app_UART.c    ****         }
+ 100:app_UART.c    ****     }
+ 101:app_UART.c    **** }
+ 312              		.loc 1 101 0 is_stmt 1
+ 313 01ea C046     		nop
+ 314 01ec BD46     		mov	sp, r7
+ 315 01ee 0FB0     		add	sp, sp, #60
+ 316              		@ sp needed
+ 317 01f0 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 318              	.L9:
+ 319 01f2 C046     		.align	2
+ 320              	.L8:
+ 321 01f4 00000000 		.word	mtuSize
+ 322 01f8 00000000 		.word	uartIdleCount.7400
+ 323 01fc 00000000 		.word	cyBle_connHandle
+ 324 0200 00000000 		.word	cyBle_state
+ 325              		.cfi_endproc
+ 326              	.LFE35:
+ 327              		.size	HandleUartTxTraffic, .-HandleUartTxTraffic
+ 328              		.section	.text.HandleUartRxTraffic,"ax",%progbits
+ 329              		.align	2
+ 330              		.global	HandleUartRxTraffic
+ 331              		.code	16
+ 332              		.thumb_func
+ 333              		.type	HandleUartRxTraffic, %function
+ 334              	HandleUartRxTraffic:
+ 335              	.LFB36:
+ 102:app_UART.c    **** 
+ 103:app_UART.c    **** /*****************************************************************************************
+ 104:app_UART.c    **** * Function Name: HandleUartRxTraffic
+ 105:app_UART.c    **** ******************************************************************************************
+ 106:app_UART.c    **** *
+ 107:app_UART.c    **** * Summary:
+ 108:app_UART.c    **** *  This function takes data from received "write without response" command from
+ 109:app_UART.c    **** *  server and, pushes it to the UART TX buffer. 
+ 110:app_UART.c    **** *
+ 111:app_UART.c    **** * Parameters:
+ 112:app_UART.c    **** *  CYBLE_GATTS_WRITE_REQ_PARAM_T * - the "write without response" param as
+ 113:app_UART.c    **** *                                    recieved by the BLE stack
+ 114:app_UART.c    **** *
+ 115:app_UART.c    **** * Return:
+ 116:app_UART.c    **** *   None.
+ 117:app_UART.c    **** *
+ 118:app_UART.c    **** *****************************************************************************************/
+ 119:app_UART.c    **** void HandleUartRxTraffic(CYBLE_GATTS_WRITE_REQ_PARAM_T * uartRxDataWrReq)
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 9
+
+
+ 120:app_UART.c    **** {
+ 336              		.loc 1 120 0
+ 337              		.cfi_startproc
+ 338              		@ args = 0, pretend = 0, frame = 8
+ 339              		@ frame_needed = 1, uses_anonymous_args = 0
+ 340 0000 80B5     		push	{r7, lr}
+ 341              		.cfi_def_cfa_offset 8
+ 342              		.cfi_offset 7, -8
+ 343              		.cfi_offset 14, -4
+ 344 0002 82B0     		sub	sp, sp, #8
+ 345              		.cfi_def_cfa_offset 16
+ 346 0004 00AF     		add	r7, sp, #0
+ 347              		.cfi_def_cfa_register 7
+ 348 0006 7860     		str	r0, [r7, #4]
+ 121:app_UART.c    ****     if(uartRxDataWrReq->handleValPair.attrHandle == CYBLE_SERVER_UART_SERVER_UART_RX_DATA_CHAR_HAND
+ 349              		.loc 1 121 0
+ 350 0008 7B68     		ldr	r3, [r7, #4]
+ 351 000a 9B89     		ldrh	r3, [r3, #12]
+ 352 000c 112B     		cmp	r3, #17
+ 353 000e 07D1     		bne	.L12
+ 122:app_UART.c    ****     {
+ 123:app_UART.c    ****         UART_SpiUartPutArray(uartRxDataWrReq->handleValPair.value.val, \
+ 354              		.loc 1 123 0
+ 355 0010 7B68     		ldr	r3, [r7, #4]
+ 356 0012 5A68     		ldr	r2, [r3, #4]
+ 124:app_UART.c    ****                                     (uint32) uartRxDataWrReq->handleValPair.value.len);
+ 357              		.loc 1 124 0
+ 358 0014 7B68     		ldr	r3, [r7, #4]
+ 359 0016 1B89     		ldrh	r3, [r3, #8]
+ 123:app_UART.c    ****                                     (uint32) uartRxDataWrReq->handleValPair.value.len);
+ 360              		.loc 1 123 0
+ 361 0018 1900     		movs	r1, r3
+ 362 001a 1000     		movs	r0, r2
+ 363 001c FFF7FEFF 		bl	UART_SpiUartPutArray
+ 364              	.L12:
+ 125:app_UART.c    ****     }
+ 126:app_UART.c    **** }
+ 365              		.loc 1 126 0
+ 366 0020 C046     		nop
+ 367 0022 BD46     		mov	sp, r7
+ 368 0024 02B0     		add	sp, sp, #8
+ 369              		@ sp needed
+ 370 0026 80BD     		pop	{r7, pc}
+ 371              		.cfi_endproc
+ 372              	.LFE36:
+ 373              		.size	HandleUartRxTraffic, .-HandleUartRxTraffic
+ 374              		.section	.text.DisableUartRxInt,"ax",%progbits
+ 375              		.align	2
+ 376              		.global	DisableUartRxInt
+ 377              		.code	16
+ 378              		.thumb_func
+ 379              		.type	DisableUartRxInt, %function
+ 380              	DisableUartRxInt:
+ 381              	.LFB37:
+ 127:app_UART.c    **** 
+ 128:app_UART.c    **** /*****************************************************************************************
+ 129:app_UART.c    **** * Function Name: DisableUartRxInt
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 10
+
+
+ 130:app_UART.c    **** ******************************************************************************************
+ 131:app_UART.c    **** *
+ 132:app_UART.c    **** * Summary:
+ 133:app_UART.c    **** *  This function disables the UART RX interrupt.
+ 134:app_UART.c    **** *
+ 135:app_UART.c    **** * Parameters:
+ 136:app_UART.c    **** *   None.
+ 137:app_UART.c    **** *
+ 138:app_UART.c    **** * Return:
+ 139:app_UART.c    **** *   None.
+ 140:app_UART.c    **** *
+ 141:app_UART.c    **** *****************************************************************************************/
+ 142:app_UART.c    **** void DisableUartRxInt(void)
+ 143:app_UART.c    **** {
+ 382              		.loc 1 143 0
+ 383              		.cfi_startproc
+ 384              		@ args = 0, pretend = 0, frame = 0
+ 385              		@ frame_needed = 1, uses_anonymous_args = 0
+ 386 0000 80B5     		push	{r7, lr}
+ 387              		.cfi_def_cfa_offset 8
+ 388              		.cfi_offset 7, -8
+ 389              		.cfi_offset 14, -4
+ 390 0002 00AF     		add	r7, sp, #0
+ 391              		.cfi_def_cfa_register 7
+ 144:app_UART.c    ****     UART_INTR_RX_MASK_REG &= ~UART_RX_INTR_MASK;  
+ 392              		.loc 1 144 0
+ 393 0004 044B     		ldr	r3, .L14
+ 394 0006 044A     		ldr	r2, .L14
+ 395 0008 1268     		ldr	r2, [r2]
+ 396 000a 0421     		movs	r1, #4
+ 397 000c 8A43     		bics	r2, r1
+ 398 000e 1A60     		str	r2, [r3]
+ 145:app_UART.c    **** }
+ 399              		.loc 1 145 0
+ 400 0010 C046     		nop
+ 401 0012 BD46     		mov	sp, r7
+ 402              		@ sp needed
+ 403 0014 80BD     		pop	{r7, pc}
+ 404              	.L15:
+ 405 0016 C046     		.align	2
+ 406              	.L14:
+ 407 0018 C80F2440 		.word	1076105160
+ 408              		.cfi_endproc
+ 409              	.LFE37:
+ 410              		.size	DisableUartRxInt, .-DisableUartRxInt
+ 411              		.section	.text.EnableUartRxInt,"ax",%progbits
+ 412              		.align	2
+ 413              		.global	EnableUartRxInt
+ 414              		.code	16
+ 415              		.thumb_func
+ 416              		.type	EnableUartRxInt, %function
+ 417              	EnableUartRxInt:
+ 418              	.LFB38:
+ 146:app_UART.c    **** 
+ 147:app_UART.c    **** /*****************************************************************************************
+ 148:app_UART.c    **** * Function Name: EnableUartRxInt
+ 149:app_UART.c    **** ******************************************************************************************
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 11
+
+
+ 150:app_UART.c    **** *
+ 151:app_UART.c    **** * Summary:
+ 152:app_UART.c    **** *  This function enables the UART RX interrupt.
+ 153:app_UART.c    **** *
+ 154:app_UART.c    **** * Parameters:
+ 155:app_UART.c    **** *   None.
+ 156:app_UART.c    **** *
+ 157:app_UART.c    **** * Return:
+ 158:app_UART.c    **** *   None.
+ 159:app_UART.c    **** *
+ 160:app_UART.c    **** *****************************************************************************************/
+ 161:app_UART.c    **** void EnableUartRxInt(void)
+ 162:app_UART.c    **** {
+ 419              		.loc 1 162 0
+ 420              		.cfi_startproc
+ 421              		@ args = 0, pretend = 0, frame = 0
+ 422              		@ frame_needed = 1, uses_anonymous_args = 0
+ 423 0000 80B5     		push	{r7, lr}
+ 424              		.cfi_def_cfa_offset 8
+ 425              		.cfi_offset 7, -8
+ 426              		.cfi_offset 14, -4
+ 427 0002 00AF     		add	r7, sp, #0
+ 428              		.cfi_def_cfa_register 7
+ 163:app_UART.c    ****     UART_INTR_RX_MASK_REG |= UART_RX_INTR_MASK;  
+ 429              		.loc 1 163 0
+ 430 0004 044B     		ldr	r3, .L17
+ 431 0006 044A     		ldr	r2, .L17
+ 432 0008 1268     		ldr	r2, [r2]
+ 433 000a 0421     		movs	r1, #4
+ 434 000c 0A43     		orrs	r2, r1
+ 435 000e 1A60     		str	r2, [r3]
+ 164:app_UART.c    **** }
+ 436              		.loc 1 164 0
+ 437 0010 C046     		nop
+ 438 0012 BD46     		mov	sp, r7
+ 439              		@ sp needed
+ 440 0014 80BD     		pop	{r7, pc}
+ 441              	.L18:
+ 442 0016 C046     		.align	2
+ 443              	.L17:
+ 444 0018 C80F2440 		.word	1076105160
+ 445              		.cfi_endproc
+ 446              	.LFE38:
+ 447              		.size	EnableUartRxInt, .-EnableUartRxInt
+ 448              		.data
+ 449              		.align	1
+ 450              		.type	uartIdleCount.7400, %object
+ 451              		.size	uartIdleCount.7400, 2
+ 452              	uartIdleCount.7400:
+ 453 0000 E803     		.short	1000
+ 454              		.text
+ 455              	.Letext0:
+ 456              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 457              		.file 3 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 458              		.file 4 "Generated_Source\\PSoC4/BLE_StackGatt.h"
+ 459              		.file 5 "Generated_Source\\PSoC4/BLE_StackGattServer.h"
+ 460              		.file 6 "Generated_Source\\PSoC4/BLE_eventHandler.h"
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 12
+
+
+ 461              		.file 7 "app_UART.h"
+ 462              		.section	.debug_info,"",%progbits
+ 463              	.Ldebug_info0:
+ 464 0000 C1030000 		.4byte	0x3c1
+ 465 0004 0400     		.2byte	0x4
+ 466 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 467 000a 04       		.byte	0x4
+ 468 000b 01       		.uleb128 0x1
+ 469 000c 50030000 		.4byte	.LASF86
+ 470 0010 0C       		.byte	0xc
+ 471 0011 81050000 		.4byte	.LASF87
+ 472 0015 2C070000 		.4byte	.LASF88
+ 473 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 474 001d 00000000 		.4byte	0
+ 475 0021 00000000 		.4byte	.Ldebug_line0
+ 476 0025 02       		.uleb128 0x2
+ 477 0026 01       		.byte	0x1
+ 478 0027 06       		.byte	0x6
+ 479 0028 39040000 		.4byte	.LASF0
+ 480 002c 02       		.uleb128 0x2
+ 481 002d 01       		.byte	0x1
+ 482 002e 08       		.byte	0x8
+ 483 002f 07040000 		.4byte	.LASF1
+ 484 0033 02       		.uleb128 0x2
+ 485 0034 02       		.byte	0x2
+ 486 0035 05       		.byte	0x5
+ 487 0036 95000000 		.4byte	.LASF2
+ 488 003a 02       		.uleb128 0x2
+ 489 003b 02       		.byte	0x2
+ 490 003c 07       		.byte	0x7
+ 491 003d 0A050000 		.4byte	.LASF3
+ 492 0041 02       		.uleb128 0x2
+ 493 0042 04       		.byte	0x4
+ 494 0043 05       		.byte	0x5
+ 495 0044 E1020000 		.4byte	.LASF4
+ 496 0048 02       		.uleb128 0x2
+ 497 0049 04       		.byte	0x4
+ 498 004a 07       		.byte	0x7
+ 499 004b 17060000 		.4byte	.LASF5
+ 500 004f 02       		.uleb128 0x2
+ 501 0050 08       		.byte	0x8
+ 502 0051 05       		.byte	0x5
+ 503 0052 94020000 		.4byte	.LASF6
+ 504 0056 02       		.uleb128 0x2
+ 505 0057 08       		.byte	0x8
+ 506 0058 07       		.byte	0x7
+ 507 0059 45040000 		.4byte	.LASF7
+ 508 005d 03       		.uleb128 0x3
+ 509 005e 04       		.byte	0x4
+ 510 005f 05       		.byte	0x5
+ 511 0060 696E7400 		.ascii	"int\000"
+ 512 0064 02       		.uleb128 0x2
+ 513 0065 04       		.byte	0x4
+ 514 0066 07       		.byte	0x7
+ 515 0067 88040000 		.4byte	.LASF8
+ 516 006b 04       		.uleb128 0x4
+ 517 006c 04020000 		.4byte	.LASF9
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 13
+
+
+ 518 0070 02       		.byte	0x2
+ 519 0071 E401     		.2byte	0x1e4
+ 520 0073 2C000000 		.4byte	0x2c
+ 521 0077 04       		.uleb128 0x4
+ 522 0078 D9010000 		.4byte	.LASF10
+ 523 007c 02       		.byte	0x2
+ 524 007d E501     		.2byte	0x1e5
+ 525 007f 3A000000 		.4byte	0x3a
+ 526 0083 04       		.uleb128 0x4
+ 527 0084 10060000 		.4byte	.LASF11
+ 528 0088 02       		.byte	0x2
+ 529 0089 E601     		.2byte	0x1e6
+ 530 008b 48000000 		.4byte	0x48
+ 531 008f 02       		.uleb128 0x2
+ 532 0090 04       		.byte	0x4
+ 533 0091 04       		.byte	0x4
+ 534 0092 8E020000 		.4byte	.LASF12
+ 535 0096 02       		.uleb128 0x2
+ 536 0097 08       		.byte	0x8
+ 537 0098 04       		.byte	0x4
+ 538 0099 34060000 		.4byte	.LASF13
+ 539 009d 02       		.uleb128 0x2
+ 540 009e 01       		.byte	0x1
+ 541 009f 08       		.byte	0x8
+ 542 00a0 1D050000 		.4byte	.LASF14
+ 543 00a4 04       		.uleb128 0x4
+ 544 00a5 E1040000 		.4byte	.LASF15
+ 545 00a9 02       		.byte	0x2
+ 546 00aa 9002     		.2byte	0x290
+ 547 00ac B0000000 		.4byte	0xb0
+ 548 00b0 05       		.uleb128 0x5
+ 549 00b1 83000000 		.4byte	0x83
+ 550 00b5 02       		.uleb128 0x2
+ 551 00b6 08       		.byte	0x8
+ 552 00b7 04       		.byte	0x4
+ 553 00b8 DE030000 		.4byte	.LASF16
+ 554 00bc 02       		.uleb128 0x2
+ 555 00bd 04       		.byte	0x4
+ 556 00be 07       		.byte	0x7
+ 557 00bf 9F000000 		.4byte	.LASF17
+ 558 00c3 06       		.uleb128 0x6
+ 559 00c4 02       		.byte	0x2
+ 560 00c5 3A000000 		.4byte	0x3a
+ 561 00c9 03       		.byte	0x3
+ 562 00ca 0204     		.2byte	0x402
+ 563 00cc 9C010000 		.4byte	0x19c
+ 564 00d0 07       		.uleb128 0x7
+ 565 00d1 B3000000 		.4byte	.LASF18
+ 566 00d5 00       		.byte	0
+ 567 00d6 07       		.uleb128 0x7
+ 568 00d7 79010000 		.4byte	.LASF19
+ 569 00db 01       		.byte	0x1
+ 570 00dc 07       		.uleb128 0x7
+ 571 00dd E0010000 		.4byte	.LASF20
+ 572 00e1 02       		.byte	0x2
+ 573 00e2 07       		.uleb128 0x7
+ 574 00e3 8C050000 		.4byte	.LASF21
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 14
+
+
+ 575 00e7 03       		.byte	0x3
+ 576 00e8 07       		.uleb128 0x7
+ 577 00e9 6B020000 		.4byte	.LASF22
+ 578 00ed 04       		.byte	0x4
+ 579 00ee 07       		.uleb128 0x7
+ 580 00ef 97010000 		.4byte	.LASF23
+ 581 00f3 05       		.byte	0x5
+ 582 00f4 07       		.uleb128 0x7
+ 583 00f5 2E020000 		.4byte	.LASF24
+ 584 00f9 06       		.byte	0x6
+ 585 00fa 07       		.uleb128 0x7
+ 586 00fb EA030000 		.4byte	.LASF25
+ 587 00ff 07       		.byte	0x7
+ 588 0100 07       		.uleb128 0x7
+ 589 0101 FA020000 		.4byte	.LASF26
+ 590 0105 08       		.byte	0x8
+ 591 0106 07       		.uleb128 0x7
+ 592 0107 73040000 		.4byte	.LASF27
+ 593 010b 09       		.byte	0x9
+ 594 010c 07       		.uleb128 0x7
+ 595 010d 51020000 		.4byte	.LASF28
+ 596 0111 0A       		.byte	0xa
+ 597 0112 07       		.uleb128 0x7
+ 598 0113 A2020000 		.4byte	.LASF29
+ 599 0117 0B       		.byte	0xb
+ 600 0118 07       		.uleb128 0x7
+ 601 0119 5C040000 		.4byte	.LASF30
+ 602 011d 0C       		.byte	0xc
+ 603 011e 07       		.uleb128 0x7
+ 604 011f 95040000 		.4byte	.LASF31
+ 605 0123 0D       		.byte	0xd
+ 606 0124 07       		.uleb128 0x7
+ 607 0125 25000000 		.4byte	.LASF32
+ 608 0129 0E       		.byte	0xe
+ 609 012a 07       		.uleb128 0x7
+ 610 012b 00000000 		.4byte	.LASF33
+ 611 012f 0F       		.byte	0xf
+ 612 0130 07       		.uleb128 0x7
+ 613 0131 F0070000 		.4byte	.LASF34
+ 614 0135 10       		.byte	0x10
+ 615 0136 07       		.uleb128 0x7
+ 616 0137 66000000 		.4byte	.LASF35
+ 617 013b 11       		.byte	0x11
+ 618 013c 07       		.uleb128 0x7
+ 619 013d 93060000 		.4byte	.LASF36
+ 620 0141 12       		.byte	0x12
+ 621 0142 07       		.uleb128 0x7
+ 622 0143 C8070000 		.4byte	.LASF37
+ 623 0147 13       		.byte	0x13
+ 624 0148 07       		.uleb128 0x7
+ 625 0149 EC060000 		.4byte	.LASF38
+ 626 014d 27       		.byte	0x27
+ 627 014e 07       		.uleb128 0x7
+ 628 014f D9000000 		.4byte	.LASF39
+ 629 0153 28       		.byte	0x28
+ 630 0154 07       		.uleb128 0x7
+ 631 0155 1F010000 		.4byte	.LASF40
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 15
+
+
+ 632 0159 29       		.byte	0x29
+ 633 015a 07       		.uleb128 0x7
+ 634 015b B6060000 		.4byte	.LASF41
+ 635 015f 2A       		.byte	0x2a
+ 636 0160 07       		.uleb128 0x7
+ 637 0161 C5050000 		.4byte	.LASF42
+ 638 0165 2B       		.byte	0x2b
+ 639 0166 07       		.uleb128 0x7
+ 640 0167 15040000 		.4byte	.LASF43
+ 641 016b 2C       		.byte	0x2c
+ 642 016c 07       		.uleb128 0x7
+ 643 016d 4C050000 		.4byte	.LASF44
+ 644 0171 FE       		.byte	0xfe
+ 645 0172 07       		.uleb128 0x7
+ 646 0173 0E070000 		.4byte	.LASF45
+ 647 0177 FF       		.byte	0xff
+ 648 0178 08       		.uleb128 0x8
+ 649 0179 D3060000 		.4byte	.LASF46
+ 650 017d 0001     		.2byte	0x100
+ 651 017f 08       		.uleb128 0x8
+ 652 0180 1E080000 		.4byte	.LASF47
+ 653 0184 0101     		.2byte	0x101
+ 654 0186 08       		.uleb128 0x8
+ 655 0187 E7040000 		.4byte	.LASF48
+ 656 018b 0201     		.2byte	0x102
+ 657 018d 08       		.uleb128 0x8
+ 658 018e 36030000 		.4byte	.LASF49
+ 659 0192 0301     		.2byte	0x103
+ 660 0194 08       		.uleb128 0x8
+ 661 0195 22050000 		.4byte	.LASF50
+ 662 0199 0401     		.2byte	0x104
+ 663 019b 00       		.byte	0
+ 664 019c 04       		.uleb128 0x4
+ 665 019d 0A020000 		.4byte	.LASF51
+ 666 01a1 03       		.byte	0x3
+ 667 01a2 7104     		.2byte	0x471
+ 668 01a4 C3000000 		.4byte	0xc3
+ 669 01a8 09       		.uleb128 0x9
+ 670 01a9 04       		.byte	0x4
+ 671 01aa 6B000000 		.4byte	0x6b
+ 672 01ae 04       		.uleb128 0x4
+ 673 01af 3B010000 		.4byte	.LASF52
+ 674 01b3 04       		.byte	0x4
+ 675 01b4 8901     		.2byte	0x189
+ 676 01b6 77000000 		.4byte	0x77
+ 677 01ba 0A       		.uleb128 0xa
+ 678 01bb 02       		.byte	0x2
+ 679 01bc 04       		.byte	0x4
+ 680 01bd 9301     		.2byte	0x193
+ 681 01bf DE010000 		.4byte	0x1de
+ 682 01c3 0B       		.uleb128 0xb
+ 683 01c4 48020000 		.4byte	.LASF53
+ 684 01c8 04       		.byte	0x4
+ 685 01c9 9A01     		.2byte	0x19a
+ 686 01cb 6B000000 		.4byte	0x6b
+ 687 01cf 00       		.byte	0
+ 688 01d0 0B       		.uleb128 0xb
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 16
+
+
+ 689 01d1 44080000 		.4byte	.LASF54
+ 690 01d5 04       		.byte	0x4
+ 691 01d6 A001     		.2byte	0x1a0
+ 692 01d8 6B000000 		.4byte	0x6b
+ 693 01dc 01       		.byte	0x1
+ 694 01dd 00       		.byte	0
+ 695 01de 04       		.uleb128 0x4
+ 696 01df 4F060000 		.4byte	.LASF55
+ 697 01e3 04       		.byte	0x4
+ 698 01e4 A201     		.2byte	0x1a2
+ 699 01e6 BA010000 		.4byte	0x1ba
+ 700 01ea 0A       		.uleb128 0xa
+ 701 01eb 08       		.byte	0x8
+ 702 01ec 04       		.byte	0x4
+ 703 01ed BE01     		.2byte	0x1be
+ 704 01ef 1B020000 		.4byte	0x21b
+ 705 01f3 0C       		.uleb128 0xc
+ 706 01f4 76616C00 		.ascii	"val\000"
+ 707 01f8 04       		.byte	0x4
+ 708 01f9 C101     		.2byte	0x1c1
+ 709 01fb A8010000 		.4byte	0x1a8
+ 710 01ff 00       		.byte	0
+ 711 0200 0C       		.uleb128 0xc
+ 712 0201 6C656E00 		.ascii	"len\000"
+ 713 0205 04       		.byte	0x4
+ 714 0206 C401     		.2byte	0x1c4
+ 715 0208 77000000 		.4byte	0x77
+ 716 020c 04       		.byte	0x4
+ 717 020d 0B       		.uleb128 0xb
+ 718 020e 4E000000 		.4byte	.LASF56
+ 719 0212 04       		.byte	0x4
+ 720 0213 CB01     		.2byte	0x1cb
+ 721 0215 77000000 		.4byte	0x77
+ 722 0219 06       		.byte	0x6
+ 723 021a 00       		.byte	0
+ 724 021b 04       		.uleb128 0x4
+ 725 021c 39050000 		.4byte	.LASF57
+ 726 0220 04       		.byte	0x4
+ 727 0221 CD01     		.2byte	0x1cd
+ 728 0223 EA010000 		.4byte	0x1ea
+ 729 0227 0A       		.uleb128 0xa
+ 730 0228 0C       		.byte	0xc
+ 731 0229 04       		.byte	0x4
+ 732 022a D001     		.2byte	0x1d0
+ 733 022c 4B020000 		.4byte	0x24b
+ 734 0230 0B       		.uleb128 0xb
+ 735 0231 B5010000 		.4byte	.LASF58
+ 736 0235 04       		.byte	0x4
+ 737 0236 D301     		.2byte	0x1d3
+ 738 0238 1B020000 		.4byte	0x21b
+ 739 023c 00       		.byte	0
+ 740 023d 0B       		.uleb128 0xb
+ 741 023e 29060000 		.4byte	.LASF59
+ 742 0242 04       		.byte	0x4
+ 743 0243 D601     		.2byte	0x1d6
+ 744 0245 AE010000 		.4byte	0x1ae
+ 745 0249 08       		.byte	0x8
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 17
+
+
+ 746 024a 00       		.byte	0
+ 747 024b 04       		.uleb128 0x4
+ 748 024c 63060000 		.4byte	.LASF60
+ 749 0250 04       		.byte	0x4
+ 750 0251 D801     		.2byte	0x1d8
+ 751 0253 27020000 		.4byte	0x227
+ 752 0257 0D       		.uleb128 0xd
+ 753 0258 C2020000 		.4byte	.LASF61
+ 754 025c 05       		.byte	0x5
+ 755 025d 34       		.byte	0x34
+ 756 025e 4B020000 		.4byte	0x24b
+ 757 0262 0E       		.uleb128 0xe
+ 758 0263 10       		.byte	0x10
+ 759 0264 05       		.byte	0x5
+ 760 0265 8A       		.byte	0x8a
+ 761 0266 83020000 		.4byte	0x283
+ 762 026a 0F       		.uleb128 0xf
+ 763 026b A8000000 		.4byte	.LASF62
+ 764 026f 05       		.byte	0x5
+ 765 0270 8D       		.byte	0x8d
+ 766 0271 DE010000 		.4byte	0x1de
+ 767 0275 00       		.byte	0
+ 768 0276 0F       		.uleb128 0xf
+ 769 0277 58000000 		.4byte	.LASF63
+ 770 027b 05       		.byte	0x5
+ 771 027c 90       		.byte	0x90
+ 772 027d 4B020000 		.4byte	0x24b
+ 773 0281 04       		.byte	0x4
+ 774 0282 00       		.byte	0
+ 775 0283 0D       		.uleb128 0xd
+ 776 0284 18030000 		.4byte	.LASF64
+ 777 0288 05       		.byte	0x5
+ 778 0289 92       		.byte	0x92
+ 779 028a 62020000 		.4byte	0x262
+ 780 028e 06       		.uleb128 0x6
+ 781 028f 01       		.byte	0x1
+ 782 0290 2C000000 		.4byte	0x2c
+ 783 0294 06       		.byte	0x6
+ 784 0295 5008     		.2byte	0x850
+ 785 0297 BA020000 		.4byte	0x2ba
+ 786 029b 07       		.uleb128 0x7
+ 787 029c 65010000 		.4byte	.LASF65
+ 788 02a0 00       		.byte	0
+ 789 02a1 07       		.uleb128 0x7
+ 790 02a2 68050000 		.4byte	.LASF66
+ 791 02a6 01       		.byte	0x1
+ 792 02a7 07       		.uleb128 0x7
+ 793 02a8 BB010000 		.4byte	.LASF67
+ 794 02ac 02       		.byte	0x2
+ 795 02ad 07       		.uleb128 0x7
+ 796 02ae F8050000 		.4byte	.LASF68
+ 797 02b2 03       		.byte	0x3
+ 798 02b3 07       		.uleb128 0x7
+ 799 02b4 BA040000 		.4byte	.LASF69
+ 800 02b8 04       		.byte	0x4
+ 801 02b9 00       		.byte	0
+ 802 02ba 04       		.uleb128 0x4
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 18
+
+
+ 803 02bb D3040000 		.4byte	.LASF70
+ 804 02bf 06       		.byte	0x6
+ 805 02c0 5E08     		.2byte	0x85e
+ 806 02c2 8E020000 		.4byte	0x28e
+ 807 02c6 10       		.uleb128 0x10
+ 808 02c7 3B060000 		.4byte	.LASF77
+ 809 02cb 01       		.byte	0x1
+ 810 02cc 21       		.byte	0x21
+ 811 02cd 00000000 		.4byte	.LFB35
+ 812 02d1 04020000 		.4byte	.LFE35-.LFB35
+ 813 02d5 01       		.uleb128 0x1
+ 814 02d6 9C       		.byte	0x9c
+ 815 02d7 42030000 		.4byte	0x342
+ 816 02db 11       		.uleb128 0x11
+ 817 02dc C2000000 		.4byte	.LASF79
+ 818 02e0 01       		.byte	0x1
+ 819 02e1 21       		.byte	0x21
+ 820 02e2 77000000 		.4byte	0x77
+ 821 02e6 02       		.uleb128 0x2
+ 822 02e7 91       		.byte	0x91
+ 823 02e8 46       		.sleb128 -58
+ 824 02e9 12       		.uleb128 0x12
+ 825 02ea FE010000 		.4byte	.LASF71
+ 826 02ee 01       		.byte	0x1
+ 827 02ef 23       		.byte	0x23
+ 828 02f0 6B000000 		.4byte	0x6b
+ 829 02f4 02       		.uleb128 0x2
+ 830 02f5 91       		.byte	0x91
+ 831 02f6 67       		.sleb128 -25
+ 832 02f7 12       		.uleb128 0x12
+ 833 02f8 8A000000 		.4byte	.LASF72
+ 834 02fc 01       		.byte	0x1
+ 835 02fd 24       		.byte	0x24
+ 836 02fe 42030000 		.4byte	0x342
+ 837 0302 03       		.uleb128 0x3
+ 838 0303 91       		.byte	0x91
+ 839 0304 5C       		.sleb128 -36
+ 840 0305 06       		.byte	0x6
+ 841 0306 12       		.uleb128 0x12
+ 842 0307 0E010000 		.4byte	.LASF73
+ 843 030b 01       		.byte	0x1
+ 844 030c 25       		.byte	0x25
+ 845 030d 77000000 		.4byte	0x77
+ 846 0311 02       		.uleb128 0x2
+ 847 0312 91       		.byte	0x91
+ 848 0313 64       		.sleb128 -28
+ 849 0314 12       		.uleb128 0x12
+ 850 0315 57010000 		.4byte	.LASF74
+ 851 0319 01       		.byte	0x1
+ 852 031a 27       		.byte	0x27
+ 853 031b 77000000 		.4byte	0x77
+ 854 031f 05       		.uleb128 0x5
+ 855 0320 03       		.byte	0x3
+ 856 0321 00000000 		.4byte	uartIdleCount.7400
+ 857 0325 12       		.uleb128 0x12
+ 858 0326 37080000 		.4byte	.LASF75
+ 859 032a 01       		.byte	0x1
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 19
+
+
+ 860 032b 29       		.byte	0x29
+ 861 032c 9C010000 		.4byte	0x19c
+ 862 0330 02       		.uleb128 0x2
+ 863 0331 91       		.byte	0x91
+ 864 0332 5A       		.sleb128 -38
+ 865 0333 12       		.uleb128 0x12
+ 866 0334 1E070000 		.4byte	.LASF76
+ 867 0338 01       		.byte	0x1
+ 868 0339 2A       		.byte	0x2a
+ 869 033a 57020000 		.4byte	0x257
+ 870 033e 02       		.uleb128 0x2
+ 871 033f 91       		.byte	0x91
+ 872 0340 4C       		.sleb128 -52
+ 873 0341 00       		.byte	0
+ 874 0342 13       		.uleb128 0x13
+ 875 0343 6B000000 		.4byte	0x6b
+ 876 0347 55030000 		.4byte	0x355
+ 877 034b 14       		.uleb128 0x14
+ 878 034c BC000000 		.4byte	0xbc
+ 879 0350 03       		.uleb128 0x3
+ 880 0351 91       		.byte	0x91
+ 881 0352 60       		.sleb128 -32
+ 882 0353 06       		.byte	0x6
+ 883 0354 00       		.byte	0
+ 884 0355 10       		.uleb128 0x10
+ 885 0356 B1050000 		.4byte	.LASF78
+ 886 035a 01       		.byte	0x1
+ 887 035b 77       		.byte	0x77
+ 888 035c 00000000 		.4byte	.LFB36
+ 889 0360 28000000 		.4byte	.LFE36-.LFB36
+ 890 0364 01       		.uleb128 0x1
+ 891 0365 9C       		.byte	0x9c
+ 892 0366 79030000 		.4byte	0x379
+ 893 036a 11       		.uleb128 0x11
+ 894 036b FE000000 		.4byte	.LASF80
+ 895 036f 01       		.byte	0x1
+ 896 0370 77       		.byte	0x77
+ 897 0371 79030000 		.4byte	0x379
+ 898 0375 02       		.uleb128 0x2
+ 899 0376 91       		.byte	0x91
+ 900 0377 74       		.sleb128 -12
+ 901 0378 00       		.byte	0
+ 902 0379 09       		.uleb128 0x9
+ 903 037a 04       		.byte	0x4
+ 904 037b 83020000 		.4byte	0x283
+ 905 037f 15       		.uleb128 0x15
+ 906 0380 82060000 		.4byte	.LASF81
+ 907 0384 01       		.byte	0x1
+ 908 0385 8E       		.byte	0x8e
+ 909 0386 00000000 		.4byte	.LFB37
+ 910 038a 1C000000 		.4byte	.LFE37-.LFB37
+ 911 038e 01       		.uleb128 0x1
+ 912 038f 9C       		.byte	0x9c
+ 913 0390 15       		.uleb128 0x15
+ 914 0391 EA020000 		.4byte	.LASF82
+ 915 0395 01       		.byte	0x1
+ 916 0396 A1       		.byte	0xa1
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 20
+
+
+ 917 0397 00000000 		.4byte	.LFB38
+ 918 039b 1C000000 		.4byte	.LFE38-.LFB38
+ 919 039f 01       		.uleb128 0x1
+ 920 03a0 9C       		.byte	0x9c
+ 921 03a1 16       		.uleb128 0x16
+ 922 03a2 2D040000 		.4byte	.LASF83
+ 923 03a6 06       		.byte	0x6
+ 924 03a7 A90A     		.2byte	0xaa9
+ 925 03a9 BA020000 		.4byte	0x2ba
+ 926 03ad 16       		.uleb128 0x16
+ 927 03ae 1D020000 		.4byte	.LASF84
+ 928 03b2 06       		.byte	0x6
+ 929 03b3 AA0A     		.2byte	0xaaa
+ 930 03b5 DE010000 		.4byte	0x1de
+ 931 03b9 17       		.uleb128 0x17
+ 932 03ba D1010000 		.4byte	.LASF85
+ 933 03be 07       		.byte	0x7
+ 934 03bf 1F       		.byte	0x1f
+ 935 03c0 77000000 		.4byte	0x77
+ 936 03c4 00       		.byte	0
+ 937              		.section	.debug_abbrev,"",%progbits
+ 938              	.Ldebug_abbrev0:
+ 939 0000 01       		.uleb128 0x1
+ 940 0001 11       		.uleb128 0x11
+ 941 0002 01       		.byte	0x1
+ 942 0003 25       		.uleb128 0x25
+ 943 0004 0E       		.uleb128 0xe
+ 944 0005 13       		.uleb128 0x13
+ 945 0006 0B       		.uleb128 0xb
+ 946 0007 03       		.uleb128 0x3
+ 947 0008 0E       		.uleb128 0xe
+ 948 0009 1B       		.uleb128 0x1b
+ 949 000a 0E       		.uleb128 0xe
+ 950 000b 55       		.uleb128 0x55
+ 951 000c 17       		.uleb128 0x17
+ 952 000d 11       		.uleb128 0x11
+ 953 000e 01       		.uleb128 0x1
+ 954 000f 10       		.uleb128 0x10
+ 955 0010 17       		.uleb128 0x17
+ 956 0011 00       		.byte	0
+ 957 0012 00       		.byte	0
+ 958 0013 02       		.uleb128 0x2
+ 959 0014 24       		.uleb128 0x24
+ 960 0015 00       		.byte	0
+ 961 0016 0B       		.uleb128 0xb
+ 962 0017 0B       		.uleb128 0xb
+ 963 0018 3E       		.uleb128 0x3e
+ 964 0019 0B       		.uleb128 0xb
+ 965 001a 03       		.uleb128 0x3
+ 966 001b 0E       		.uleb128 0xe
+ 967 001c 00       		.byte	0
+ 968 001d 00       		.byte	0
+ 969 001e 03       		.uleb128 0x3
+ 970 001f 24       		.uleb128 0x24
+ 971 0020 00       		.byte	0
+ 972 0021 0B       		.uleb128 0xb
+ 973 0022 0B       		.uleb128 0xb
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 21
+
+
+ 974 0023 3E       		.uleb128 0x3e
+ 975 0024 0B       		.uleb128 0xb
+ 976 0025 03       		.uleb128 0x3
+ 977 0026 08       		.uleb128 0x8
+ 978 0027 00       		.byte	0
+ 979 0028 00       		.byte	0
+ 980 0029 04       		.uleb128 0x4
+ 981 002a 16       		.uleb128 0x16
+ 982 002b 00       		.byte	0
+ 983 002c 03       		.uleb128 0x3
+ 984 002d 0E       		.uleb128 0xe
+ 985 002e 3A       		.uleb128 0x3a
+ 986 002f 0B       		.uleb128 0xb
+ 987 0030 3B       		.uleb128 0x3b
+ 988 0031 05       		.uleb128 0x5
+ 989 0032 49       		.uleb128 0x49
+ 990 0033 13       		.uleb128 0x13
+ 991 0034 00       		.byte	0
+ 992 0035 00       		.byte	0
+ 993 0036 05       		.uleb128 0x5
+ 994 0037 35       		.uleb128 0x35
+ 995 0038 00       		.byte	0
+ 996 0039 49       		.uleb128 0x49
+ 997 003a 13       		.uleb128 0x13
+ 998 003b 00       		.byte	0
+ 999 003c 00       		.byte	0
+ 1000 003d 06       		.uleb128 0x6
+ 1001 003e 04       		.uleb128 0x4
+ 1002 003f 01       		.byte	0x1
+ 1003 0040 0B       		.uleb128 0xb
+ 1004 0041 0B       		.uleb128 0xb
+ 1005 0042 49       		.uleb128 0x49
+ 1006 0043 13       		.uleb128 0x13
+ 1007 0044 3A       		.uleb128 0x3a
+ 1008 0045 0B       		.uleb128 0xb
+ 1009 0046 3B       		.uleb128 0x3b
+ 1010 0047 05       		.uleb128 0x5
+ 1011 0048 01       		.uleb128 0x1
+ 1012 0049 13       		.uleb128 0x13
+ 1013 004a 00       		.byte	0
+ 1014 004b 00       		.byte	0
+ 1015 004c 07       		.uleb128 0x7
+ 1016 004d 28       		.uleb128 0x28
+ 1017 004e 00       		.byte	0
+ 1018 004f 03       		.uleb128 0x3
+ 1019 0050 0E       		.uleb128 0xe
+ 1020 0051 1C       		.uleb128 0x1c
+ 1021 0052 0B       		.uleb128 0xb
+ 1022 0053 00       		.byte	0
+ 1023 0054 00       		.byte	0
+ 1024 0055 08       		.uleb128 0x8
+ 1025 0056 28       		.uleb128 0x28
+ 1026 0057 00       		.byte	0
+ 1027 0058 03       		.uleb128 0x3
+ 1028 0059 0E       		.uleb128 0xe
+ 1029 005a 1C       		.uleb128 0x1c
+ 1030 005b 05       		.uleb128 0x5
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 22
+
+
+ 1031 005c 00       		.byte	0
+ 1032 005d 00       		.byte	0
+ 1033 005e 09       		.uleb128 0x9
+ 1034 005f 0F       		.uleb128 0xf
+ 1035 0060 00       		.byte	0
+ 1036 0061 0B       		.uleb128 0xb
+ 1037 0062 0B       		.uleb128 0xb
+ 1038 0063 49       		.uleb128 0x49
+ 1039 0064 13       		.uleb128 0x13
+ 1040 0065 00       		.byte	0
+ 1041 0066 00       		.byte	0
+ 1042 0067 0A       		.uleb128 0xa
+ 1043 0068 13       		.uleb128 0x13
+ 1044 0069 01       		.byte	0x1
+ 1045 006a 0B       		.uleb128 0xb
+ 1046 006b 0B       		.uleb128 0xb
+ 1047 006c 3A       		.uleb128 0x3a
+ 1048 006d 0B       		.uleb128 0xb
+ 1049 006e 3B       		.uleb128 0x3b
+ 1050 006f 05       		.uleb128 0x5
+ 1051 0070 01       		.uleb128 0x1
+ 1052 0071 13       		.uleb128 0x13
+ 1053 0072 00       		.byte	0
+ 1054 0073 00       		.byte	0
+ 1055 0074 0B       		.uleb128 0xb
+ 1056 0075 0D       		.uleb128 0xd
+ 1057 0076 00       		.byte	0
+ 1058 0077 03       		.uleb128 0x3
+ 1059 0078 0E       		.uleb128 0xe
+ 1060 0079 3A       		.uleb128 0x3a
+ 1061 007a 0B       		.uleb128 0xb
+ 1062 007b 3B       		.uleb128 0x3b
+ 1063 007c 05       		.uleb128 0x5
+ 1064 007d 49       		.uleb128 0x49
+ 1065 007e 13       		.uleb128 0x13
+ 1066 007f 38       		.uleb128 0x38
+ 1067 0080 0B       		.uleb128 0xb
+ 1068 0081 00       		.byte	0
+ 1069 0082 00       		.byte	0
+ 1070 0083 0C       		.uleb128 0xc
+ 1071 0084 0D       		.uleb128 0xd
+ 1072 0085 00       		.byte	0
+ 1073 0086 03       		.uleb128 0x3
+ 1074 0087 08       		.uleb128 0x8
+ 1075 0088 3A       		.uleb128 0x3a
+ 1076 0089 0B       		.uleb128 0xb
+ 1077 008a 3B       		.uleb128 0x3b
+ 1078 008b 05       		.uleb128 0x5
+ 1079 008c 49       		.uleb128 0x49
+ 1080 008d 13       		.uleb128 0x13
+ 1081 008e 38       		.uleb128 0x38
+ 1082 008f 0B       		.uleb128 0xb
+ 1083 0090 00       		.byte	0
+ 1084 0091 00       		.byte	0
+ 1085 0092 0D       		.uleb128 0xd
+ 1086 0093 16       		.uleb128 0x16
+ 1087 0094 00       		.byte	0
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 23
+
+
+ 1088 0095 03       		.uleb128 0x3
+ 1089 0096 0E       		.uleb128 0xe
+ 1090 0097 3A       		.uleb128 0x3a
+ 1091 0098 0B       		.uleb128 0xb
+ 1092 0099 3B       		.uleb128 0x3b
+ 1093 009a 0B       		.uleb128 0xb
+ 1094 009b 49       		.uleb128 0x49
+ 1095 009c 13       		.uleb128 0x13
+ 1096 009d 00       		.byte	0
+ 1097 009e 00       		.byte	0
+ 1098 009f 0E       		.uleb128 0xe
+ 1099 00a0 13       		.uleb128 0x13
+ 1100 00a1 01       		.byte	0x1
+ 1101 00a2 0B       		.uleb128 0xb
+ 1102 00a3 0B       		.uleb128 0xb
+ 1103 00a4 3A       		.uleb128 0x3a
+ 1104 00a5 0B       		.uleb128 0xb
+ 1105 00a6 3B       		.uleb128 0x3b
+ 1106 00a7 0B       		.uleb128 0xb
+ 1107 00a8 01       		.uleb128 0x1
+ 1108 00a9 13       		.uleb128 0x13
+ 1109 00aa 00       		.byte	0
+ 1110 00ab 00       		.byte	0
+ 1111 00ac 0F       		.uleb128 0xf
+ 1112 00ad 0D       		.uleb128 0xd
+ 1113 00ae 00       		.byte	0
+ 1114 00af 03       		.uleb128 0x3
+ 1115 00b0 0E       		.uleb128 0xe
+ 1116 00b1 3A       		.uleb128 0x3a
+ 1117 00b2 0B       		.uleb128 0xb
+ 1118 00b3 3B       		.uleb128 0x3b
+ 1119 00b4 0B       		.uleb128 0xb
+ 1120 00b5 49       		.uleb128 0x49
+ 1121 00b6 13       		.uleb128 0x13
+ 1122 00b7 38       		.uleb128 0x38
+ 1123 00b8 0B       		.uleb128 0xb
+ 1124 00b9 00       		.byte	0
+ 1125 00ba 00       		.byte	0
+ 1126 00bb 10       		.uleb128 0x10
+ 1127 00bc 2E       		.uleb128 0x2e
+ 1128 00bd 01       		.byte	0x1
+ 1129 00be 3F       		.uleb128 0x3f
+ 1130 00bf 19       		.uleb128 0x19
+ 1131 00c0 03       		.uleb128 0x3
+ 1132 00c1 0E       		.uleb128 0xe
+ 1133 00c2 3A       		.uleb128 0x3a
+ 1134 00c3 0B       		.uleb128 0xb
+ 1135 00c4 3B       		.uleb128 0x3b
+ 1136 00c5 0B       		.uleb128 0xb
+ 1137 00c6 27       		.uleb128 0x27
+ 1138 00c7 19       		.uleb128 0x19
+ 1139 00c8 11       		.uleb128 0x11
+ 1140 00c9 01       		.uleb128 0x1
+ 1141 00ca 12       		.uleb128 0x12
+ 1142 00cb 06       		.uleb128 0x6
+ 1143 00cc 40       		.uleb128 0x40
+ 1144 00cd 18       		.uleb128 0x18
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 24
+
+
+ 1145 00ce 9642     		.uleb128 0x2116
+ 1146 00d0 19       		.uleb128 0x19
+ 1147 00d1 01       		.uleb128 0x1
+ 1148 00d2 13       		.uleb128 0x13
+ 1149 00d3 00       		.byte	0
+ 1150 00d4 00       		.byte	0
+ 1151 00d5 11       		.uleb128 0x11
+ 1152 00d6 05       		.uleb128 0x5
+ 1153 00d7 00       		.byte	0
+ 1154 00d8 03       		.uleb128 0x3
+ 1155 00d9 0E       		.uleb128 0xe
+ 1156 00da 3A       		.uleb128 0x3a
+ 1157 00db 0B       		.uleb128 0xb
+ 1158 00dc 3B       		.uleb128 0x3b
+ 1159 00dd 0B       		.uleb128 0xb
+ 1160 00de 49       		.uleb128 0x49
+ 1161 00df 13       		.uleb128 0x13
+ 1162 00e0 02       		.uleb128 0x2
+ 1163 00e1 18       		.uleb128 0x18
+ 1164 00e2 00       		.byte	0
+ 1165 00e3 00       		.byte	0
+ 1166 00e4 12       		.uleb128 0x12
+ 1167 00e5 34       		.uleb128 0x34
+ 1168 00e6 00       		.byte	0
+ 1169 00e7 03       		.uleb128 0x3
+ 1170 00e8 0E       		.uleb128 0xe
+ 1171 00e9 3A       		.uleb128 0x3a
+ 1172 00ea 0B       		.uleb128 0xb
+ 1173 00eb 3B       		.uleb128 0x3b
+ 1174 00ec 0B       		.uleb128 0xb
+ 1175 00ed 49       		.uleb128 0x49
+ 1176 00ee 13       		.uleb128 0x13
+ 1177 00ef 02       		.uleb128 0x2
+ 1178 00f0 18       		.uleb128 0x18
+ 1179 00f1 00       		.byte	0
+ 1180 00f2 00       		.byte	0
+ 1181 00f3 13       		.uleb128 0x13
+ 1182 00f4 01       		.uleb128 0x1
+ 1183 00f5 01       		.byte	0x1
+ 1184 00f6 49       		.uleb128 0x49
+ 1185 00f7 13       		.uleb128 0x13
+ 1186 00f8 01       		.uleb128 0x1
+ 1187 00f9 13       		.uleb128 0x13
+ 1188 00fa 00       		.byte	0
+ 1189 00fb 00       		.byte	0
+ 1190 00fc 14       		.uleb128 0x14
+ 1191 00fd 21       		.uleb128 0x21
+ 1192 00fe 00       		.byte	0
+ 1193 00ff 49       		.uleb128 0x49
+ 1194 0100 13       		.uleb128 0x13
+ 1195 0101 2F       		.uleb128 0x2f
+ 1196 0102 18       		.uleb128 0x18
+ 1197 0103 00       		.byte	0
+ 1198 0104 00       		.byte	0
+ 1199 0105 15       		.uleb128 0x15
+ 1200 0106 2E       		.uleb128 0x2e
+ 1201 0107 00       		.byte	0
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 25
+
+
+ 1202 0108 3F       		.uleb128 0x3f
+ 1203 0109 19       		.uleb128 0x19
+ 1204 010a 03       		.uleb128 0x3
+ 1205 010b 0E       		.uleb128 0xe
+ 1206 010c 3A       		.uleb128 0x3a
+ 1207 010d 0B       		.uleb128 0xb
+ 1208 010e 3B       		.uleb128 0x3b
+ 1209 010f 0B       		.uleb128 0xb
+ 1210 0110 27       		.uleb128 0x27
+ 1211 0111 19       		.uleb128 0x19
+ 1212 0112 11       		.uleb128 0x11
+ 1213 0113 01       		.uleb128 0x1
+ 1214 0114 12       		.uleb128 0x12
+ 1215 0115 06       		.uleb128 0x6
+ 1216 0116 40       		.uleb128 0x40
+ 1217 0117 18       		.uleb128 0x18
+ 1218 0118 9742     		.uleb128 0x2117
+ 1219 011a 19       		.uleb128 0x19
+ 1220 011b 00       		.byte	0
+ 1221 011c 00       		.byte	0
+ 1222 011d 16       		.uleb128 0x16
+ 1223 011e 34       		.uleb128 0x34
+ 1224 011f 00       		.byte	0
+ 1225 0120 03       		.uleb128 0x3
+ 1226 0121 0E       		.uleb128 0xe
+ 1227 0122 3A       		.uleb128 0x3a
+ 1228 0123 0B       		.uleb128 0xb
+ 1229 0124 3B       		.uleb128 0x3b
+ 1230 0125 05       		.uleb128 0x5
+ 1231 0126 49       		.uleb128 0x49
+ 1232 0127 13       		.uleb128 0x13
+ 1233 0128 3F       		.uleb128 0x3f
+ 1234 0129 19       		.uleb128 0x19
+ 1235 012a 3C       		.uleb128 0x3c
+ 1236 012b 19       		.uleb128 0x19
+ 1237 012c 00       		.byte	0
+ 1238 012d 00       		.byte	0
+ 1239 012e 17       		.uleb128 0x17
+ 1240 012f 34       		.uleb128 0x34
+ 1241 0130 00       		.byte	0
+ 1242 0131 03       		.uleb128 0x3
+ 1243 0132 0E       		.uleb128 0xe
+ 1244 0133 3A       		.uleb128 0x3a
+ 1245 0134 0B       		.uleb128 0xb
+ 1246 0135 3B       		.uleb128 0x3b
+ 1247 0136 0B       		.uleb128 0xb
+ 1248 0137 49       		.uleb128 0x49
+ 1249 0138 13       		.uleb128 0x13
+ 1250 0139 3F       		.uleb128 0x3f
+ 1251 013a 19       		.uleb128 0x19
+ 1252 013b 3C       		.uleb128 0x3c
+ 1253 013c 19       		.uleb128 0x19
+ 1254 013d 00       		.byte	0
+ 1255 013e 00       		.byte	0
+ 1256 013f 00       		.byte	0
+ 1257              		.section	.debug_aranges,"",%progbits
+ 1258 0000 34000000 		.4byte	0x34
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 26
+
+
+ 1259 0004 0200     		.2byte	0x2
+ 1260 0006 00000000 		.4byte	.Ldebug_info0
+ 1261 000a 04       		.byte	0x4
+ 1262 000b 00       		.byte	0
+ 1263 000c 0000     		.2byte	0
+ 1264 000e 0000     		.2byte	0
+ 1265 0010 00000000 		.4byte	.LFB35
+ 1266 0014 04020000 		.4byte	.LFE35-.LFB35
+ 1267 0018 00000000 		.4byte	.LFB36
+ 1268 001c 28000000 		.4byte	.LFE36-.LFB36
+ 1269 0020 00000000 		.4byte	.LFB37
+ 1270 0024 1C000000 		.4byte	.LFE37-.LFB37
+ 1271 0028 00000000 		.4byte	.LFB38
+ 1272 002c 1C000000 		.4byte	.LFE38-.LFB38
+ 1273 0030 00000000 		.4byte	0
+ 1274 0034 00000000 		.4byte	0
+ 1275              		.section	.debug_ranges,"",%progbits
+ 1276              	.Ldebug_ranges0:
+ 1277 0000 00000000 		.4byte	.LFB35
+ 1278 0004 04020000 		.4byte	.LFE35
+ 1279 0008 00000000 		.4byte	.LFB36
+ 1280 000c 28000000 		.4byte	.LFE36
+ 1281 0010 00000000 		.4byte	.LFB37
+ 1282 0014 1C000000 		.4byte	.LFE37
+ 1283 0018 00000000 		.4byte	.LFB38
+ 1284 001c 1C000000 		.4byte	.LFE38
+ 1285 0020 00000000 		.4byte	0
+ 1286 0024 00000000 		.4byte	0
+ 1287              		.section	.debug_line,"",%progbits
+ 1288              	.Ldebug_line0:
+ 1289 0000 35010000 		.section	.debug_str,"MS",%progbits,1
+ 1289      0200A400 
+ 1289      00000201 
+ 1289      FB0E0D00 
+ 1289      01010101 
+ 1290              	.LASF33:
+ 1291 0000 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_REGISTERED\000"
+ 1291      455F4552 
+ 1291      524F525F 
+ 1291      4C324341 
+ 1291      505F5053 
+ 1292              	.LASF32:
+ 1293 0025 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_ALREADY_REGISTERED\000"
+ 1293      455F4552 
+ 1293      524F525F 
+ 1293      4C324341 
+ 1293      505F5053 
+ 1294              	.LASF56:
+ 1295 004e 61637475 		.ascii	"actualLen\000"
+ 1295      616C4C65 
+ 1295      6E00
+ 1296              	.LASF63:
+ 1297 0058 68616E64 		.ascii	"handleValPair\000"
+ 1297      6C655661 
+ 1297      6C506169 
+ 1297      7200
+ 1298              	.LASF35:
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 27
+
+
+ 1299 0066 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CHANNEL_NOT_FOUND\000"
+ 1299      455F4552 
+ 1299      524F525F 
+ 1299      4C324341 
+ 1299      505F4348 
+ 1300              	.LASF72:
+ 1301 008a 75617274 		.ascii	"uartTxData\000"
+ 1301      54784461 
+ 1301      746100
+ 1302              	.LASF2:
+ 1303 0095 73686F72 		.ascii	"short int\000"
+ 1303      7420696E 
+ 1303      7400
+ 1304              	.LASF17:
+ 1305 009f 73697A65 		.ascii	"sizetype\000"
+ 1305      74797065 
+ 1305      00
+ 1306              	.LASF62:
+ 1307 00a8 636F6E6E 		.ascii	"connHandle\000"
+ 1307      48616E64 
+ 1307      6C6500
+ 1308              	.LASF18:
+ 1309 00b3 4359424C 		.ascii	"CYBLE_ERROR_OK\000"
+ 1309      455F4552 
+ 1309      524F525F 
+ 1309      4F4B00
+ 1310              	.LASF79:
+ 1311 00c2 74784461 		.ascii	"txDataClientConfigDesc\000"
+ 1311      7461436C 
+ 1311      69656E74 
+ 1311      436F6E66 
+ 1311      69674465 
+ 1312              	.LASF39:
+ 1313 00d9 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE_NOT_PERMITED\000"
+ 1313      455F4552 
+ 1313      524F525F 
+ 1313      464C4153 
+ 1313      485F5752 
+ 1314              	.LASF80:
+ 1315 00fe 75617274 		.ascii	"uartRxDataWrReq\000"
+ 1315      52784461 
+ 1315      74615772 
+ 1315      52657100 
+ 1316              	.LASF73:
+ 1317 010e 75617274 		.ascii	"uartTxDataLength\000"
+ 1317      54784461 
+ 1317      74614C65 
+ 1317      6E677468 
+ 1317      00
+ 1318              	.LASF40:
+ 1319 011f 4359424C 		.ascii	"CYBLE_ERROR_MIC_AUTH_FAILED\000"
+ 1319      455F4552 
+ 1319      524F525F 
+ 1319      4D49435F 
+ 1319      41555448 
+ 1320              	.LASF52:
+ 1321 013b 4359424C 		.ascii	"CYBLE_GATT_DB_ATTR_HANDLE_T\000"
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 28
+
+
+ 1321      455F4741 
+ 1321      54545F44 
+ 1321      425F4154 
+ 1321      54525F48 
+ 1322              	.LASF74:
+ 1323 0157 75617274 		.ascii	"uartIdleCount\000"
+ 1323      49646C65 
+ 1323      436F756E 
+ 1323      7400
+ 1324              	.LASF65:
+ 1325 0165 4359424C 		.ascii	"CYBLE_STATE_STOPPED\000"
+ 1325      455F5354 
+ 1325      4154455F 
+ 1325      53544F50 
+ 1325      50454400 
+ 1326              	.LASF19:
+ 1327 0179 4359424C 		.ascii	"CYBLE_ERROR_INVALID_PARAMETER\000"
+ 1327      455F4552 
+ 1327      524F525F 
+ 1327      494E5641 
+ 1327      4C49445F 
+ 1328              	.LASF23:
+ 1329 0197 4359424C 		.ascii	"CYBLE_ERROR_OOB_NOT_AVAILABLE\000"
+ 1329      455F4552 
+ 1329      524F525F 
+ 1329      4F4F425F 
+ 1329      4E4F545F 
+ 1330              	.LASF58:
+ 1331 01b5 76616C75 		.ascii	"value\000"
+ 1331      6500
+ 1332              	.LASF67:
+ 1333 01bb 4359424C 		.ascii	"CYBLE_STATE_CONNECTED\000"
+ 1333      455F5354 
+ 1333      4154455F 
+ 1333      434F4E4E 
+ 1333      45435445 
+ 1334              	.LASF85:
+ 1335 01d1 6D747553 		.ascii	"mtuSize\000"
+ 1335      697A6500 
+ 1336              	.LASF10:
+ 1337 01d9 75696E74 		.ascii	"uint16\000"
+ 1337      313600
+ 1338              	.LASF20:
+ 1339 01e0 4359424C 		.ascii	"CYBLE_ERROR_INVALID_OPERATION\000"
+ 1339      455F4552 
+ 1339      524F525F 
+ 1339      494E5641 
+ 1339      4C49445F 
+ 1340              	.LASF71:
+ 1341 01fe 696E6465 		.ascii	"index\000"
+ 1341      7800
+ 1342              	.LASF9:
+ 1343 0204 75696E74 		.ascii	"uint8\000"
+ 1343      3800
+ 1344              	.LASF51:
+ 1345 020a 4359424C 		.ascii	"CYBLE_API_RESULT_T\000"
+ 1345      455F4150 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 29
+
+
+ 1345      495F5245 
+ 1345      53554C54 
+ 1345      5F5400
+ 1346              	.LASF84:
+ 1347 021d 6379426C 		.ascii	"cyBle_connHandle\000"
+ 1347      655F636F 
+ 1347      6E6E4861 
+ 1347      6E646C65 
+ 1347      00
+ 1348              	.LASF24:
+ 1349 022e 4359424C 		.ascii	"CYBLE_ERROR_NO_CONNECTION\000"
+ 1349      455F4552 
+ 1349      524F525F 
+ 1349      4E4F5F43 
+ 1349      4F4E4E45 
+ 1350              	.LASF53:
+ 1351 0248 62644861 		.ascii	"bdHandle\000"
+ 1351      6E646C65 
+ 1351      00
+ 1352              	.LASF28:
+ 1353 0251 4359424C 		.ascii	"CYBLE_ERROR_TX_POWER_READ\000"
+ 1353      455F4552 
+ 1353      524F525F 
+ 1353      54585F50 
+ 1353      4F574552 
+ 1354              	.LASF22:
+ 1355 026b 4359424C 		.ascii	"CYBLE_ERROR_INSUFFICIENT_RESOURCES\000"
+ 1355      455F4552 
+ 1355      524F525F 
+ 1355      494E5355 
+ 1355      46464943 
+ 1356              	.LASF12:
+ 1357 028e 666C6F61 		.ascii	"float\000"
+ 1357      7400
+ 1358              	.LASF6:
+ 1359 0294 6C6F6E67 		.ascii	"long long int\000"
+ 1359      206C6F6E 
+ 1359      6720696E 
+ 1359      7400
+ 1360              	.LASF29:
+ 1361 02a2 4359424C 		.ascii	"CYBLE_ERROR_BT_ON_NOT_COMPLETED\000"
+ 1361      455F4552 
+ 1361      524F525F 
+ 1361      42545F4F 
+ 1361      4E5F4E4F 
+ 1362              	.LASF61:
+ 1363 02c2 4359424C 		.ascii	"CYBLE_GATTS_HANDLE_VALUE_NTF_T\000"
+ 1363      455F4741 
+ 1363      5454535F 
+ 1363      48414E44 
+ 1363      4C455F56 
+ 1364              	.LASF4:
+ 1365 02e1 6C6F6E67 		.ascii	"long int\000"
+ 1365      20696E74 
+ 1365      00
+ 1366              	.LASF82:
+ 1367 02ea 456E6162 		.ascii	"EnableUartRxInt\000"
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 30
+
+
+ 1367      6C655561 
+ 1367      72745278 
+ 1367      496E7400 
+ 1368              	.LASF26:
+ 1369 02fa 4359424C 		.ascii	"CYBLE_ERROR_REPEATED_ATTEMPTS\000"
+ 1369      455F4552 
+ 1369      524F525F 
+ 1369      52455045 
+ 1369      41544544 
+ 1370              	.LASF64:
+ 1371 0318 4359424C 		.ascii	"CYBLE_GATTS_WRITE_REQ_PARAM_T\000"
+ 1371      455F4741 
+ 1371      5454535F 
+ 1371      57524954 
+ 1371      455F5245 
+ 1372              	.LASF49:
+ 1373 0336 4359424C 		.ascii	"CYBLE_ERROR_INVALID_STATE\000"
+ 1373      455F4552 
+ 1373      524F525F 
+ 1373      494E5641 
+ 1373      4C49445F 
+ 1374              	.LASF86:
+ 1375 0350 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1375      43313120 
+ 1375      352E342E 
+ 1375      31203230 
+ 1375      31363036 
+ 1376 0383 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 1376      20726576 
+ 1376      6973696F 
+ 1376      6E203233 
+ 1376      37373135 
+ 1377 03b6 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1377      66756E63 
+ 1377      74696F6E 
+ 1377      2D736563 
+ 1377      74696F6E 
+ 1378              	.LASF16:
+ 1379 03de 6C6F6E67 		.ascii	"long double\000"
+ 1379      20646F75 
+ 1379      626C6500 
+ 1380              	.LASF25:
+ 1381 03ea 4359424C 		.ascii	"CYBLE_ERROR_NO_DEVICE_ENTITY\000"
+ 1381      455F4552 
+ 1381      524F525F 
+ 1381      4E4F5F44 
+ 1381      45564943 
+ 1382              	.LASF1:
+ 1383 0407 756E7369 		.ascii	"unsigned char\000"
+ 1383      676E6564 
+ 1383      20636861 
+ 1383      7200
+ 1384              	.LASF43:
+ 1385 0415 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE\000"
+ 1385      455F4552 
+ 1385      524F525F 
+ 1385      464C4153 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 31
+
+
+ 1385      485F5752 
+ 1386              	.LASF83:
+ 1387 042d 6379426C 		.ascii	"cyBle_state\000"
+ 1387      655F7374 
+ 1387      61746500 
+ 1388              	.LASF0:
+ 1389 0439 7369676E 		.ascii	"signed char\000"
+ 1389      65642063 
+ 1389      68617200 
+ 1390              	.LASF7:
+ 1391 0445 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1391      206C6F6E 
+ 1391      6720756E 
+ 1391      7369676E 
+ 1391      65642069 
+ 1392              	.LASF30:
+ 1393 045c 4359424C 		.ascii	"CYBLE_ERROR_SEC_FAILED\000"
+ 1393      455F4552 
+ 1393      524F525F 
+ 1393      5345435F 
+ 1393      4641494C 
+ 1394              	.LASF27:
+ 1395 0473 4359424C 		.ascii	"CYBLE_ERROR_GAP_ROLE\000"
+ 1395      455F4552 
+ 1395      524F525F 
+ 1395      4741505F 
+ 1395      524F4C45 
+ 1396              	.LASF8:
+ 1397 0488 756E7369 		.ascii	"unsigned int\000"
+ 1397      676E6564 
+ 1397      20696E74 
+ 1397      00
+ 1398              	.LASF31:
+ 1399 0495 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_WRONG_ENCODING\000"
+ 1399      455F4552 
+ 1399      524F525F 
+ 1399      4C324341 
+ 1399      505F5053 
+ 1400              	.LASF69:
+ 1401 04ba 4359424C 		.ascii	"CYBLE_STATE_DISCONNECTED\000"
+ 1401      455F5354 
+ 1401      4154455F 
+ 1401      44495343 
+ 1401      4F4E4E45 
+ 1402              	.LASF70:
+ 1403 04d3 4359424C 		.ascii	"CYBLE_STATE_T\000"
+ 1403      455F5354 
+ 1403      4154455F 
+ 1403      5400
+ 1404              	.LASF15:
+ 1405 04e1 72656733 		.ascii	"reg32\000"
+ 1405      3200
+ 1406              	.LASF48:
+ 1407 04e7 4359424C 		.ascii	"CYBLE_ERROR_CHAR_IS_NOT_DISCOVERED\000"
+ 1407      455F4552 
+ 1407      524F525F 
+ 1407      43484152 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 32
+
+
+ 1407      5F49535F 
+ 1408              	.LASF3:
+ 1409 050a 73686F72 		.ascii	"short unsigned int\000"
+ 1409      7420756E 
+ 1409      7369676E 
+ 1409      65642069 
+ 1409      6E7400
+ 1410              	.LASF14:
+ 1411 051d 63686172 		.ascii	"char\000"
+ 1411      00
+ 1412              	.LASF50:
+ 1413 0522 4359424C 		.ascii	"CYBLE_ERROR_STACK_BUSY\000"
+ 1413      455F4552 
+ 1413      524F525F 
+ 1413      53544143 
+ 1413      4B5F4255 
+ 1414              	.LASF57:
+ 1415 0539 4359424C 		.ascii	"CYBLE_GATT_VALUE_T\000"
+ 1415      455F4741 
+ 1415      54545F56 
+ 1415      414C5545 
+ 1415      5F5400
+ 1416              	.LASF44:
+ 1417 054c 4359424C 		.ascii	"CYBLE_ERROR_CONTROLLER_BUSY\000"
+ 1417      455F4552 
+ 1417      524F525F 
+ 1417      434F4E54 
+ 1417      524F4C4C 
+ 1418              	.LASF66:
+ 1419 0568 4359424C 		.ascii	"CYBLE_STATE_INITIALIZING\000"
+ 1419      455F5354 
+ 1419      4154455F 
+ 1419      494E4954 
+ 1419      49414C49 
+ 1420              	.LASF87:
+ 1421 0581 6170705F 		.ascii	"app_UART.c\000"
+ 1421      55415254 
+ 1421      2E6300
+ 1422              	.LASF21:
+ 1423 058c 4359424C 		.ascii	"CYBLE_ERROR_MEMORY_ALLOCATION_FAILED\000"
+ 1423      455F4552 
+ 1423      524F525F 
+ 1423      4D454D4F 
+ 1423      52595F41 
+ 1424              	.LASF78:
+ 1425 05b1 48616E64 		.ascii	"HandleUartRxTraffic\000"
+ 1425      6C655561 
+ 1425      72745278 
+ 1425      54726166 
+ 1425      66696300 
+ 1426              	.LASF42:
+ 1427 05c5 4359424C 		.ascii	"CYBLE_ERROR_UNSUPPORTED_FEATURE_OR_PARAMETER_VALUE\000"
+ 1427      455F4552 
+ 1427      524F525F 
+ 1427      554E5355 
+ 1427      50504F52 
+ 1428              	.LASF68:
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 33
+
+
+ 1429 05f8 4359424C 		.ascii	"CYBLE_STATE_ADVERTISING\000"
+ 1429      455F5354 
+ 1429      4154455F 
+ 1429      41445645 
+ 1429      52544953 
+ 1430              	.LASF11:
+ 1431 0610 75696E74 		.ascii	"uint32\000"
+ 1431      333200
+ 1432              	.LASF5:
+ 1433 0617 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1433      20756E73 
+ 1433      69676E65 
+ 1433      6420696E 
+ 1433      7400
+ 1434              	.LASF59:
+ 1435 0629 61747472 		.ascii	"attrHandle\000"
+ 1435      48616E64 
+ 1435      6C6500
+ 1436              	.LASF13:
+ 1437 0634 646F7562 		.ascii	"double\000"
+ 1437      6C6500
+ 1438              	.LASF77:
+ 1439 063b 48616E64 		.ascii	"HandleUartTxTraffic\000"
+ 1439      6C655561 
+ 1439      72745478 
+ 1439      54726166 
+ 1439      66696300 
+ 1440              	.LASF55:
+ 1441 064f 4359424C 		.ascii	"CYBLE_CONN_HANDLE_T\000"
+ 1441      455F434F 
+ 1441      4E4E5F48 
+ 1441      414E444C 
+ 1441      455F5400 
+ 1442              	.LASF60:
+ 1443 0663 4359424C 		.ascii	"CYBLE_GATT_HANDLE_VALUE_PAIR_T\000"
+ 1443      455F4741 
+ 1443      54545F48 
+ 1443      414E444C 
+ 1443      455F5641 
+ 1444              	.LASF81:
+ 1445 0682 44697361 		.ascii	"DisableUartRxInt\000"
+ 1445      626C6555 
+ 1445      61727452 
+ 1445      78496E74 
+ 1445      00
+ 1446              	.LASF36:
+ 1447 0693 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_IN_RANGE\000"
+ 1447      455F4552 
+ 1447      524F525F 
+ 1447      4C324341 
+ 1447      505F5053 
+ 1448              	.LASF41:
+ 1449 06b6 4359424C 		.ascii	"CYBLE_ERROR_HARDWARE_FAILURE\000"
+ 1449      455F4552 
+ 1449      524F525F 
+ 1449      48415244 
+ 1449      57415245 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 34
+
+
+ 1450              	.LASF46:
+ 1451 06d3 4359424C 		.ascii	"CYBLE_ERROR_NTF_DISABLED\000"
+ 1451      455F4552 
+ 1451      524F525F 
+ 1451      4E54465F 
+ 1451      44495341 
+ 1452              	.LASF38:
+ 1453 06ec 4359424C 		.ascii	"CYBLE_ERROR_DEVICE_ALREADY_EXISTS\000"
+ 1453      455F4552 
+ 1453      524F525F 
+ 1453      44455649 
+ 1453      43455F41 
+ 1454              	.LASF45:
+ 1455 070e 4359424C 		.ascii	"CYBLE_ERROR_MAX\000"
+ 1455      455F4552 
+ 1455      524F525F 
+ 1455      4D415800 
+ 1456              	.LASF76:
+ 1457 071e 75617274 		.ascii	"uartTxDataNtf\000"
+ 1457      54784461 
+ 1457      74614E74 
+ 1457      6600
+ 1458              	.LASF88:
+ 1459 072c 433A5C55 		.ascii	"C:\\Users\\Benakapoi\\Desktop\\PSoC-4-BLE-master\\P"
+ 1459      73657273 
+ 1459      5C42656E 
+ 1459      616B6170 
+ 1459      6F695C44 
+ 1460 075a 536F432D 		.ascii	"SoC-4-BLE-master\\100_Projects_in_100_Days\\Day020_"
+ 1460      342D424C 
+ 1460      452D6D61 
+ 1460      73746572 
+ 1460      5C313030 
+ 1461 078b 424C455F 		.ascii	"BLE_UART\\UART_to_BLE_peripheral\\UART_to_BLE_perip"
+ 1461      55415254 
+ 1461      5C554152 
+ 1461      545F746F 
+ 1461      5F424C45 
+ 1462 07bc 68657261 		.ascii	"heral.cydsn\000"
+ 1462      6C2E6379 
+ 1462      64736E00 
+ 1463              	.LASF37:
+ 1464 07c8 4359424C 		.ascii	"CYBLE_ERROR_GATT_DB_INVALID_ATTR_HANDLE\000"
+ 1464      455F4552 
+ 1464      524F525F 
+ 1464      47415454 
+ 1464      5F44425F 
+ 1465              	.LASF34:
+ 1466 07f0 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CONNECTION_ENTITY_NOT_FOUND\000"
+ 1466      455F4552 
+ 1466      524F525F 
+ 1466      4C324341 
+ 1466      505F434F 
+ 1467              	.LASF47:
+ 1468 081e 4359424C 		.ascii	"CYBLE_ERROR_IND_DISABLED\000"
+ 1468      455F4552 
+ 1468      524F525F 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccK18q1x.s 			page 35
+
+
+ 1468      494E445F 
+ 1468      44495341 
+ 1469              	.LASF75:
+ 1470 0837 626C6541 		.ascii	"bleApiResult\000"
+ 1470      70695265 
+ 1470      73756C74 
+ 1470      00
+ 1471              	.LASF54:
+ 1472 0844 61747449 		.ascii	"attId\000"
+ 1472      6400
+ 1473              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

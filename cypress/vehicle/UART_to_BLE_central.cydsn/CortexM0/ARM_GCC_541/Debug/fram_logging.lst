@@ -1,0 +1,2099 @@
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"fram_logging.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.comm	addr,4,4
+  20              		.section	.text.WriteFRAMData,"ax",%progbits
+  21              		.align	2
+  22              		.global	WriteFRAMData
+  23              		.code	16
+  24              		.thumb_func
+  25              		.type	WriteFRAMData, %function
+  26              	WriteFRAMData:
+  27              	.LFB36:
+  28              		.file 1 "fram_logging.c"
+   1:fram_logging.c **** /* ========================================
+   2:fram_logging.c ****  *
+   3:fram_logging.c ****  * Copyright YOUR COMPANY, THE YEAR
+   4:fram_logging.c ****  * All Rights Reserved
+   5:fram_logging.c ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:fram_logging.c ****  *
+   7:fram_logging.c ****  * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8:fram_logging.c ****  * WHICH IS THE PROPERTY OF your company.
+   9:fram_logging.c ****  *
+  10:fram_logging.c ****  * ========================================
+  11:fram_logging.c **** */
+  12:fram_logging.c **** #include <project.h>
+  13:fram_logging.c **** #include "common.h"
+  14:fram_logging.c **** #include "fram_logging.h"
+  15:fram_logging.c **** 
+  16:fram_logging.c **** /* Attribute CY_NOINIT puts SRAM variable in memory section which is retained in low power modes */
+  17:fram_logging.c **** uint32 addr;
+  18:fram_logging.c **** 
+  19:fram_logging.c **** uint8 WriteFRAMData(uint16 addr_buf, uint8* write_buf, uint16 len)
+  20:fram_logging.c **** {
+  29              		.loc 1 20 0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 48
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  34              		.cfi_def_cfa_offset 20
+  35              		.cfi_offset 4, -20
+  36              		.cfi_offset 5, -16
+  37              		.cfi_offset 6, -12
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 2
+
+
+  38              		.cfi_offset 7, -8
+  39              		.cfi_offset 14, -4
+  40 0002 8DB0     		sub	sp, sp, #52
+  41              		.cfi_def_cfa_offset 72
+  42 0004 00AF     		add	r7, sp, #0
+  43              		.cfi_def_cfa_register 7
+  44 0006 7860     		str	r0, [r7, #4]
+  45 0008 B961     		str	r1, [r7, #24]
+  46 000a 1000     		movs	r0, r2
+  47 000c 1E22     		movs	r2, #30
+  48 000e BA18     		adds	r2, r7, r2
+  49 0010 B988     		ldrh	r1, [r7, #4]
+  50 0012 1180     		strh	r1, [r2]
+  51 0014 1C22     		movs	r2, #28
+  52 0016 BA18     		adds	r2, r7, r2
+  53 0018 011C     		adds	r1, r0, #0
+  54 001a 1180     		strh	r1, [r2]
+  55              		.loc 1 20 0
+  56 001c 6A46     		mov	r2, sp
+  57 001e 7A60     		str	r2, [r7, #4]
+  21:fram_logging.c **** 	uint8 err;
+  22:fram_logging.c **** 	uint8 temp_buf[len+ADDR_SIZE];
+  58              		.loc 1 22 0
+  59 0020 1C22     		movs	r2, #28
+  60 0022 BA18     		adds	r2, r7, r2
+  61 0024 1288     		ldrh	r2, [r2]
+  62 0026 0432     		adds	r2, r2, #4
+  63 0028 511E     		subs	r1, r2, #1
+  64 002a F962     		str	r1, [r7, #44]
+  65 002c 1100     		movs	r1, r2
+  66 002e 3961     		str	r1, [r7, #16]
+  67 0030 0021     		movs	r1, #0
+  68 0032 7961     		str	r1, [r7, #20]
+  69 0034 3969     		ldr	r1, [r7, #16]
+  70 0036 490F     		lsrs	r1, r1, #29
+  71 0038 7869     		ldr	r0, [r7, #20]
+  72 003a C600     		lsls	r6, r0, #3
+  73 003c 0E43     		orrs	r6, r1
+  74 003e 3969     		ldr	r1, [r7, #16]
+  75 0040 CD00     		lsls	r5, r1, #3
+  76 0042 1100     		movs	r1, r2
+  77 0044 B960     		str	r1, [r7, #8]
+  78 0046 0021     		movs	r1, #0
+  79 0048 F960     		str	r1, [r7, #12]
+  80 004a BD68     		ldr	r5, [r7, #8]
+  81 004c FE68     		ldr	r6, [r7, #12]
+  82 004e 2900     		movs	r1, r5
+  83 0050 490F     		lsrs	r1, r1, #29
+  84 0052 3000     		movs	r0, r6
+  85 0054 C400     		lsls	r4, r0, #3
+  86 0056 0C43     		orrs	r4, r1
+  87 0058 2900     		movs	r1, r5
+  88 005a CB00     		lsls	r3, r1, #3
+  89 005c 1300     		movs	r3, r2
+  90 005e 0733     		adds	r3, r3, #7
+  91 0060 DB08     		lsrs	r3, r3, #3
+  92 0062 DB00     		lsls	r3, r3, #3
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 3
+
+
+  93 0064 6A46     		mov	r2, sp
+  94 0066 D31A     		subs	r3, r2, r3
+  95 0068 9D46     		mov	sp, r3
+  96 006a 6B46     		mov	r3, sp
+  97 006c 0033     		adds	r3, r3, #0
+  98 006e BB62     		str	r3, [r7, #40]
+  23:fram_logging.c **** 	
+  24:fram_logging.c **** 	temp_buf[0] = (addr_buf & 0x000000ff);
+  99              		.loc 1 24 0
+ 100 0070 1E23     		movs	r3, #30
+ 101 0072 FB18     		adds	r3, r7, r3
+ 102 0074 1B88     		ldrh	r3, [r3]
+ 103 0076 DAB2     		uxtb	r2, r3
+ 104 0078 BB6A     		ldr	r3, [r7, #40]
+ 105 007a 1A70     		strb	r2, [r3]
+  25:fram_logging.c **** 	temp_buf[1] = ((addr_buf >> 8) & 0x000000ff);
+ 106              		.loc 1 25 0
+ 107 007c 1E23     		movs	r3, #30
+ 108 007e FB18     		adds	r3, r7, r3
+ 109 0080 1B88     		ldrh	r3, [r3]
+ 110 0082 1B0A     		lsrs	r3, r3, #8
+ 111 0084 9BB2     		uxth	r3, r3
+ 112 0086 DAB2     		uxtb	r2, r3
+ 113 0088 BB6A     		ldr	r3, [r7, #40]
+ 114 008a 5A70     		strb	r2, [r3, #1]
+  26:fram_logging.c ****     temp_buf[2] = ((addr_buf >> 16) & 0x000000ff);
+ 115              		.loc 1 26 0
+ 116 008c BB6A     		ldr	r3, [r7, #40]
+ 117 008e 0022     		movs	r2, #0
+ 118 0090 9A70     		strb	r2, [r3, #2]
+  27:fram_logging.c ****     temp_buf[3] = ((addr_buf >> 24) & 0x000000ff);
+ 119              		.loc 1 27 0
+ 120 0092 BB6A     		ldr	r3, [r7, #40]
+ 121 0094 0022     		movs	r2, #0
+ 122 0096 DA70     		strb	r2, [r3, #3]
+  28:fram_logging.c ****     
+  29:fram_logging.c **** 	memcpy(&temp_buf[4], write_buf, len);
+ 123              		.loc 1 29 0
+ 124 0098 BB6A     		ldr	r3, [r7, #40]
+ 125 009a 181D     		adds	r0, r3, #4
+ 126 009c 1C23     		movs	r3, #28
+ 127 009e FB18     		adds	r3, r7, r3
+ 128 00a0 1A88     		ldrh	r2, [r3]
+ 129 00a2 BB69     		ldr	r3, [r7, #24]
+ 130 00a4 1900     		movs	r1, r3
+ 131 00a6 FFF7FEFF 		bl	memcpy
+  30:fram_logging.c **** 	
+  31:fram_logging.c **** 	err = I2C_M_I2CMasterWriteBuf(FRAM_SLAVE_ADDR, temp_buf, len+ADDR_SIZE, I2C_M_I2C_MODE_COMPLETE_XF
+ 132              		.loc 1 31 0
+ 133 00aa B96A     		ldr	r1, [r7, #40]
+ 134 00ac 1C23     		movs	r3, #28
+ 135 00ae FB18     		adds	r3, r7, r3
+ 136 00b0 1B88     		ldrh	r3, [r3]
+ 137 00b2 0433     		adds	r3, r3, #4
+ 138 00b4 1A00     		movs	r2, r3
+ 139 00b6 0023     		movs	r3, #0
+ 140 00b8 5020     		movs	r0, #80
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 4
+
+
+ 141 00ba FFF7FEFF 		bl	I2C_M_I2CMasterWriteBuf
+ 142 00be 0200     		movs	r2, r0
+ 143 00c0 0F23     		movs	r3, #15
+ 144 00c2 1821     		movs	r1, #24
+ 145 00c4 8C46     		mov	ip, r1
+ 146 00c6 BC44     		add	ip, ip, r7
+ 147 00c8 6344     		add	r3, r3, ip
+ 148 00ca 1A70     		strb	r2, [r3]
+  32:fram_logging.c **** 	
+  33:fram_logging.c **** 	while(0u == (I2C_M_I2CMasterStatus() & I2C_M_I2C_MSTAT_WR_CMPLT))
+ 149              		.loc 1 33 0
+ 150 00cc C046     		nop
+ 151              	.L2:
+ 152              		.loc 1 33 0 is_stmt 0 discriminator 1
+ 153 00ce FFF7FEFF 		bl	I2C_M_I2CMasterStatus
+ 154 00d2 0200     		movs	r2, r0
+ 155 00d4 0223     		movs	r3, #2
+ 156 00d6 1340     		ands	r3, r2
+ 157 00d8 F9D0     		beq	.L2
+  34:fram_logging.c **** 	{
+  35:fram_logging.c **** 	/* Wait until master complete write */
+  36:fram_logging.c **** 	}
+  37:fram_logging.c **** 	/* Clear I2C master status */
+  38:fram_logging.c **** 	(void) I2C_M_I2CMasterClearStatus();
+ 158              		.loc 1 38 0 is_stmt 1
+ 159 00da FFF7FEFF 		bl	I2C_M_I2CMasterClearStatus
+  39:fram_logging.c **** 	
+  40:fram_logging.c **** 	return(err);
+ 160              		.loc 1 40 0
+ 161 00de 0F23     		movs	r3, #15
+ 162 00e0 1822     		movs	r2, #24
+ 163 00e2 9446     		mov	ip, r2
+ 164 00e4 BC44     		add	ip, ip, r7
+ 165 00e6 6344     		add	r3, r3, ip
+ 166 00e8 1B78     		ldrb	r3, [r3]
+ 167 00ea 7A68     		ldr	r2, [r7, #4]
+ 168 00ec 9546     		mov	sp, r2
+  41:fram_logging.c **** }
+ 169              		.loc 1 41 0
+ 170 00ee 1800     		movs	r0, r3
+ 171 00f0 BD46     		mov	sp, r7
+ 172 00f2 0DB0     		add	sp, sp, #52
+ 173              		@ sp needed
+ 174 00f4 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 175              		.cfi_endproc
+ 176              	.LFE36:
+ 177              		.size	WriteFRAMData, .-WriteFRAMData
+ 178 00f6 C046     		.section	.text.ReadFRAMData,"ax",%progbits
+ 179              		.align	2
+ 180              		.global	ReadFRAMData
+ 181              		.code	16
+ 182              		.thumb_func
+ 183              		.type	ReadFRAMData, %function
+ 184              	ReadFRAMData:
+ 185              	.LFB37:
+  42:fram_logging.c **** 
+  43:fram_logging.c **** uint8 ReadFRAMData(uint16 addr_buf, uint8* read_buf, uint16 len)
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 5
+
+
+  44:fram_logging.c **** {
+ 186              		.loc 1 44 0
+ 187              		.cfi_startproc
+ 188              		@ args = 0, pretend = 0, frame = 16
+ 189              		@ frame_needed = 1, uses_anonymous_args = 0
+ 190 0000 80B5     		push	{r7, lr}
+ 191              		.cfi_def_cfa_offset 8
+ 192              		.cfi_offset 7, -8
+ 193              		.cfi_offset 14, -4
+ 194 0002 84B0     		sub	sp, sp, #16
+ 195              		.cfi_def_cfa_offset 24
+ 196 0004 00AF     		add	r7, sp, #0
+ 197              		.cfi_def_cfa_register 7
+ 198 0006 3960     		str	r1, [r7]
+ 199 0008 1100     		movs	r1, r2
+ 200 000a BB1D     		adds	r3, r7, #6
+ 201 000c 021C     		adds	r2, r0, #0
+ 202 000e 1A80     		strh	r2, [r3]
+ 203 0010 3B1D     		adds	r3, r7, #4
+ 204 0012 0A1C     		adds	r2, r1, #0
+ 205 0014 1A80     		strh	r2, [r3]
+  45:fram_logging.c **** 	uint8 err;
+  46:fram_logging.c **** 
+  47:fram_logging.c ****     
+  48:fram_logging.c **** 	err = I2C_M_I2CMasterWriteBuf(FRAM_SLAVE_ADDR, (uint8 *)&addr_buf, ADDR_SIZE, I2C_M_I2C_MODE_COMPL
+ 206              		.loc 1 48 0
+ 207 0016 B91D     		adds	r1, r7, #6
+ 208 0018 0023     		movs	r3, #0
+ 209 001a 0422     		movs	r2, #4
+ 210 001c 5020     		movs	r0, #80
+ 211 001e FFF7FEFF 		bl	I2C_M_I2CMasterWriteBuf
+ 212 0022 0200     		movs	r2, r0
+ 213 0024 0F23     		movs	r3, #15
+ 214 0026 FB18     		adds	r3, r7, r3
+ 215 0028 1A70     		strb	r2, [r3]
+  49:fram_logging.c **** 	
+  50:fram_logging.c **** 	while(0u == (I2C_M_I2CMasterStatus() & I2C_M_I2C_MSTAT_WR_CMPLT))
+ 216              		.loc 1 50 0
+ 217 002a C046     		nop
+ 218              	.L5:
+ 219              		.loc 1 50 0 is_stmt 0 discriminator 1
+ 220 002c FFF7FEFF 		bl	I2C_M_I2CMasterStatus
+ 221 0030 0200     		movs	r2, r0
+ 222 0032 0223     		movs	r3, #2
+ 223 0034 1340     		ands	r3, r2
+ 224 0036 F9D0     		beq	.L5
+  51:fram_logging.c **** 	{
+  52:fram_logging.c **** 	/* Wait until master complete write */
+  53:fram_logging.c **** 	}
+  54:fram_logging.c **** 	/* Clear I2C master status */
+  55:fram_logging.c **** 	(void) I2C_M_I2CMasterClearStatus();
+ 225              		.loc 1 55 0 is_stmt 1
+ 226 0038 FFF7FEFF 		bl	I2C_M_I2CMasterClearStatus
+  56:fram_logging.c **** 	
+  57:fram_logging.c **** 	err = I2C_M_I2CMasterReadBuf(FRAM_SLAVE_ADDR, &read_buf[0], len, I2C_M_I2C_MODE_COMPLETE_XFER);
+ 227              		.loc 1 57 0
+ 228 003c 3B1D     		adds	r3, r7, #4
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 6
+
+
+ 229 003e 1A88     		ldrh	r2, [r3]
+ 230 0040 3968     		ldr	r1, [r7]
+ 231 0042 0023     		movs	r3, #0
+ 232 0044 5020     		movs	r0, #80
+ 233 0046 FFF7FEFF 		bl	I2C_M_I2CMasterReadBuf
+ 234 004a 0200     		movs	r2, r0
+ 235 004c 0F23     		movs	r3, #15
+ 236 004e FB18     		adds	r3, r7, r3
+ 237 0050 1A70     		strb	r2, [r3]
+  58:fram_logging.c **** 				
+  59:fram_logging.c **** 	while(0u == (I2C_M_I2CMasterStatus() & I2C_M_I2C_MSTAT_RD_CMPLT))
+ 238              		.loc 1 59 0
+ 239 0052 C046     		nop
+ 240              	.L6:
+ 241              		.loc 1 59 0 is_stmt 0 discriminator 1
+ 242 0054 FFF7FEFF 		bl	I2C_M_I2CMasterStatus
+ 243 0058 0200     		movs	r2, r0
+ 244 005a 0123     		movs	r3, #1
+ 245 005c 1340     		ands	r3, r2
+ 246 005e F9D0     		beq	.L6
+  60:fram_logging.c **** 	{
+  61:fram_logging.c **** 	/* Wait until master complete reading */
+  62:fram_logging.c **** 	}
+  63:fram_logging.c **** 	
+  64:fram_logging.c **** 	/* Clear I2C master status */
+  65:fram_logging.c **** 	(void) I2C_M_I2CMasterClearStatus();
+ 247              		.loc 1 65 0 is_stmt 1
+ 248 0060 FFF7FEFF 		bl	I2C_M_I2CMasterClearStatus
+  66:fram_logging.c **** 	
+  67:fram_logging.c **** 	return(err);
+ 249              		.loc 1 67 0
+ 250 0064 0F23     		movs	r3, #15
+ 251 0066 FB18     		adds	r3, r7, r3
+ 252 0068 1B78     		ldrb	r3, [r3]
+  68:fram_logging.c **** }
+ 253              		.loc 1 68 0
+ 254 006a 1800     		movs	r0, r3
+ 255 006c BD46     		mov	sp, r7
+ 256 006e 04B0     		add	sp, sp, #16
+ 257              		@ sp needed
+ 258 0070 80BD     		pop	{r7, pc}
+ 259              		.cfi_endproc
+ 260              	.LFE37:
+ 261              		.size	ReadFRAMData, .-ReadFRAMData
+ 262 0072 C046     		.section	.rodata
+ 263              		.align	2
+ 264              	.LC1:
+ 265 0000 44617461 		.ascii	"Data logged successfully \015\000"
+ 265      206C6F67 
+ 265      67656420 
+ 265      73756363 
+ 265      65737366 
+ 266 001b 00       		.align	2
+ 267              	.LC3:
+ 268 001c 44617461 		.ascii	"Data read back: \000"
+ 268      20726561 
+ 268      64206261 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 7
+
+
+ 268      636B3A20 
+ 268      00
+ 269 002d 000000   		.align	2
+ 270              	.LC5:
+ 271 0030 2000     		.ascii	" \000"
+ 272 0032 0000     		.align	2
+ 273              	.LC7:
+ 274 0034 0D0A00   		.ascii	"\015\012\000"
+ 275 0037 00       		.align	2
+ 276              	.LC9:
+ 277 0038 41646472 		.ascii	"Address reset\015\000"
+ 277      65737320 
+ 277      72657365 
+ 277      740D00
+ 278 0047 00       		.align	2
+ 279              	.LC11:
+ 280 0048 4D656D6F 		.ascii	"Memory full. Press r or R to reset the memory.\015\000"
+ 280      72792066 
+ 280      756C6C2E 
+ 280      20507265 
+ 280      73732072 
+ 281              		.section	.text.DataLogging,"ax",%progbits
+ 282              		.align	2
+ 283              		.global	DataLogging
+ 284              		.code	16
+ 285              		.thumb_func
+ 286              		.type	DataLogging, %function
+ 287              	DataLogging:
+ 288              	.LFB38:
+  69:fram_logging.c **** 
+  70:fram_logging.c **** void DataLogging(uint8 len, uint8* data_buf)
+  71:fram_logging.c **** {
+ 289              		.loc 1 71 0
+ 290              		.cfi_startproc
+ 291              		@ args = 0, pretend = 0, frame = 32
+ 292              		@ frame_needed = 1, uses_anonymous_args = 0
+ 293 0000 80B5     		push	{r7, lr}
+ 294              		.cfi_def_cfa_offset 8
+ 295              		.cfi_offset 7, -8
+ 296              		.cfi_offset 14, -4
+ 297 0002 88B0     		sub	sp, sp, #32
+ 298              		.cfi_def_cfa_offset 40
+ 299 0004 00AF     		add	r7, sp, #0
+ 300              		.cfi_def_cfa_register 7
+ 301 0006 0200     		movs	r2, r0
+ 302 0008 3960     		str	r1, [r7]
+ 303 000a FB1D     		adds	r3, r7, #7
+ 304 000c 1A70     		strb	r2, [r3]
+  72:fram_logging.c ****     uint8 read_buf[20];
+  73:fram_logging.c ****     uint8 temp;
+  74:fram_logging.c ****     uint16 temp1;
+  75:fram_logging.c ****     
+  76:fram_logging.c ****     if((addr + len) < FRAM_SIZE)
+ 305              		.loc 1 76 0
+ 306 000e FB1D     		adds	r3, r7, #7
+ 307 0010 1A78     		ldrb	r2, [r3]
+ 308 0012 374B     		ldr	r3, .L16
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 8
+
+
+ 309 0014 1B68     		ldr	r3, [r3]
+ 310 0016 D318     		adds	r3, r2, r3
+ 311 0018 364A     		ldr	r2, .L16+4
+ 312 001a 9342     		cmp	r3, r2
+ 313 001c 48D8     		bhi	.L9
+  77:fram_logging.c ****     {
+  78:fram_logging.c ****         addr = addr + len;
+ 314              		.loc 1 78 0
+ 315 001e FB1D     		adds	r3, r7, #7
+ 316 0020 1A78     		ldrb	r2, [r3]
+ 317 0022 334B     		ldr	r3, .L16
+ 318 0024 1B68     		ldr	r3, [r3]
+ 319 0026 D218     		adds	r2, r2, r3
+ 320 0028 314B     		ldr	r3, .L16
+ 321 002a 1A60     		str	r2, [r3]
+  79:fram_logging.c ****         WriteFRAMData(addr, data_buf, len);
+ 322              		.loc 1 79 0
+ 323 002c 304B     		ldr	r3, .L16
+ 324 002e 1B68     		ldr	r3, [r3]
+ 325 0030 98B2     		uxth	r0, r3
+ 326 0032 FB1D     		adds	r3, r7, #7
+ 327 0034 1B78     		ldrb	r3, [r3]
+ 328 0036 9AB2     		uxth	r2, r3
+ 329 0038 3B68     		ldr	r3, [r7]
+ 330 003a 1900     		movs	r1, r3
+ 331 003c FFF7FEFF 		bl	WriteFRAMData
+  80:fram_logging.c ****         printf("Data logged successfully \r\n");
+ 332              		.loc 1 80 0
+ 333 0040 2D4B     		ldr	r3, .L16+8
+ 334 0042 1800     		movs	r0, r3
+ 335 0044 FFF7FEFF 		bl	puts
+  81:fram_logging.c **** 	    ReadFRAMData(addr, read_buf, len);
+ 336              		.loc 1 81 0
+ 337 0048 294B     		ldr	r3, .L16
+ 338 004a 1B68     		ldr	r3, [r3]
+ 339 004c 98B2     		uxth	r0, r3
+ 340 004e FB1D     		adds	r3, r7, #7
+ 341 0050 1B78     		ldrb	r3, [r3]
+ 342 0052 9AB2     		uxth	r2, r3
+ 343 0054 0823     		movs	r3, #8
+ 344 0056 FB18     		adds	r3, r7, r3
+ 345 0058 1900     		movs	r1, r3
+ 346 005a FFF7FEFF 		bl	ReadFRAMData
+  82:fram_logging.c **** 	    printf("Data read back: ");
+ 347              		.loc 1 82 0
+ 348 005e 274B     		ldr	r3, .L16+12
+ 349 0060 1800     		movs	r0, r3
+ 350 0062 FFF7FEFF 		bl	printf
+  83:fram_logging.c ****         for(temp=0; temp<len; temp++)
+ 351              		.loc 1 83 0
+ 352 0066 1F23     		movs	r3, #31
+ 353 0068 FB18     		adds	r3, r7, r3
+ 354 006a 0022     		movs	r2, #0
+ 355 006c 1A70     		strb	r2, [r3]
+ 356 006e 13E0     		b	.L10
+ 357              	.L11:
+  84:fram_logging.c ****         {
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 9
+
+
+  85:fram_logging.c **** 	        PrintHex(read_buf[temp]);
+ 358              		.loc 1 85 0 discriminator 3
+ 359 0070 1F23     		movs	r3, #31
+ 360 0072 FB18     		adds	r3, r7, r3
+ 361 0074 1B78     		ldrb	r3, [r3]
+ 362 0076 0822     		movs	r2, #8
+ 363 0078 BA18     		adds	r2, r7, r2
+ 364 007a D35C     		ldrb	r3, [r2, r3]
+ 365 007c 1800     		movs	r0, r3
+ 366 007e FFF7FEFF 		bl	PrintHex
+  86:fram_logging.c **** 	        UART_UartPutString(" ");
+ 367              		.loc 1 86 0 discriminator 3
+ 368 0082 1F4B     		ldr	r3, .L16+16
+ 369 0084 1800     		movs	r0, r3
+ 370 0086 FFF7FEFF 		bl	UART_UartPutString
+  83:fram_logging.c ****         for(temp=0; temp<len; temp++)
+ 371              		.loc 1 83 0 discriminator 3
+ 372 008a 1F23     		movs	r3, #31
+ 373 008c FB18     		adds	r3, r7, r3
+ 374 008e 1A78     		ldrb	r2, [r3]
+ 375 0090 1F23     		movs	r3, #31
+ 376 0092 FB18     		adds	r3, r7, r3
+ 377 0094 0132     		adds	r2, r2, #1
+ 378 0096 1A70     		strb	r2, [r3]
+ 379              	.L10:
+  83:fram_logging.c ****         for(temp=0; temp<len; temp++)
+ 380              		.loc 1 83 0 is_stmt 0 discriminator 1
+ 381 0098 1F23     		movs	r3, #31
+ 382 009a FA18     		adds	r2, r7, r3
+ 383 009c FB1D     		adds	r3, r7, #7
+ 384 009e 1278     		ldrb	r2, [r2]
+ 385 00a0 1B78     		ldrb	r3, [r3]
+ 386 00a2 9A42     		cmp	r2, r3
+ 387 00a4 E4D3     		bcc	.L11
+  87:fram_logging.c ****         }
+  88:fram_logging.c ****         UART_UartPutString("\r\n");
+ 388              		.loc 1 88 0 is_stmt 1
+ 389 00a6 174B     		ldr	r3, .L16+20
+ 390 00a8 1800     		movs	r0, r3
+ 391 00aa FFF7FEFF 		bl	UART_UartPutString
+  89:fram_logging.c ****     }
+  90:fram_logging.c ****     else
+  91:fram_logging.c ****     {
+  92:fram_logging.c ****         temp = (uint8)UART_UartGetChar();
+  93:fram_logging.c ****         if(temp == 'r' || temp == 'R')
+  94:fram_logging.c ****         {
+  95:fram_logging.c ****             printf("Address reset\r\n");
+  96:fram_logging.c ****             addr = 0;
+  97:fram_logging.c ****         }
+  98:fram_logging.c ****         else
+  99:fram_logging.c ****         {
+ 100:fram_logging.c ****             printf("Memory full. Press r or R to reset the memory.\r\n");
+ 101:fram_logging.c ****         }
+ 102:fram_logging.c ****     }
+ 103:fram_logging.c **** }
+ 392              		.loc 1 103 0
+ 393 00ae 1BE0     		b	.L15
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 10
+
+
+ 394              	.L9:
+  92:fram_logging.c ****         if(temp == 'r' || temp == 'R')
+ 395              		.loc 1 92 0
+ 396 00b0 FFF7FEFF 		bl	UART_UartGetChar
+ 397 00b4 0200     		movs	r2, r0
+ 398 00b6 1F23     		movs	r3, #31
+ 399 00b8 FB18     		adds	r3, r7, r3
+ 400 00ba 1A70     		strb	r2, [r3]
+  93:fram_logging.c ****         {
+ 401              		.loc 1 93 0
+ 402 00bc 1F23     		movs	r3, #31
+ 403 00be FB18     		adds	r3, r7, r3
+ 404 00c0 1B78     		ldrb	r3, [r3]
+ 405 00c2 722B     		cmp	r3, #114
+ 406 00c4 04D0     		beq	.L13
+  93:fram_logging.c ****         {
+ 407              		.loc 1 93 0 is_stmt 0 discriminator 1
+ 408 00c6 1F23     		movs	r3, #31
+ 409 00c8 FB18     		adds	r3, r7, r3
+ 410 00ca 1B78     		ldrb	r3, [r3]
+ 411 00cc 522B     		cmp	r3, #82
+ 412 00ce 07D1     		bne	.L14
+ 413              	.L13:
+  95:fram_logging.c ****             addr = 0;
+ 414              		.loc 1 95 0 is_stmt 1
+ 415 00d0 0D4B     		ldr	r3, .L16+24
+ 416 00d2 1800     		movs	r0, r3
+ 417 00d4 FFF7FEFF 		bl	puts
+  96:fram_logging.c ****         }
+ 418              		.loc 1 96 0
+ 419 00d8 054B     		ldr	r3, .L16
+ 420 00da 0022     		movs	r2, #0
+ 421 00dc 1A60     		str	r2, [r3]
+ 422              		.loc 1 103 0
+ 423 00de 03E0     		b	.L15
+ 424              	.L14:
+ 100:fram_logging.c ****         }
+ 425              		.loc 1 100 0
+ 426 00e0 0A4B     		ldr	r3, .L16+28
+ 427 00e2 1800     		movs	r0, r3
+ 428 00e4 FFF7FEFF 		bl	puts
+ 429              	.L15:
+ 430              		.loc 1 103 0
+ 431 00e8 C046     		nop
+ 432 00ea BD46     		mov	sp, r7
+ 433 00ec 08B0     		add	sp, sp, #32
+ 434              		@ sp needed
+ 435 00ee 80BD     		pop	{r7, pc}
+ 436              	.L17:
+ 437              		.align	2
+ 438              	.L16:
+ 439 00f0 00000000 		.word	addr
+ 440 00f4 FFFF0100 		.word	131071
+ 441 00f8 00000000 		.word	.LC1
+ 442 00fc 1C000000 		.word	.LC3
+ 443 0100 30000000 		.word	.LC5
+ 444 0104 34000000 		.word	.LC7
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 11
+
+
+ 445 0108 38000000 		.word	.LC9
+ 446 010c 48000000 		.word	.LC11
+ 447              		.cfi_endproc
+ 448              	.LFE38:
+ 449              		.size	DataLogging, .-DataLogging
+ 450              		.text
+ 451              	.Letext0:
+ 452              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 453              		.file 3 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 454              		.file 4 "Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 455              		.section	.debug_info,"",%progbits
+ 456              	.Ldebug_info0:
+ 457 0000 DF030000 		.4byte	0x3df
+ 458 0004 0400     		.2byte	0x4
+ 459 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 460 000a 04       		.byte	0x4
+ 461 000b 01       		.uleb128 0x1
+ 462 000c 8A040000 		.4byte	.LASF102
+ 463 0010 0C       		.byte	0xc
+ 464 0011 5A0A0000 		.4byte	.LASF103
+ 465 0015 CA010000 		.4byte	.LASF104
+ 466 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 467 001d 00000000 		.4byte	0
+ 468 0021 00000000 		.4byte	.Ldebug_line0
+ 469 0025 02       		.uleb128 0x2
+ 470 0026 01       		.byte	0x1
+ 471 0027 06       		.byte	0x6
+ 472 0028 14060000 		.4byte	.LASF0
+ 473 002c 02       		.uleb128 0x2
+ 474 002d 01       		.byte	0x1
+ 475 002e 08       		.byte	0x8
+ 476 002f AA050000 		.4byte	.LASF1
+ 477 0033 02       		.uleb128 0x2
+ 478 0034 02       		.byte	0x2
+ 479 0035 05       		.byte	0x5
+ 480 0036 76000000 		.4byte	.LASF2
+ 481 003a 02       		.uleb128 0x2
+ 482 003b 02       		.byte	0x2
+ 483 003c 07       		.byte	0x7
+ 484 003d 51070000 		.4byte	.LASF3
+ 485 0041 02       		.uleb128 0x2
+ 486 0042 04       		.byte	0x4
+ 487 0043 05       		.byte	0x5
+ 488 0044 B2030000 		.4byte	.LASF4
+ 489 0048 02       		.uleb128 0x2
+ 490 0049 04       		.byte	0x4
+ 491 004a 07       		.byte	0x7
+ 492 004b A5060000 		.4byte	.LASF5
+ 493 004f 02       		.uleb128 0x2
+ 494 0050 08       		.byte	0x8
+ 495 0051 05       		.byte	0x5
+ 496 0052 F5000000 		.4byte	.LASF6
+ 497 0056 02       		.uleb128 0x2
+ 498 0057 08       		.byte	0x8
+ 499 0058 07       		.byte	0x7
+ 500 0059 7A030000 		.4byte	.LASF7
+ 501 005d 03       		.uleb128 0x3
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 12
+
+
+ 502 005e 04       		.byte	0x4
+ 503 005f 05       		.byte	0x5
+ 504 0060 696E7400 		.ascii	"int\000"
+ 505 0064 02       		.uleb128 0x2
+ 506 0065 04       		.byte	0x4
+ 507 0066 07       		.byte	0x7
+ 508 0067 7D060000 		.4byte	.LASF8
+ 509 006b 04       		.uleb128 0x4
+ 510 006c ED070000 		.4byte	.LASF9
+ 511 0070 02       		.byte	0x2
+ 512 0071 E401     		.2byte	0x1e4
+ 513 0073 2C000000 		.4byte	0x2c
+ 514 0077 04       		.uleb128 0x4
+ 515 0078 9F010000 		.4byte	.LASF10
+ 516 007c 02       		.byte	0x2
+ 517 007d E501     		.2byte	0x1e5
+ 518 007f 3A000000 		.4byte	0x3a
+ 519 0083 04       		.uleb128 0x4
+ 520 0084 63080000 		.4byte	.LASF11
+ 521 0088 02       		.byte	0x2
+ 522 0089 E601     		.2byte	0x1e6
+ 523 008b 48000000 		.4byte	0x48
+ 524 008f 02       		.uleb128 0x2
+ 525 0090 04       		.byte	0x4
+ 526 0091 04       		.byte	0x4
+ 527 0092 11030000 		.4byte	.LASF12
+ 528 0096 02       		.uleb128 0x2
+ 529 0097 08       		.byte	0x8
+ 530 0098 04       		.byte	0x4
+ 531 0099 B8080000 		.4byte	.LASF13
+ 532 009d 02       		.uleb128 0x2
+ 533 009e 01       		.byte	0x1
+ 534 009f 08       		.byte	0x8
+ 535 00a0 CC070000 		.4byte	.LASF14
+ 536 00a4 02       		.uleb128 0x2
+ 537 00a5 08       		.byte	0x8
+ 538 00a6 04       		.byte	0x4
+ 539 00a7 66050000 		.4byte	.LASF15
+ 540 00ab 02       		.uleb128 0x2
+ 541 00ac 04       		.byte	0x4
+ 542 00ad 07       		.byte	0x7
+ 543 00ae CB000000 		.4byte	.LASF16
+ 544 00b2 05       		.uleb128 0x5
+ 545 00b3 01       		.byte	0x1
+ 546 00b4 2C000000 		.4byte	0x2c
+ 547 00b8 03       		.byte	0x3
+ 548 00b9 4D01     		.2byte	0x14d
+ 549 00bb 70020000 		.4byte	0x270
+ 550 00bf 06       		.uleb128 0x6
+ 551 00c0 A1020000 		.4byte	.LASF17
+ 552 00c4 00       		.byte	0
+ 553 00c5 06       		.uleb128 0x6
+ 554 00c6 39010000 		.4byte	.LASF18
+ 555 00ca 01       		.byte	0x1
+ 556 00cb 06       		.uleb128 0x6
+ 557 00cc 9C090000 		.4byte	.LASF19
+ 558 00d0 02       		.byte	0x2
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 13
+
+
+ 559 00d1 06       		.uleb128 0x6
+ 560 00d2 3E090000 		.4byte	.LASF20
+ 561 00d6 03       		.byte	0x3
+ 562 00d7 06       		.uleb128 0x6
+ 563 00d8 03010000 		.4byte	.LASF21
+ 564 00dc 04       		.byte	0x4
+ 565 00dd 06       		.uleb128 0x6
+ 566 00de 48040000 		.4byte	.LASF22
+ 567 00e2 05       		.byte	0x5
+ 568 00e3 06       		.uleb128 0x6
+ 569 00e4 3E000000 		.4byte	.LASF23
+ 570 00e8 06       		.byte	0x6
+ 571 00e9 06       		.uleb128 0x6
+ 572 00ea F3070000 		.4byte	.LASF24
+ 573 00ee 20       		.byte	0x20
+ 574 00ef 06       		.uleb128 0x6
+ 575 00f0 B7060000 		.4byte	.LASF25
+ 576 00f4 21       		.byte	0x21
+ 577 00f5 06       		.uleb128 0x6
+ 578 00f6 00000000 		.4byte	.LASF26
+ 579 00fa 22       		.byte	0x22
+ 580 00fb 06       		.uleb128 0x6
+ 581 00fc 64040000 		.4byte	.LASF27
+ 582 0100 23       		.byte	0x23
+ 583 0101 06       		.uleb128 0x6
+ 584 0102 61060000 		.4byte	.LASF28
+ 585 0106 24       		.byte	0x24
+ 586 0107 06       		.uleb128 0x6
+ 587 0108 80000000 		.4byte	.LASF29
+ 588 010c 25       		.byte	0x25
+ 589 010d 06       		.uleb128 0x6
+ 590 010e 16090000 		.4byte	.LASF30
+ 591 0112 26       		.byte	0x26
+ 592 0113 06       		.uleb128 0x6
+ 593 0114 F1030000 		.4byte	.LASF31
+ 594 0118 27       		.byte	0x27
+ 595 0119 06       		.uleb128 0x6
+ 596 011a 240B0000 		.4byte	.LASF32
+ 597 011e 28       		.byte	0x28
+ 598 011f 06       		.uleb128 0x6
+ 599 0120 F9060000 		.4byte	.LASF33
+ 600 0124 29       		.byte	0x29
+ 601 0125 06       		.uleb128 0x6
+ 602 0126 7C070000 		.4byte	.LASF34
+ 603 012a 2A       		.byte	0x2a
+ 604 012b 06       		.uleb128 0x6
+ 605 012c 8D0A0000 		.4byte	.LASF35
+ 606 0130 2B       		.byte	0x2b
+ 607 0131 06       		.uleb128 0x6
+ 608 0132 A6010000 		.4byte	.LASF36
+ 609 0136 2C       		.byte	0x2c
+ 610 0137 06       		.uleb128 0x6
+ 611 0138 30030000 		.4byte	.LASF37
+ 612 013c 2D       		.byte	0x2d
+ 613 013d 06       		.uleb128 0x6
+ 614 013e F3090000 		.4byte	.LASF38
+ 615 0142 2E       		.byte	0x2e
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 14
+
+
+ 616 0143 06       		.uleb128 0x6
+ 617 0144 7C0B0000 		.4byte	.LASF39
+ 618 0148 2F       		.byte	0x2f
+ 619 0149 06       		.uleb128 0x6
+ 620 014a D4000000 		.4byte	.LASF40
+ 621 014e 30       		.byte	0x30
+ 622 014f 06       		.uleb128 0x6
+ 623 0150 42050000 		.4byte	.LASF41
+ 624 0154 31       		.byte	0x31
+ 625 0155 06       		.uleb128 0x6
+ 626 0156 59030000 		.4byte	.LASF42
+ 627 015a 32       		.byte	0x32
+ 628 015b 06       		.uleb128 0x6
+ 629 015c A5070000 		.4byte	.LASF43
+ 630 0160 33       		.byte	0x33
+ 631 0161 06       		.uleb128 0x6
+ 632 0162 16070000 		.4byte	.LASF44
+ 633 0166 34       		.byte	0x34
+ 634 0167 06       		.uleb128 0x6
+ 635 0168 F0080000 		.4byte	.LASF45
+ 636 016c 35       		.byte	0x35
+ 637 016d 06       		.uleb128 0x6
+ 638 016e 91030000 		.4byte	.LASF46
+ 639 0172 36       		.byte	0x36
+ 640 0173 06       		.uleb128 0x6
+ 641 0174 4C010000 		.4byte	.LASF47
+ 642 0178 37       		.byte	0x37
+ 643 0179 06       		.uleb128 0x6
+ 644 017a 57000000 		.4byte	.LASF48
+ 645 017e 40       		.byte	0x40
+ 646 017f 06       		.uleb128 0x6
+ 647 0180 8A060000 		.4byte	.LASF49
+ 648 0184 41       		.byte	0x41
+ 649 0185 06       		.uleb128 0x6
+ 650 0186 9A000000 		.4byte	.LASF50
+ 651 018a 42       		.byte	0x42
+ 652 018b 06       		.uleb128 0x6
+ 653 018c 81010000 		.4byte	.LASF51
+ 654 0190 43       		.byte	0x43
+ 655 0191 06       		.uleb128 0x6
+ 656 0192 170A0000 		.4byte	.LASF52
+ 657 0196 44       		.byte	0x44
+ 658 0197 06       		.uleb128 0x6
+ 659 0198 AE090000 		.4byte	.LASF53
+ 660 019c 45       		.byte	0x45
+ 661 019d 06       		.uleb128 0x6
+ 662 019e 18010000 		.4byte	.LASF54
+ 663 01a2 46       		.byte	0x46
+ 664 01a3 06       		.uleb128 0x6
+ 665 01a4 F6050000 		.4byte	.LASF55
+ 666 01a8 47       		.byte	0x47
+ 667 01a9 06       		.uleb128 0x6
+ 668 01aa 3A060000 		.4byte	.LASF56
+ 669 01ae 48       		.byte	0x48
+ 670 01af 06       		.uleb128 0x6
+ 671 01b0 17030000 		.4byte	.LASF57
+ 672 01b4 49       		.byte	0x49
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 15
+
+
+ 673 01b5 06       		.uleb128 0x6
+ 674 01b6 17080000 		.4byte	.LASF58
+ 675 01ba 4A       		.byte	0x4a
+ 676 01bb 06       		.uleb128 0x6
+ 677 01bc 3B0A0000 		.4byte	.LASF59
+ 678 01c0 4B       		.byte	0x4b
+ 679 01c1 06       		.uleb128 0x6
+ 680 01c2 20060000 		.4byte	.LASF60
+ 681 01c6 4C       		.byte	0x4c
+ 682 01c7 06       		.uleb128 0x6
+ 683 01c8 24000000 		.4byte	.LASF61
+ 684 01cc 4D       		.byte	0x4d
+ 685 01cd 06       		.uleb128 0x6
+ 686 01ce D5090000 		.4byte	.LASF62
+ 687 01d2 4E       		.byte	0x4e
+ 688 01d3 06       		.uleb128 0x6
+ 689 01d4 B8050000 		.4byte	.LASF63
+ 690 01d8 4F       		.byte	0x4f
+ 691 01d9 06       		.uleb128 0x6
+ 692 01da 050B0000 		.4byte	.LASF64
+ 693 01de 50       		.byte	0x50
+ 694 01df 06       		.uleb128 0x6
+ 695 01e0 44080000 		.4byte	.LASF65
+ 696 01e4 51       		.byte	0x51
+ 697 01e5 06       		.uleb128 0x6
+ 698 01e6 27040000 		.4byte	.LASF66
+ 699 01ea 52       		.byte	0x52
+ 700 01eb 06       		.uleb128 0x6
+ 701 01ec BB030000 		.4byte	.LASF67
+ 702 01f0 53       		.byte	0x53
+ 703 01f1 06       		.uleb128 0x6
+ 704 01f2 80020000 		.4byte	.LASF68
+ 705 01f6 54       		.byte	0x54
+ 706 01f7 06       		.uleb128 0x6
+ 707 01f8 460B0000 		.4byte	.LASF69
+ 708 01fc 55       		.byte	0x55
+ 709 01fd 06       		.uleb128 0x6
+ 710 01fe E30A0000 		.4byte	.LASF70
+ 711 0202 56       		.byte	0x56
+ 712 0203 06       		.uleb128 0x6
+ 713 0204 BA0A0000 		.4byte	.LASF71
+ 714 0208 57       		.byte	0x57
+ 715 0209 06       		.uleb128 0x6
+ 716 020a 2E070000 		.4byte	.LASF72
+ 717 020e 58       		.byte	0x58
+ 718 020f 06       		.uleb128 0x6
+ 719 0210 84050000 		.4byte	.LASF73
+ 720 0214 70       		.byte	0x70
+ 721 0215 06       		.uleb128 0x6
+ 722 0216 76090000 		.4byte	.LASF74
+ 723 021a 71       		.byte	0x71
+ 724 021b 06       		.uleb128 0x6
+ 725 021c D1070000 		.4byte	.LASF75
+ 726 0220 72       		.byte	0x72
+ 727 0221 06       		.uleb128 0x6
+ 728 0222 C9020000 		.4byte	.LASF76
+ 729 0226 73       		.byte	0x73
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 16
+
+
+ 730 0227 06       		.uleb128 0x6
+ 731 0228 24050000 		.4byte	.LASF77
+ 732 022c 74       		.byte	0x74
+ 733 022d 06       		.uleb128 0x6
+ 734 022e D8060000 		.4byte	.LASF78
+ 735 0232 75       		.byte	0x75
+ 736 0233 06       		.uleb128 0x6
+ 737 0234 E7020000 		.4byte	.LASF79
+ 738 0238 76       		.byte	0x76
+ 739 0239 06       		.uleb128 0x6
+ 740 023a 57090000 		.4byte	.LASF80
+ 741 023e 77       		.byte	0x77
+ 742 023f 06       		.uleb128 0x6
+ 743 0240 95080000 		.4byte	.LASF81
+ 744 0244 78       		.byte	0x78
+ 745 0245 06       		.uleb128 0x6
+ 746 0246 CD080000 		.4byte	.LASF82
+ 747 024a 79       		.byte	0x79
+ 748 024b 06       		.uleb128 0x6
+ 749 024c 690A0000 		.4byte	.LASF83
+ 750 0250 7A       		.byte	0x7a
+ 751 0251 06       		.uleb128 0x6
+ 752 0252 6A080000 		.4byte	.LASF84
+ 753 0256 FA       		.byte	0xfa
+ 754 0257 06       		.uleb128 0x6
+ 755 0258 D7050000 		.4byte	.LASF85
+ 756 025c FB       		.byte	0xfb
+ 757 025d 06       		.uleb128 0x6
+ 758 025e 6A0B0000 		.4byte	.LASF86
+ 759 0262 FC       		.byte	0xfc
+ 760 0263 06       		.uleb128 0x6
+ 761 0264 64070000 		.4byte	.LASF87
+ 762 0268 FD       		.byte	0xfd
+ 763 0269 06       		.uleb128 0x6
+ 764 026a AC0A0000 		.4byte	.LASF88
+ 765 026e FF       		.byte	0xff
+ 766 026f 00       		.byte	0
+ 767 0270 07       		.uleb128 0x7
+ 768 0271 04       		.byte	0x4
+ 769 0272 6B000000 		.4byte	0x6b
+ 770 0276 05       		.uleb128 0x5
+ 771 0277 01       		.byte	0x1
+ 772 0278 2C000000 		.4byte	0x2c
+ 773 027c 04       		.byte	0x4
+ 774 027d 9308     		.2byte	0x893
+ 775 027f A2020000 		.4byte	0x2a2
+ 776 0283 06       		.uleb128 0x6
+ 777 0284 35080000 		.4byte	.LASF89
+ 778 0288 00       		.byte	0
+ 779 0289 06       		.uleb128 0x6
+ 780 028a E1030000 		.4byte	.LASF90
+ 781 028e 01       		.byte	0x1
+ 782 028f 06       		.uleb128 0x6
+ 783 0290 B8000000 		.4byte	.LASF91
+ 784 0294 02       		.byte	0x2
+ 785 0295 06       		.uleb128 0x6
+ 786 0296 10040000 		.4byte	.LASF92
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 17
+
+
+ 787 029a 02       		.byte	0x2
+ 788 029b 06       		.uleb128 0x6
+ 789 029c B8020000 		.4byte	.LASF93
+ 790 02a0 03       		.byte	0x3
+ 791 02a1 00       		.byte	0
+ 792 02a2 08       		.uleb128 0x8
+ 793 02a3 BF080000 		.4byte	.LASF97
+ 794 02a7 01       		.byte	0x1
+ 795 02a8 13       		.byte	0x13
+ 796 02a9 6B000000 		.4byte	0x6b
+ 797 02ad 00000000 		.4byte	.LFB36
+ 798 02b1 F6000000 		.4byte	.LFE36-.LFB36
+ 799 02b5 01       		.uleb128 0x1
+ 800 02b6 9C       		.byte	0x9c
+ 801 02b7 03030000 		.4byte	0x303
+ 802 02bb 09       		.uleb128 0x9
+ 803 02bc 72050000 		.4byte	.LASF94
+ 804 02c0 01       		.byte	0x1
+ 805 02c1 13       		.byte	0x13
+ 806 02c2 77000000 		.4byte	0x77
+ 807 02c6 02       		.uleb128 0x2
+ 808 02c7 91       		.byte	0x91
+ 809 02c8 56       		.sleb128 -42
+ 810 02c9 09       		.uleb128 0x9
+ 811 02ca CE060000 		.4byte	.LASF95
+ 812 02ce 01       		.byte	0x1
+ 813 02cf 13       		.byte	0x13
+ 814 02d0 70020000 		.4byte	0x270
+ 815 02d4 02       		.uleb128 0x2
+ 816 02d5 91       		.byte	0x91
+ 817 02d6 50       		.sleb128 -48
+ 818 02d7 0A       		.uleb128 0xa
+ 819 02d8 6C656E00 		.ascii	"len\000"
+ 820 02dc 01       		.byte	0x1
+ 821 02dd 13       		.byte	0x13
+ 822 02de 77000000 		.4byte	0x77
+ 823 02e2 02       		.uleb128 0x2
+ 824 02e3 91       		.byte	0x91
+ 825 02e4 54       		.sleb128 -44
+ 826 02e5 0B       		.uleb128 0xb
+ 827 02e6 65727200 		.ascii	"err\000"
+ 828 02ea 01       		.byte	0x1
+ 829 02eb 15       		.byte	0x15
+ 830 02ec 6B000000 		.4byte	0x6b
+ 831 02f0 02       		.uleb128 0x2
+ 832 02f1 91       		.byte	0x91
+ 833 02f2 5F       		.sleb128 -33
+ 834 02f3 0C       		.uleb128 0xc
+ 835 02f4 08030000 		.4byte	.LASF96
+ 836 02f8 01       		.byte	0x1
+ 837 02f9 16       		.byte	0x16
+ 838 02fa 03030000 		.4byte	0x303
+ 839 02fe 03       		.uleb128 0x3
+ 840 02ff 91       		.byte	0x91
+ 841 0300 60       		.sleb128 -32
+ 842 0301 06       		.byte	0x6
+ 843 0302 00       		.byte	0
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 18
+
+
+ 844 0303 0D       		.uleb128 0xd
+ 845 0304 6B000000 		.4byte	0x6b
+ 846 0308 16030000 		.4byte	0x316
+ 847 030c 0E       		.uleb128 0xe
+ 848 030d AB000000 		.4byte	0xab
+ 849 0311 03       		.uleb128 0x3
+ 850 0312 91       		.byte	0x91
+ 851 0313 64       		.sleb128 -28
+ 852 0314 06       		.byte	0x6
+ 853 0315 00       		.byte	0
+ 854 0316 08       		.uleb128 0x8
+ 855 0317 88080000 		.4byte	.LASF98
+ 856 031b 01       		.byte	0x1
+ 857 031c 2B       		.byte	0x2b
+ 858 031d 6B000000 		.4byte	0x6b
+ 859 0321 00000000 		.4byte	.LFB37
+ 860 0325 72000000 		.4byte	.LFE37-.LFB37
+ 861 0329 01       		.uleb128 0x1
+ 862 032a 9C       		.byte	0x9c
+ 863 032b 68030000 		.4byte	0x368
+ 864 032f 09       		.uleb128 0x9
+ 865 0330 72050000 		.4byte	.LASF94
+ 866 0334 01       		.byte	0x1
+ 867 0335 2B       		.byte	0x2b
+ 868 0336 77000000 		.4byte	0x77
+ 869 033a 02       		.uleb128 0x2
+ 870 033b 91       		.byte	0x91
+ 871 033c 6E       		.sleb128 -18
+ 872 033d 09       		.uleb128 0x9
+ 873 033e 7B050000 		.4byte	.LASF99
+ 874 0342 01       		.byte	0x1
+ 875 0343 2B       		.byte	0x2b
+ 876 0344 70020000 		.4byte	0x270
+ 877 0348 02       		.uleb128 0x2
+ 878 0349 91       		.byte	0x91
+ 879 034a 68       		.sleb128 -24
+ 880 034b 0A       		.uleb128 0xa
+ 881 034c 6C656E00 		.ascii	"len\000"
+ 882 0350 01       		.byte	0x1
+ 883 0351 2B       		.byte	0x2b
+ 884 0352 77000000 		.4byte	0x77
+ 885 0356 02       		.uleb128 0x2
+ 886 0357 91       		.byte	0x91
+ 887 0358 6C       		.sleb128 -20
+ 888 0359 0B       		.uleb128 0xb
+ 889 035a 65727200 		.ascii	"err\000"
+ 890 035e 01       		.byte	0x1
+ 891 035f 2D       		.byte	0x2d
+ 892 0360 6B000000 		.4byte	0x6b
+ 893 0364 02       		.uleb128 0x2
+ 894 0365 91       		.byte	0x91
+ 895 0366 77       		.sleb128 -9
+ 896 0367 00       		.byte	0
+ 897 0368 0F       		.uleb128 0xf
+ 898 0369 18050000 		.4byte	.LASF105
+ 899 036d 01       		.byte	0x1
+ 900 036e 46       		.byte	0x46
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 19
+
+
+ 901 036f 00000000 		.4byte	.LFB38
+ 902 0373 10010000 		.4byte	.LFE38-.LFB38
+ 903 0377 01       		.uleb128 0x1
+ 904 0378 9C       		.byte	0x9c
+ 905 0379 C1030000 		.4byte	0x3c1
+ 906 037d 0A       		.uleb128 0xa
+ 907 037e 6C656E00 		.ascii	"len\000"
+ 908 0382 01       		.byte	0x1
+ 909 0383 46       		.byte	0x46
+ 910 0384 6B000000 		.4byte	0x6b
+ 911 0388 02       		.uleb128 0x2
+ 912 0389 91       		.byte	0x91
+ 913 038a 5F       		.sleb128 -33
+ 914 038b 09       		.uleb128 0x9
+ 915 038c 0D090000 		.4byte	.LASF100
+ 916 0390 01       		.byte	0x1
+ 917 0391 46       		.byte	0x46
+ 918 0392 70020000 		.4byte	0x270
+ 919 0396 02       		.uleb128 0x2
+ 920 0397 91       		.byte	0x91
+ 921 0398 58       		.sleb128 -40
+ 922 0399 0C       		.uleb128 0xc
+ 923 039a 7B050000 		.4byte	.LASF99
+ 924 039e 01       		.byte	0x1
+ 925 039f 48       		.byte	0x48
+ 926 03a0 C1030000 		.4byte	0x3c1
+ 927 03a4 02       		.uleb128 0x2
+ 928 03a5 91       		.byte	0x91
+ 929 03a6 60       		.sleb128 -32
+ 930 03a7 0C       		.uleb128 0xc
+ 931 03a8 71000000 		.4byte	.LASF101
+ 932 03ac 01       		.byte	0x1
+ 933 03ad 49       		.byte	0x49
+ 934 03ae 6B000000 		.4byte	0x6b
+ 935 03b2 02       		.uleb128 0x2
+ 936 03b3 91       		.byte	0x91
+ 937 03b4 77       		.sleb128 -9
+ 938 03b5 10       		.uleb128 0x10
+ 939 03b6 350A0000 		.4byte	.LASF106
+ 940 03ba 01       		.byte	0x1
+ 941 03bb 4A       		.byte	0x4a
+ 942 03bc 77000000 		.4byte	0x77
+ 943 03c0 00       		.byte	0
+ 944 03c1 0D       		.uleb128 0xd
+ 945 03c2 6B000000 		.4byte	0x6b
+ 946 03c6 D1030000 		.4byte	0x3d1
+ 947 03ca 11       		.uleb128 0x11
+ 948 03cb AB000000 		.4byte	0xab
+ 949 03cf 13       		.byte	0x13
+ 950 03d0 00       		.byte	0
+ 951 03d1 12       		.uleb128 0x12
+ 952 03d2 DC030000 		.4byte	.LASF107
+ 953 03d6 01       		.byte	0x1
+ 954 03d7 11       		.byte	0x11
+ 955 03d8 83000000 		.4byte	0x83
+ 956 03dc 05       		.uleb128 0x5
+ 957 03dd 03       		.byte	0x3
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 20
+
+
+ 958 03de 00000000 		.4byte	addr
+ 959 03e2 00       		.byte	0
+ 960              		.section	.debug_abbrev,"",%progbits
+ 961              	.Ldebug_abbrev0:
+ 962 0000 01       		.uleb128 0x1
+ 963 0001 11       		.uleb128 0x11
+ 964 0002 01       		.byte	0x1
+ 965 0003 25       		.uleb128 0x25
+ 966 0004 0E       		.uleb128 0xe
+ 967 0005 13       		.uleb128 0x13
+ 968 0006 0B       		.uleb128 0xb
+ 969 0007 03       		.uleb128 0x3
+ 970 0008 0E       		.uleb128 0xe
+ 971 0009 1B       		.uleb128 0x1b
+ 972 000a 0E       		.uleb128 0xe
+ 973 000b 55       		.uleb128 0x55
+ 974 000c 17       		.uleb128 0x17
+ 975 000d 11       		.uleb128 0x11
+ 976 000e 01       		.uleb128 0x1
+ 977 000f 10       		.uleb128 0x10
+ 978 0010 17       		.uleb128 0x17
+ 979 0011 00       		.byte	0
+ 980 0012 00       		.byte	0
+ 981 0013 02       		.uleb128 0x2
+ 982 0014 24       		.uleb128 0x24
+ 983 0015 00       		.byte	0
+ 984 0016 0B       		.uleb128 0xb
+ 985 0017 0B       		.uleb128 0xb
+ 986 0018 3E       		.uleb128 0x3e
+ 987 0019 0B       		.uleb128 0xb
+ 988 001a 03       		.uleb128 0x3
+ 989 001b 0E       		.uleb128 0xe
+ 990 001c 00       		.byte	0
+ 991 001d 00       		.byte	0
+ 992 001e 03       		.uleb128 0x3
+ 993 001f 24       		.uleb128 0x24
+ 994 0020 00       		.byte	0
+ 995 0021 0B       		.uleb128 0xb
+ 996 0022 0B       		.uleb128 0xb
+ 997 0023 3E       		.uleb128 0x3e
+ 998 0024 0B       		.uleb128 0xb
+ 999 0025 03       		.uleb128 0x3
+ 1000 0026 08       		.uleb128 0x8
+ 1001 0027 00       		.byte	0
+ 1002 0028 00       		.byte	0
+ 1003 0029 04       		.uleb128 0x4
+ 1004 002a 16       		.uleb128 0x16
+ 1005 002b 00       		.byte	0
+ 1006 002c 03       		.uleb128 0x3
+ 1007 002d 0E       		.uleb128 0xe
+ 1008 002e 3A       		.uleb128 0x3a
+ 1009 002f 0B       		.uleb128 0xb
+ 1010 0030 3B       		.uleb128 0x3b
+ 1011 0031 05       		.uleb128 0x5
+ 1012 0032 49       		.uleb128 0x49
+ 1013 0033 13       		.uleb128 0x13
+ 1014 0034 00       		.byte	0
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 21
+
+
+ 1015 0035 00       		.byte	0
+ 1016 0036 05       		.uleb128 0x5
+ 1017 0037 04       		.uleb128 0x4
+ 1018 0038 01       		.byte	0x1
+ 1019 0039 0B       		.uleb128 0xb
+ 1020 003a 0B       		.uleb128 0xb
+ 1021 003b 49       		.uleb128 0x49
+ 1022 003c 13       		.uleb128 0x13
+ 1023 003d 3A       		.uleb128 0x3a
+ 1024 003e 0B       		.uleb128 0xb
+ 1025 003f 3B       		.uleb128 0x3b
+ 1026 0040 05       		.uleb128 0x5
+ 1027 0041 01       		.uleb128 0x1
+ 1028 0042 13       		.uleb128 0x13
+ 1029 0043 00       		.byte	0
+ 1030 0044 00       		.byte	0
+ 1031 0045 06       		.uleb128 0x6
+ 1032 0046 28       		.uleb128 0x28
+ 1033 0047 00       		.byte	0
+ 1034 0048 03       		.uleb128 0x3
+ 1035 0049 0E       		.uleb128 0xe
+ 1036 004a 1C       		.uleb128 0x1c
+ 1037 004b 0B       		.uleb128 0xb
+ 1038 004c 00       		.byte	0
+ 1039 004d 00       		.byte	0
+ 1040 004e 07       		.uleb128 0x7
+ 1041 004f 0F       		.uleb128 0xf
+ 1042 0050 00       		.byte	0
+ 1043 0051 0B       		.uleb128 0xb
+ 1044 0052 0B       		.uleb128 0xb
+ 1045 0053 49       		.uleb128 0x49
+ 1046 0054 13       		.uleb128 0x13
+ 1047 0055 00       		.byte	0
+ 1048 0056 00       		.byte	0
+ 1049 0057 08       		.uleb128 0x8
+ 1050 0058 2E       		.uleb128 0x2e
+ 1051 0059 01       		.byte	0x1
+ 1052 005a 3F       		.uleb128 0x3f
+ 1053 005b 19       		.uleb128 0x19
+ 1054 005c 03       		.uleb128 0x3
+ 1055 005d 0E       		.uleb128 0xe
+ 1056 005e 3A       		.uleb128 0x3a
+ 1057 005f 0B       		.uleb128 0xb
+ 1058 0060 3B       		.uleb128 0x3b
+ 1059 0061 0B       		.uleb128 0xb
+ 1060 0062 27       		.uleb128 0x27
+ 1061 0063 19       		.uleb128 0x19
+ 1062 0064 49       		.uleb128 0x49
+ 1063 0065 13       		.uleb128 0x13
+ 1064 0066 11       		.uleb128 0x11
+ 1065 0067 01       		.uleb128 0x1
+ 1066 0068 12       		.uleb128 0x12
+ 1067 0069 06       		.uleb128 0x6
+ 1068 006a 40       		.uleb128 0x40
+ 1069 006b 18       		.uleb128 0x18
+ 1070 006c 9642     		.uleb128 0x2116
+ 1071 006e 19       		.uleb128 0x19
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 22
+
+
+ 1072 006f 01       		.uleb128 0x1
+ 1073 0070 13       		.uleb128 0x13
+ 1074 0071 00       		.byte	0
+ 1075 0072 00       		.byte	0
+ 1076 0073 09       		.uleb128 0x9
+ 1077 0074 05       		.uleb128 0x5
+ 1078 0075 00       		.byte	0
+ 1079 0076 03       		.uleb128 0x3
+ 1080 0077 0E       		.uleb128 0xe
+ 1081 0078 3A       		.uleb128 0x3a
+ 1082 0079 0B       		.uleb128 0xb
+ 1083 007a 3B       		.uleb128 0x3b
+ 1084 007b 0B       		.uleb128 0xb
+ 1085 007c 49       		.uleb128 0x49
+ 1086 007d 13       		.uleb128 0x13
+ 1087 007e 02       		.uleb128 0x2
+ 1088 007f 18       		.uleb128 0x18
+ 1089 0080 00       		.byte	0
+ 1090 0081 00       		.byte	0
+ 1091 0082 0A       		.uleb128 0xa
+ 1092 0083 05       		.uleb128 0x5
+ 1093 0084 00       		.byte	0
+ 1094 0085 03       		.uleb128 0x3
+ 1095 0086 08       		.uleb128 0x8
+ 1096 0087 3A       		.uleb128 0x3a
+ 1097 0088 0B       		.uleb128 0xb
+ 1098 0089 3B       		.uleb128 0x3b
+ 1099 008a 0B       		.uleb128 0xb
+ 1100 008b 49       		.uleb128 0x49
+ 1101 008c 13       		.uleb128 0x13
+ 1102 008d 02       		.uleb128 0x2
+ 1103 008e 18       		.uleb128 0x18
+ 1104 008f 00       		.byte	0
+ 1105 0090 00       		.byte	0
+ 1106 0091 0B       		.uleb128 0xb
+ 1107 0092 34       		.uleb128 0x34
+ 1108 0093 00       		.byte	0
+ 1109 0094 03       		.uleb128 0x3
+ 1110 0095 08       		.uleb128 0x8
+ 1111 0096 3A       		.uleb128 0x3a
+ 1112 0097 0B       		.uleb128 0xb
+ 1113 0098 3B       		.uleb128 0x3b
+ 1114 0099 0B       		.uleb128 0xb
+ 1115 009a 49       		.uleb128 0x49
+ 1116 009b 13       		.uleb128 0x13
+ 1117 009c 02       		.uleb128 0x2
+ 1118 009d 18       		.uleb128 0x18
+ 1119 009e 00       		.byte	0
+ 1120 009f 00       		.byte	0
+ 1121 00a0 0C       		.uleb128 0xc
+ 1122 00a1 34       		.uleb128 0x34
+ 1123 00a2 00       		.byte	0
+ 1124 00a3 03       		.uleb128 0x3
+ 1125 00a4 0E       		.uleb128 0xe
+ 1126 00a5 3A       		.uleb128 0x3a
+ 1127 00a6 0B       		.uleb128 0xb
+ 1128 00a7 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 23
+
+
+ 1129 00a8 0B       		.uleb128 0xb
+ 1130 00a9 49       		.uleb128 0x49
+ 1131 00aa 13       		.uleb128 0x13
+ 1132 00ab 02       		.uleb128 0x2
+ 1133 00ac 18       		.uleb128 0x18
+ 1134 00ad 00       		.byte	0
+ 1135 00ae 00       		.byte	0
+ 1136 00af 0D       		.uleb128 0xd
+ 1137 00b0 01       		.uleb128 0x1
+ 1138 00b1 01       		.byte	0x1
+ 1139 00b2 49       		.uleb128 0x49
+ 1140 00b3 13       		.uleb128 0x13
+ 1141 00b4 01       		.uleb128 0x1
+ 1142 00b5 13       		.uleb128 0x13
+ 1143 00b6 00       		.byte	0
+ 1144 00b7 00       		.byte	0
+ 1145 00b8 0E       		.uleb128 0xe
+ 1146 00b9 21       		.uleb128 0x21
+ 1147 00ba 00       		.byte	0
+ 1148 00bb 49       		.uleb128 0x49
+ 1149 00bc 13       		.uleb128 0x13
+ 1150 00bd 2F       		.uleb128 0x2f
+ 1151 00be 18       		.uleb128 0x18
+ 1152 00bf 00       		.byte	0
+ 1153 00c0 00       		.byte	0
+ 1154 00c1 0F       		.uleb128 0xf
+ 1155 00c2 2E       		.uleb128 0x2e
+ 1156 00c3 01       		.byte	0x1
+ 1157 00c4 3F       		.uleb128 0x3f
+ 1158 00c5 19       		.uleb128 0x19
+ 1159 00c6 03       		.uleb128 0x3
+ 1160 00c7 0E       		.uleb128 0xe
+ 1161 00c8 3A       		.uleb128 0x3a
+ 1162 00c9 0B       		.uleb128 0xb
+ 1163 00ca 3B       		.uleb128 0x3b
+ 1164 00cb 0B       		.uleb128 0xb
+ 1165 00cc 27       		.uleb128 0x27
+ 1166 00cd 19       		.uleb128 0x19
+ 1167 00ce 11       		.uleb128 0x11
+ 1168 00cf 01       		.uleb128 0x1
+ 1169 00d0 12       		.uleb128 0x12
+ 1170 00d1 06       		.uleb128 0x6
+ 1171 00d2 40       		.uleb128 0x40
+ 1172 00d3 18       		.uleb128 0x18
+ 1173 00d4 9642     		.uleb128 0x2116
+ 1174 00d6 19       		.uleb128 0x19
+ 1175 00d7 01       		.uleb128 0x1
+ 1176 00d8 13       		.uleb128 0x13
+ 1177 00d9 00       		.byte	0
+ 1178 00da 00       		.byte	0
+ 1179 00db 10       		.uleb128 0x10
+ 1180 00dc 34       		.uleb128 0x34
+ 1181 00dd 00       		.byte	0
+ 1182 00de 03       		.uleb128 0x3
+ 1183 00df 0E       		.uleb128 0xe
+ 1184 00e0 3A       		.uleb128 0x3a
+ 1185 00e1 0B       		.uleb128 0xb
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 24
+
+
+ 1186 00e2 3B       		.uleb128 0x3b
+ 1187 00e3 0B       		.uleb128 0xb
+ 1188 00e4 49       		.uleb128 0x49
+ 1189 00e5 13       		.uleb128 0x13
+ 1190 00e6 00       		.byte	0
+ 1191 00e7 00       		.byte	0
+ 1192 00e8 11       		.uleb128 0x11
+ 1193 00e9 21       		.uleb128 0x21
+ 1194 00ea 00       		.byte	0
+ 1195 00eb 49       		.uleb128 0x49
+ 1196 00ec 13       		.uleb128 0x13
+ 1197 00ed 2F       		.uleb128 0x2f
+ 1198 00ee 0B       		.uleb128 0xb
+ 1199 00ef 00       		.byte	0
+ 1200 00f0 00       		.byte	0
+ 1201 00f1 12       		.uleb128 0x12
+ 1202 00f2 34       		.uleb128 0x34
+ 1203 00f3 00       		.byte	0
+ 1204 00f4 03       		.uleb128 0x3
+ 1205 00f5 0E       		.uleb128 0xe
+ 1206 00f6 3A       		.uleb128 0x3a
+ 1207 00f7 0B       		.uleb128 0xb
+ 1208 00f8 3B       		.uleb128 0x3b
+ 1209 00f9 0B       		.uleb128 0xb
+ 1210 00fa 49       		.uleb128 0x49
+ 1211 00fb 13       		.uleb128 0x13
+ 1212 00fc 3F       		.uleb128 0x3f
+ 1213 00fd 19       		.uleb128 0x19
+ 1214 00fe 02       		.uleb128 0x2
+ 1215 00ff 18       		.uleb128 0x18
+ 1216 0100 00       		.byte	0
+ 1217 0101 00       		.byte	0
+ 1218 0102 00       		.byte	0
+ 1219              		.section	.debug_aranges,"",%progbits
+ 1220 0000 2C000000 		.4byte	0x2c
+ 1221 0004 0200     		.2byte	0x2
+ 1222 0006 00000000 		.4byte	.Ldebug_info0
+ 1223 000a 04       		.byte	0x4
+ 1224 000b 00       		.byte	0
+ 1225 000c 0000     		.2byte	0
+ 1226 000e 0000     		.2byte	0
+ 1227 0010 00000000 		.4byte	.LFB36
+ 1228 0014 F6000000 		.4byte	.LFE36-.LFB36
+ 1229 0018 00000000 		.4byte	.LFB37
+ 1230 001c 72000000 		.4byte	.LFE37-.LFB37
+ 1231 0020 00000000 		.4byte	.LFB38
+ 1232 0024 10010000 		.4byte	.LFE38-.LFB38
+ 1233 0028 00000000 		.4byte	0
+ 1234 002c 00000000 		.4byte	0
+ 1235              		.section	.debug_ranges,"",%progbits
+ 1236              	.Ldebug_ranges0:
+ 1237 0000 00000000 		.4byte	.LFB36
+ 1238 0004 F6000000 		.4byte	.LFE36
+ 1239 0008 00000000 		.4byte	.LFB37
+ 1240 000c 72000000 		.4byte	.LFE37
+ 1241 0010 00000000 		.4byte	.LFB38
+ 1242 0014 10010000 		.4byte	.LFE38
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 25
+
+
+ 1243 0018 00000000 		.4byte	0
+ 1244 001c 00000000 		.4byte	0
+ 1245              		.section	.debug_line,"",%progbits
+ 1246              	.Ldebug_line0:
+ 1247 0000 FF000000 		.section	.debug_str,"MS",%progbits,1
+ 1247      02006E00 
+ 1247      00000201 
+ 1247      FB0E0D00 
+ 1247      01010101 
+ 1248              	.LASF26:
+ 1249 0000 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 1249      455F4556 
+ 1249      545F4741 
+ 1249      505F5041 
+ 1249      53534B45 
+ 1250              	.LASF61:
+ 1251 0024 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 1251      455F4556 
+ 1251      545F4741 
+ 1251      5454435F 
+ 1251      57524954 
+ 1252              	.LASF23:
+ 1253 003e 4359424C 		.ascii	"CYBLE_EVT_MEMORY_REQUEST\000"
+ 1253      455F4556 
+ 1253      545F4D45 
+ 1253      4D4F5259 
+ 1253      5F524551 
+ 1254              	.LASF48:
+ 1255 0057 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 1255      455F4556 
+ 1255      545F4741 
+ 1255      5454435F 
+ 1255      4552524F 
+ 1256              	.LASF101:
+ 1257 0071 74656D70 		.ascii	"temp\000"
+ 1257      00
+ 1258              	.LASF2:
+ 1259 0076 73686F72 		.ascii	"short int\000"
+ 1259      7420696E 
+ 1259      7400
+ 1260              	.LASF29:
+ 1261 0080 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 1261      455F4556 
+ 1261      545F4741 
+ 1261      505F4155 
+ 1261      54485F46 
+ 1262              	.LASF50:
+ 1263 009a 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 1263      455F4556 
+ 1263      545F4741 
+ 1263      54545F44 
+ 1263      4953434F 
+ 1264              	.LASF91:
+ 1265 00b8 4359424C 		.ascii	"CYBLE_SRVI_CUSTOMS\000"
+ 1265      455F5352 
+ 1265      56495F43 
+ 1265      5553544F 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 26
+
+
+ 1265      4D5300
+ 1266              	.LASF16:
+ 1267 00cb 73697A65 		.ascii	"sizetype\000"
+ 1267      74797065 
+ 1267      00
+ 1268              	.LASF40:
+ 1269 00d4 4359424C 		.ascii	"CYBLE_EVT_GAP_DATA_LENGTH_CHANGE\000"
+ 1269      455F4556 
+ 1269      545F4741 
+ 1269      505F4441 
+ 1269      54415F4C 
+ 1270              	.LASF6:
+ 1271 00f5 6C6F6E67 		.ascii	"long long int\000"
+ 1271      206C6F6E 
+ 1271      6720696E 
+ 1271      7400
+ 1272              	.LASF21:
+ 1273 0103 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 1273      455F4556 
+ 1273      545F4843 
+ 1273      495F5354 
+ 1273      41545553 
+ 1274              	.LASF54:
+ 1275 0118 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 1275      455F4556 
+ 1275      545F4741 
+ 1275      5454435F 
+ 1275      52454144 
+ 1276              	.LASF18:
+ 1277 0139 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 1277      455F4556 
+ 1277      545F5354 
+ 1277      41434B5F 
+ 1277      4F4E00
+ 1278              	.LASF47:
+ 1279 014c 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_LOC_P256_KEYS_GEN_AND_SET_COMPLET"
+ 1279      455F4556 
+ 1279      545F4741 
+ 1279      505F534D 
+ 1279      505F4C4F 
+ 1280 017f 4500     		.ascii	"E\000"
+ 1281              	.LASF51:
+ 1282 0181 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 1282      455F4556 
+ 1282      545F4741 
+ 1282      5454535F 
+ 1282      58434E48 
+ 1283              	.LASF10:
+ 1284 019f 75696E74 		.ascii	"uint16\000"
+ 1284      313600
+ 1285              	.LASF36:
+ 1286 01a6 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 1286      455F4556 
+ 1286      545F4741 
+ 1286      505F4B45 
+ 1286      59494E46 
+ 1287              	.LASF104:
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 27
+
+
+ 1288 01ca 433A5C55 		.ascii	"C:\\Users\\Benakapoi\\Downloads\\PSoC-4-BLE-master\\"
+ 1288      73657273 
+ 1288      5C42656E 
+ 1288      616B6170 
+ 1288      6F695C44 
+ 1289 01f9 50536F43 		.ascii	"PSoC-4-BLE-master\\100_Projects_in_100_Days\\Day020"
+ 1289      2D342D42 
+ 1289      4C452D6D 
+ 1289      61737465 
+ 1289      725C3130 
+ 1290 022a 5F424C45 		.ascii	"_BLE_UART\\UART_to_BLE_central\\Archive\\2\\UART_to"
+ 1290      5F554152 
+ 1290      545C5541 
+ 1290      52545F74 
+ 1290      6F5F424C 
+ 1291 0259 5F424C45 		.ascii	"_BLE_central\\UART_to_BLE_central.cydsn\000"
+ 1291      5F63656E 
+ 1291      7472616C 
+ 1291      5C554152 
+ 1291      545F746F 
+ 1292              	.LASF68:
+ 1293 0280 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 1293      455F4556 
+ 1293      545F4741 
+ 1293      5454535F 
+ 1293      48414E44 
+ 1294              	.LASF17:
+ 1295 02a1 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 1295      455F4556 
+ 1295      545F484F 
+ 1295      53545F49 
+ 1295      4E56414C 
+ 1296              	.LASF93:
+ 1297 02b8 4359424C 		.ascii	"CYBLE_SRVI_COUNT\000"
+ 1297      455F5352 
+ 1297      56495F43 
+ 1297      4F554E54 
+ 1297      00
+ 1298              	.LASF76:
+ 1299 02c9 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 1299      455F4556 
+ 1299      545F4C32 
+ 1299      4341505F 
+ 1299      43424643 
+ 1300              	.LASF79:
+ 1301 02e7 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 1301      455F4556 
+ 1301      545F4C32 
+ 1301      4341505F 
+ 1301      43424643 
+ 1302              	.LASF96:
+ 1303 0308 74656D70 		.ascii	"temp_buf\000"
+ 1303      5F627566 
+ 1303      00
+ 1304              	.LASF12:
+ 1305 0311 666C6F61 		.ascii	"float\000"
+ 1305      7400
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 28
+
+
+ 1306              	.LASF57:
+ 1307 0317 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 1307      455F4556 
+ 1307      545F4741 
+ 1307      5454435F 
+ 1307      52454144 
+ 1308              	.LASF37:
+ 1309 0330 4359424C 		.ascii	"CYBLE_EVT_GAP_NUMERIC_COMPARISON_REQUEST\000"
+ 1309      455F4556 
+ 1309      545F4741 
+ 1309      505F4E55 
+ 1309      4D455249 
+ 1310              	.LASF42:
+ 1311 0359 4359424C 		.ascii	"CYBLE_EVT_GAPC_DIRECT_ADV_REPORT\000"
+ 1311      455F4556 
+ 1311      545F4741 
+ 1311      50435F44 
+ 1311      49524543 
+ 1312              	.LASF7:
+ 1313 037a 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1313      206C6F6E 
+ 1313      6720756E 
+ 1313      7369676E 
+ 1313      65642069 
+ 1314              	.LASF46:
+ 1315 0391 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ_REPLY_ERR\000"
+ 1315      455F4556 
+ 1315      545F4741 
+ 1315      505F4155 
+ 1315      54485F52 
+ 1316              	.LASF4:
+ 1317 03b2 6C6F6E67 		.ascii	"long int\000"
+ 1317      20696E74 
+ 1317      00
+ 1318              	.LASF67:
+ 1319 03bb 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 1319      455F4556 
+ 1319      545F4741 
+ 1319      5454435F 
+ 1319      48414E44 
+ 1320              	.LASF107:
+ 1321 03dc 61646472 		.ascii	"addr\000"
+ 1321      00
+ 1322              	.LASF90:
+ 1323 03e1 4359424C 		.ascii	"CYBLE_SRVI_GATT\000"
+ 1323      455F5352 
+ 1323      56495F47 
+ 1323      41545400 
+ 1324              	.LASF31:
+ 1325 03f1 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 1325      455F4556 
+ 1325      545F4741 
+ 1325      505F4445 
+ 1325      56494345 
+ 1326              	.LASF92:
+ 1327 0410 4359424C 		.ascii	"CYBLE_SRVI_CUSTOMS_END\000"
+ 1327      455F5352 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 29
+
+
+ 1327      56495F43 
+ 1327      5553544F 
+ 1327      4D535F45 
+ 1328              	.LASF66:
+ 1329 0427 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 1329      455F4556 
+ 1329      545F4741 
+ 1329      5454435F 
+ 1329      48414E44 
+ 1330              	.LASF22:
+ 1331 0448 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 1331      455F4556 
+ 1331      545F5354 
+ 1331      41434B5F 
+ 1331      42555359 
+ 1332              	.LASF27:
+ 1333 0464 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 1333      455F4556 
+ 1333      545F4741 
+ 1333      505F5041 
+ 1333      53534B45 
+ 1334              	.LASF102:
+ 1335 048a 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1335      43313120 
+ 1335      352E342E 
+ 1335      31203230 
+ 1335      31363036 
+ 1336 04bd 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 1336      20726576 
+ 1336      6973696F 
+ 1336      6E203233 
+ 1336      37373135 
+ 1337 04f0 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1337      66756E63 
+ 1337      74696F6E 
+ 1337      2D736563 
+ 1337      74696F6E 
+ 1338              	.LASF105:
+ 1339 0518 44617461 		.ascii	"DataLogging\000"
+ 1339      4C6F6767 
+ 1339      696E6700 
+ 1340              	.LASF77:
+ 1341 0524 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 1341      455F4556 
+ 1341      545F4C32 
+ 1341      4341505F 
+ 1341      43424643 
+ 1342              	.LASF41:
+ 1343 0542 4359424C 		.ascii	"CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\000"
+ 1343      455F4556 
+ 1343      545F4741 
+ 1343      505F454E 
+ 1343      48414E43 
+ 1344              	.LASF15:
+ 1345 0566 6C6F6E67 		.ascii	"long double\000"
+ 1345      20646F75 
+ 1345      626C6500 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 30
+
+
+ 1346              	.LASF94:
+ 1347 0572 61646472 		.ascii	"addr_buf\000"
+ 1347      5F627566 
+ 1347      00
+ 1348              	.LASF99:
+ 1349 057b 72656164 		.ascii	"read_buf\000"
+ 1349      5F627566 
+ 1349      00
+ 1350              	.LASF73:
+ 1351 0584 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 1351      455F4556 
+ 1351      545F4C32 
+ 1351      4341505F 
+ 1351      434F4E4E 
+ 1352              	.LASF1:
+ 1353 05aa 756E7369 		.ascii	"unsigned char\000"
+ 1353      676E6564 
+ 1353      20636861 
+ 1353      7200
+ 1354              	.LASF63:
+ 1355 05b8 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 1355      455F4556 
+ 1355      545F4741 
+ 1355      5454535F 
+ 1355      50524550 
+ 1356              	.LASF85:
+ 1357 05d7 4359424C 		.ascii	"CYBLE_EVT_LE_PING_AUTH_TIMEOUT\000"
+ 1357      455F4556 
+ 1357      545F4C45 
+ 1357      5F50494E 
+ 1357      475F4155 
+ 1358              	.LASF55:
+ 1359 05f6 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 1359      455F4556 
+ 1359      545F4741 
+ 1359      5454435F 
+ 1359      46494E44 
+ 1360              	.LASF0:
+ 1361 0614 7369676E 		.ascii	"signed char\000"
+ 1361      65642063 
+ 1361      68617200 
+ 1362              	.LASF60:
+ 1363 0620 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 1363      455F4556 
+ 1363      545F4741 
+ 1363      5454535F 
+ 1363      57524954 
+ 1364              	.LASF56:
+ 1365 063a 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 1365      455F4556 
+ 1365      545F4741 
+ 1365      5454435F 
+ 1365      46494E44 
+ 1366              	.LASF28:
+ 1367 0661 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 1367      455F4556 
+ 1367      545F4741 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 31
+
+
+ 1367      505F4155 
+ 1367      54485F43 
+ 1368              	.LASF8:
+ 1369 067d 756E7369 		.ascii	"unsigned int\000"
+ 1369      676E6564 
+ 1369      20696E74 
+ 1369      00
+ 1370              	.LASF49:
+ 1371 068a 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 1371      455F4556 
+ 1371      545F4741 
+ 1371      54545F43 
+ 1371      4F4E4E45 
+ 1372              	.LASF5:
+ 1373 06a5 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1373      20756E73 
+ 1373      69676E65 
+ 1373      6420696E 
+ 1373      7400
+ 1374              	.LASF25:
+ 1375 06b7 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 1375      455F4556 
+ 1375      545F4741 
+ 1375      505F4155 
+ 1375      54485F52 
+ 1376              	.LASF95:
+ 1377 06ce 77726974 		.ascii	"write_buf\000"
+ 1377      655F6275 
+ 1377      6600
+ 1378              	.LASF78:
+ 1379 06d8 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 1379      455F4556 
+ 1379      545F4C32 
+ 1379      4341505F 
+ 1379      43424643 
+ 1380              	.LASF33:
+ 1381 06f9 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 1381      455F4556 
+ 1381      545F4741 
+ 1381      505F454E 
+ 1381      43525950 
+ 1382              	.LASF44:
+ 1383 0716 4359424C 		.ascii	"CYBLE_EVT_GAP_CONN_ESTB\000"
+ 1383      455F4556 
+ 1383      545F4741 
+ 1383      505F434F 
+ 1383      4E4E5F45 
+ 1384              	.LASF72:
+ 1385 072e 4359424C 		.ascii	"CYBLE_EVT_GATTC_LONG_PROCEDURE_END\000"
+ 1385      455F4556 
+ 1385      545F4741 
+ 1385      5454435F 
+ 1385      4C4F4E47 
+ 1386              	.LASF3:
+ 1387 0751 73686F72 		.ascii	"short unsigned int\000"
+ 1387      7420756E 
+ 1387      7369676E 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 32
+
+
+ 1387      65642069 
+ 1387      6E7400
+ 1388              	.LASF87:
+ 1389 0764 4359424C 		.ascii	"CYBLE_EVT_FLASH_CORRUPT\000"
+ 1389      455F4556 
+ 1389      545F464C 
+ 1389      4153485F 
+ 1389      434F5252 
+ 1390              	.LASF34:
+ 1391 077c 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 1391      455F4556 
+ 1391      545F4741 
+ 1391      505F434F 
+ 1391      4E4E4543 
+ 1392              	.LASF43:
+ 1393 07a5 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO\000"
+ 1393      455F4556 
+ 1393      545F4741 
+ 1393      505F534D 
+ 1393      505F4E45 
+ 1394              	.LASF14:
+ 1395 07cc 63686172 		.ascii	"char\000"
+ 1395      00
+ 1396              	.LASF75:
+ 1397 07d1 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 1397      455F4556 
+ 1397      545F4C32 
+ 1397      4341505F 
+ 1397      434F4D4D 
+ 1398              	.LASF9:
+ 1399 07ed 75696E74 		.ascii	"uint8\000"
+ 1399      3800
+ 1400              	.LASF24:
+ 1401 07f3 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 1401      455F4556 
+ 1401      545F4741 
+ 1401      50435F53 
+ 1401      43414E5F 
+ 1402              	.LASF58:
+ 1403 0817 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 1403      455F4556 
+ 1403      545F4741 
+ 1403      5454435F 
+ 1403      52454144 
+ 1404              	.LASF89:
+ 1405 0835 4359424C 		.ascii	"CYBLE_SRVI_GAP\000"
+ 1405      455F5352 
+ 1405      56495F47 
+ 1405      415000
+ 1406              	.LASF65:
+ 1407 0844 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 1407      455F4556 
+ 1407      545F4741 
+ 1407      5454435F 
+ 1407      45584543 
+ 1408              	.LASF11:
+ 1409 0863 75696E74 		.ascii	"uint32\000"
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 33
+
+
+ 1409      333200
+ 1410              	.LASF84:
+ 1411 086a 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 1411      455F4556 
+ 1411      545F5045 
+ 1411      4E44494E 
+ 1411      475F464C 
+ 1412              	.LASF98:
+ 1413 0888 52656164 		.ascii	"ReadFRAMData\000"
+ 1413      4652414D 
+ 1413      44617461 
+ 1413      00
+ 1414              	.LASF81:
+ 1415 0895 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 1415      455F4556 
+ 1415      545F4C32 
+ 1415      4341505F 
+ 1415      43424643 
+ 1416              	.LASF13:
+ 1417 08b8 646F7562 		.ascii	"double\000"
+ 1417      6C6500
+ 1418              	.LASF97:
+ 1419 08bf 57726974 		.ascii	"WriteFRAMData\000"
+ 1419      65465241 
+ 1419      4D446174 
+ 1419      6100
+ 1420              	.LASF82:
+ 1421 08cd 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 1421      455F4556 
+ 1421      545F4C32 
+ 1421      4341505F 
+ 1421      43424643 
+ 1422              	.LASF45:
+ 1423 08f0 4359424C 		.ascii	"CYBLE_EVT_GAP_SCAN_REQ_RECVD\000"
+ 1423      455F4556 
+ 1423      545F4741 
+ 1423      505F5343 
+ 1423      414E5F52 
+ 1424              	.LASF100:
+ 1425 090d 64617461 		.ascii	"data_buf\000"
+ 1425      5F627566 
+ 1425      00
+ 1426              	.LASF30:
+ 1427 0916 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 1427      455F4556 
+ 1427      545F4741 
+ 1427      50505F41 
+ 1427      44564552 
+ 1428              	.LASF20:
+ 1429 093e 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 1429      455F4556 
+ 1429      545F4841 
+ 1429      52445741 
+ 1429      52455F45 
+ 1430              	.LASF80:
+ 1431 0957 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 1431      455F4556 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 34
+
+
+ 1431      545F4C32 
+ 1431      4341505F 
+ 1431      43424643 
+ 1432              	.LASF74:
+ 1433 0976 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 1433      455F4556 
+ 1433      545F4C32 
+ 1433      4341505F 
+ 1433      434F4E4E 
+ 1434              	.LASF19:
+ 1435 099c 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 1435      455F4556 
+ 1435      545F5449 
+ 1435      4D454F55 
+ 1435      5400
+ 1436              	.LASF53:
+ 1437 09ae 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 1437      455F4556 
+ 1437      545F4741 
+ 1437      5454435F 
+ 1437      52454144 
+ 1438              	.LASF62:
+ 1439 09d5 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 1439      455F4556 
+ 1439      545F4741 
+ 1439      5454535F 
+ 1439      57524954 
+ 1440              	.LASF38:
+ 1441 09f3 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION\000"
+ 1441      455F4556 
+ 1441      545F4741 
+ 1441      505F4B45 
+ 1441      59505245 
+ 1442              	.LASF52:
+ 1443 0a17 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 1443      455F4556 
+ 1443      545F4741 
+ 1443      5454435F 
+ 1443      5843484E 
+ 1444              	.LASF106:
+ 1445 0a35 74656D70 		.ascii	"temp1\000"
+ 1445      3100
+ 1446              	.LASF59:
+ 1447 0a3b 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 1447      455F4556 
+ 1447      545F4741 
+ 1447      5454435F 
+ 1447      52454144 
+ 1448              	.LASF103:
+ 1449 0a5a 6672616D 		.ascii	"fram_logging.c\000"
+ 1449      5F6C6F67 
+ 1449      67696E67 
+ 1449      2E6300
+ 1450              	.LASF83:
+ 1451 0a69 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 1451      455F4556 
+ 1451      545F4C32 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccXKiYai.s 			page 35
+
+
+ 1451      4341505F 
+ 1451      43424643 
+ 1452              	.LASF35:
+ 1453 0a8d 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 1453      455F4556 
+ 1453      545F4741 
+ 1453      50435F53 
+ 1453      43414E5F 
+ 1454              	.LASF88:
+ 1455 0aac 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 1455      455F4556 
+ 1455      545F4D41 
+ 1455      5800
+ 1456              	.LASF71:
+ 1457 0aba 4359424C 		.ascii	"CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ\000"
+ 1457      455F4556 
+ 1457      545F4741 
+ 1457      5454535F 
+ 1457      52454144 
+ 1458              	.LASF70:
+ 1459 0ae3 4359424C 		.ascii	"CYBLE_EVT_GATTC_STOP_CMD_COMPLETE\000"
+ 1459      455F4556 
+ 1459      545F4741 
+ 1459      5454435F 
+ 1459      53544F50 
+ 1460              	.LASF64:
+ 1461 0b05 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 1461      455F4556 
+ 1461      545F4741 
+ 1461      5454535F 
+ 1461      45584543 
+ 1462              	.LASF32:
+ 1463 0b24 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 1463      455F4556 
+ 1463      545F4741 
+ 1463      505F4445 
+ 1463      56494345 
+ 1464              	.LASF69:
+ 1465 0b46 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 1465      455F4556 
+ 1465      545F4741 
+ 1465      5454535F 
+ 1465      44415441 
+ 1466              	.LASF86:
+ 1467 0b6a 4359424C 		.ascii	"CYBLE_EVT_HCI_PKT\000"
+ 1467      455F4556 
+ 1467      545F4843 
+ 1467      495F504B 
+ 1467      5400
+ 1468              	.LASF39:
+ 1469 0b7c 4359424C 		.ascii	"CYBLE_EVT_GAP_OOB_GENERATED_NOTIFICATION\000"
+ 1469      455F4556 
+ 1469      545F4741 
+ 1469      505F4F4F 
+ 1469      425F4745 
+ 1470              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

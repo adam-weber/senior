@@ -1,0 +1,8 @@
+C:/Users/Benakapoi/Desktop/PSoC-4-BLE-master/PSoC-4-BLE-master/100_Projects_in_100_Days/Day020_BLE_UART/UART_to_BLE_peripheral/UART_to_BLE_peripheral.cydsn/CortexM0/ARM_GCC_541/Debug/CyBootAsmGnu.o : C:/Users/Benakapoi/Desktop/PSoC-4-BLE-master/PSoC-4-BLE-master/100_Projects_in_100_Days/Day020_BLE_UART/UART_to_BLE_peripheral/UART_to_BLE_peripheral.cydsn/Generated_Source/PSoC4/CyBootAsmGnu.s C:/Users/Benakapoi/Desktop/PSoC-4-BLE-master/PSoC-4-BLE-master/100_Projects_in_100_Days/Day020_BLE_UART/UART_to_BLE_peripheral/UART_to_BLE_peripheral.cydsn/Generated_Source/PSoC4/cydevicegnu_trm.inc C:/Users/Benakapoi/Desktop/PSoC-4-BLE-master/PSoC-4-BLE-master/100_Projects_in_100_Days/Day020_BLE_UART/UART_to_BLE_peripheral/UART_to_BLE_peripheral.cydsn/Generated_Source/PSoC4/cyfittergnu.inc 
+
+C:/Users/Benakapoi/Desktop/PSoC-4-BLE-master/PSoC-4-BLE-master/100_Projects_in_100_Days/Day020_BLE_UART/UART_to_BLE_peripheral/UART_to_BLE_peripheral.cydsn/Generated_Source/PSoC4/CyBootAsmGnu.s : 
+
+C:/Users/Benakapoi/Desktop/PSoC-4-BLE-master/PSoC-4-BLE-master/100_Projects_in_100_Days/Day020_BLE_UART/UART_to_BLE_peripheral/UART_to_BLE_peripheral.cydsn/Generated_Source/PSoC4/cydevicegnu_trm.inc : 
+
+C:/Users/Benakapoi/Desktop/PSoC-4-BLE-master/PSoC-4-BLE-master/100_Projects_in_100_Days/Day020_BLE_UART/UART_to_BLE_peripheral/UART_to_BLE_peripheral.cydsn/Generated_Source/PSoC4/cyfittergnu.inc : 
+

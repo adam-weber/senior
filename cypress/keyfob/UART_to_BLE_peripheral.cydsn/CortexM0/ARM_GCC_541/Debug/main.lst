@@ -1,0 +1,1039 @@
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.rodata
+  20              		.align	2
+  21              	.LC1:
+  22 0000 0A0D2A2A 		.ascii	"\012\015*******************************************"
+  22      2A2A2A2A 
+  22      2A2A2A2A 
+  22      2A2A2A2A 
+  22      2A2A2A2A 
+  23 002d 2A2A2A2A 		.ascii	"*****************\000"
+  23      2A2A2A2A 
+  23      2A2A2A2A 
+  23      2A2A2A2A 
+  23      2A00
+  24 003f 00       		.align	2
+  25              	.LC3:
+  26 0040 0A0D2A2A 		.ascii	"\012\015***************** BLE UART example project "
+  26      2A2A2A2A 
+  26      2A2A2A2A 
+  26      2A2A2A2A 
+  26      2A2A2A20 
+  27 006d 2A2A2A2A 		.ascii	"*****************\000"
+  27      2A2A2A2A 
+  27      2A2A2A2A 
+  27      2A2A2A2A 
+  27      2A00
+  28 007f 00       		.align	2
+  29              	.LC5:
+  30 0080 0A0D2A2A 		.ascii	"\012\015*******************************************"
+  30      2A2A2A2A 
+  30      2A2A2A2A 
+  30      2A2A2A2A 
+  30      2A2A2A2A 
+  31 00ad 2A2A2A2A 		.ascii	"*****************\012\015\000"
+  31      2A2A2A2A 
+  31      2A2A2A2A 
+  31      2A2A2A2A 
+  31      2A0A0D00 
+  32 00c1 000000   		.align	2
+  33              	.LC7:
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 2
+
+
+  34 00c4 0A0D4465 		.ascii	"\012\015Device role \011: PERIPHERAL\000"
+  34      76696365 
+  34      20726F6C 
+  34      6520093A 
+  34      20504552 
+  35              		.align	2
+  36              	.LC9:
+  37 00e0 0A0D4C6F 		.ascii	"\012\015Low Power Mode \011: DISABLED\000"
+  37      7720506F 
+  37      77657220 
+  37      4D6F6465 
+  37      20093A20 
+  38 00fd 000000   		.align	2
+  39              	.LC11:
+  40 0100 0A0D466C 		.ascii	"\012\015Flow Control \011: DISABLED\000"
+  40      6F772043 
+  40      6F6E7472 
+  40      6F6C2009 
+  40      3A204449 
+  41 011b 00       		.align	2
+  42              	.LC13:
+  43 011c 0A0D0909 		.ascii	"\012\015\011\011CyBle stack initilization FAILED!!!"
+  43      4379426C 
+  43      65207374 
+  43      61636B20 
+  43      696E6974 
+  44 0143 200A0D20 		.ascii	" \012\015 \000"
+  44      00
+  45              		.section	.text.main,"ax",%progbits
+  46              		.align	2
+  47              		.global	main
+  48              		.code	16
+  49              		.thumb_func
+  50              		.type	main, %function
+  51              	main:
+  52              	.LFB35:
+  53              		.file 1 "main.c"
+   1:main.c        **** /*******************************************************************************
+   2:main.c        **** * File Name: main.c
+   3:main.c        **** *
+   4:main.c        **** * Version: 1.0
+   5:main.c        **** *
+   6:main.c        **** * Description:
+   7:main.c        **** *  BLE example project that works as a BLE to UART bridge, using 
+   8:main.c        **** *  Cypress's BLE component APIs and application layer callback. 
+   9:main.c        **** *  This project demostrates a custom service usage for BLE to UART  
+  10:main.c        **** *  bridge in a PERIPHERAL role.
+  11:main.c        **** *
+  12:main.c        **** * References:
+  13:main.c        **** *  BLUETOOTH SPECIFICATION Version 4.1
+  14:main.c        **** *
+  15:main.c        **** * Hardware Dependency:
+  16:main.c        **** *  (1) CY8CKIT-042 BLE
+  17:main.c        **** *  (2) An external UART transciever (if flow control is needed) 
+  18:main.c        **** *
+  19:main.c        **** ********************************************************************************
+  20:main.c        **** * Copyright 2015, Cypress Semiconductor Corporation.  All rights reserved.
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 3
+
+
+  21:main.c        **** * You may use this file only in accordance with the license, terms, conditions,
+  22:main.c        **** * disclaimers, and limitations in the end user license agreement accompanying
+  23:main.c        **** * the software package with which this file was provided.
+  24:main.c        **** *******************************************************************************/
+  25:main.c        **** 
+  26:main.c        **** #include "main.h"
+  27:main.c        **** 
+  28:main.c        **** int main()
+  29:main.c        **** {
+  54              		.loc 1 29 0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 8
+  57              		@ frame_needed = 1, uses_anonymous_args = 0
+  58 0000 90B5     		push	{r4, r7, lr}
+  59              		.cfi_def_cfa_offset 12
+  60              		.cfi_offset 4, -12
+  61              		.cfi_offset 7, -8
+  62              		.cfi_offset 14, -4
+  63 0002 83B0     		sub	sp, sp, #12
+  64              		.cfi_def_cfa_offset 24
+  65 0004 00AF     		add	r7, sp, #0
+  66              		.cfi_def_cfa_register 7
+  30:main.c        ****     #ifdef LOW_POWER_MODE    
+  31:main.c        ****         CYBLE_LP_MODE_T         lpMode;
+  32:main.c        ****         CYBLE_BLESS_STATE_T     blessState;
+  33:main.c        ****     #endif
+  34:main.c        ****     
+  35:main.c        ****     CYBLE_API_RESULT_T      bleApiResult;
+  36:main.c        ****     
+  37:main.c        ****     CyGlobalIntEnable;
+  67              		.loc 1 37 0
+  68              		.syntax divided
+  69              	@ 37 "main.c" 1
+  70 0006 62B6     		CPSIE   i
+  71              	@ 0 "" 2
+  38:main.c        ****     
+  39:main.c        ****     /* Start UART and BLE component and display project information */
+  40:main.c        ****     UART_Start();   
+  72              		.loc 1 40 0
+  73              		.thumb
+  74              		.syntax unified
+  75 0008 FFF7FEFF 		bl	UART_Start
+  41:main.c        ****     bleApiResult = CyBle_Start(AppCallBack); 
+  76              		.loc 1 41 0
+  77 000c BC1D     		adds	r4, r7, #6
+  78 000e 184B     		ldr	r3, .L6
+  79 0010 1800     		movs	r0, r3
+  80 0012 FFF7FEFF 		bl	CyBle_Start
+  81 0016 0300     		movs	r3, r0
+  82 0018 2380     		strh	r3, [r4]
+  42:main.c        ****     
+  43:main.c        ****     if(bleApiResult == CYBLE_ERROR_OK)
+  83              		.loc 1 43 0
+  84 001a BB1D     		adds	r3, r7, #6
+  85 001c 1B88     		ldrh	r3, [r3]
+  86 001e 002B     		cmp	r3, #0
+  87 0020 1AD1     		bne	.L2
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 4
+
+
+  44:main.c        ****     {
+  45:main.c        ****         #ifdef PRINT_MESSAGE_LOG
+  46:main.c        ****             UART_UartPutString("\n\r************************************************************");
+  88              		.loc 1 46 0
+  89 0022 144B     		ldr	r3, .L6+4
+  90 0024 1800     		movs	r0, r3
+  91 0026 FFF7FEFF 		bl	UART_UartPutString
+  47:main.c        ****             UART_UartPutString("\n\r***************** BLE UART example project *****************");
+  92              		.loc 1 47 0
+  93 002a 134B     		ldr	r3, .L6+8
+  94 002c 1800     		movs	r0, r3
+  95 002e FFF7FEFF 		bl	UART_UartPutString
+  48:main.c        ****             UART_UartPutString("\n\r************************************************************\n\
+  96              		.loc 1 48 0
+  97 0032 124B     		ldr	r3, .L6+12
+  98 0034 1800     		movs	r0, r3
+  99 0036 FFF7FEFF 		bl	UART_UartPutString
+  49:main.c        ****             UART_UartPutString("\n\rDevice role \t: PERIPHERAL");
+ 100              		.loc 1 49 0
+ 101 003a 114B     		ldr	r3, .L6+16
+ 102 003c 1800     		movs	r0, r3
+ 103 003e FFF7FEFF 		bl	UART_UartPutString
+  50:main.c        ****             
+  51:main.c        ****             #ifdef LOW_POWER_MODE
+  52:main.c        ****                 UART_UartPutString("\n\rLow Power Mode \t: ENABLED");
+  53:main.c        ****             #else
+  54:main.c        ****                 UART_UartPutString("\n\rLow Power Mode \t: DISABLED");
+ 104              		.loc 1 54 0
+ 105 0042 104B     		ldr	r3, .L6+20
+ 106 0044 1800     		movs	r0, r3
+ 107 0046 FFF7FEFF 		bl	UART_UartPutString
+  55:main.c        ****             #endif
+  56:main.c        ****             
+  57:main.c        ****             #ifdef FLOW_CONTROL
+  58:main.c        ****                 UART_UartPutString("\n\rFlow Control \t: ENABLED");  
+  59:main.c        ****             #else
+  60:main.c        ****                 UART_UartPutString("\n\rFlow Control \t: DISABLED");
+ 108              		.loc 1 60 0
+ 109 004a 0F4B     		ldr	r3, .L6+24
+ 110 004c 1800     		movs	r0, r3
+ 111 004e FFF7FEFF 		bl	UART_UartPutString
+  61:main.c        ****             #endif
+  62:main.c        ****             
+  63:main.c        ****         #endif
+  64:main.c        ****     }
+  65:main.c        ****     else
+  66:main.c        ****     {
+  67:main.c        ****         #ifdef PRINT_MESSAGE_LOG   
+  68:main.c        ****             UART_UartPutString("\n\r\t\tCyBle stack initilization FAILED!!! \n\r ");
+  69:main.c        ****         #endif
+  70:main.c        ****         
+  71:main.c        ****         /* Enter infinite loop */
+  72:main.c        ****         while(1);
+  73:main.c        ****     }
+  74:main.c        ****     
+  75:main.c        ****     CyBle_ProcessEvents();
+ 112              		.loc 1 75 0
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 5
+
+
+ 113 0052 FFF7FEFF 		bl	CyBle_ProcessEvents
+ 114 0056 04E0     		b	.L5
+ 115              	.L2:
+  68:main.c        ****         #endif
+ 116              		.loc 1 68 0
+ 117 0058 0C4B     		ldr	r3, .L6+28
+ 118 005a 1800     		movs	r0, r3
+ 119 005c FFF7FEFF 		bl	UART_UartPutString
+ 120              	.L4:
+  72:main.c        ****     }
+ 121              		.loc 1 72 0 discriminator 1
+ 122 0060 FEE7     		b	.L4
+ 123              	.L5:
+  76:main.c        ****     
+  77:main.c        ****     /***************************************************************************
+  78:main.c        ****     * Main polling loop
+  79:main.c        ****     ***************************************************************************/
+  80:main.c        ****     while(1)
+  81:main.c        ****     {              
+  82:main.c        ****         #ifdef LOW_POWER_MODE
+  83:main.c        ****             
+  84:main.c        ****             if((CyBle_GetState() != CYBLE_STATE_INITIALIZING) && (CyBle_GetState() != CYBLE_STATE_D
+  85:main.c        ****             {
+  86:main.c        ****                 /* Enter DeepSleep mode between connection intervals */
+  87:main.c        ****                 
+  88:main.c        ****                 lpMode = CyBle_EnterLPM(CYBLE_BLESS_DEEPSLEEP);
+  89:main.c        ****                 CyGlobalIntDisable;
+  90:main.c        ****                 blessState = CyBle_GetBleSsState();
+  91:main.c        **** 
+  92:main.c        ****                 if(lpMode == CYBLE_BLESS_DEEPSLEEP) 
+  93:main.c        ****                 {   
+  94:main.c        ****                     if((blessState == CYBLE_BLESS_STATE_ECO_ON || blessState == CYBLE_BLESS_STATE_D
+  95:main.c        ****                             (UART_SpiUartGetTxBufferSize() + UART_GET_TX_FIFO_SR_VALID) == 0u)
+  96:main.c        ****                     {
+  97:main.c        ****                         EnableUartRxInt();
+  98:main.c        ****                         CySysPmSleep();
+  99:main.c        ****                         DisableUartRxInt();
+ 100:main.c        ****                     }
+ 101:main.c        ****                 }
+ 102:main.c        ****                 else
+ 103:main.c        ****                 {
+ 104:main.c        ****                     if((blessState != CYBLE_BLESS_STATE_EVENT_CLOSE) && \
+ 105:main.c        ****                             (UART_SpiUartGetTxBufferSize() + UART_GET_TX_FIFO_SR_VALID) == 0u)
+ 106:main.c        ****                     {
+ 107:main.c        ****                         EnableUartRxInt();
+ 108:main.c        ****                         CySysPmSleep();
+ 109:main.c        ****                         DisableUartRxInt();
+ 110:main.c        ****                     }
+ 111:main.c        ****                 }
+ 112:main.c        ****                 CyGlobalIntEnable;
+ 113:main.c        ****                 
+ 114:main.c        ****                 /* Handle advertising led blinking */
+ 115:main.c        ****                 HandleLeds();
+ 116:main.c        ****             }
+ 117:main.c        ****         #else
+ 118:main.c        ****             HandleLeds();
+ 124              		.loc 1 118 0 discriminator 1
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 6
+
+
+ 125 0062 FFF7FEFF 		bl	HandleLeds
+ 119:main.c        ****         #endif
+ 120:main.c        ****         
+ 121:main.c        ****         /*******************************************************************
+ 122:main.c        ****         *  Process all pending BLE events in the stack
+ 123:main.c        ****         *******************************************************************/       
+ 124:main.c        ****         HandleBleProcessing();
+ 126              		.loc 1 124 0 discriminator 1
+ 127 0066 FFF7FEFF 		bl	HandleBleProcessing
+ 125:main.c        ****         CyBle_ProcessEvents();
+ 128              		.loc 1 125 0 discriminator 1
+ 129 006a FFF7FEFF 		bl	CyBle_ProcessEvents
+ 126:main.c        ****     }
+ 130              		.loc 1 126 0 discriminator 1
+ 131 006e F8E7     		b	.L5
+ 132              	.L7:
+ 133              		.align	2
+ 134              	.L6:
+ 135 0070 00000000 		.word	AppCallBack
+ 136 0074 00000000 		.word	.LC1
+ 137 0078 40000000 		.word	.LC3
+ 138 007c 80000000 		.word	.LC5
+ 139 0080 C4000000 		.word	.LC7
+ 140 0084 E0000000 		.word	.LC9
+ 141 0088 00010000 		.word	.LC11
+ 142 008c 1C010000 		.word	.LC13
+ 143              		.cfi_endproc
+ 144              	.LFE35:
+ 145              		.size	main, .-main
+ 146              		.text
+ 147              	.Letext0:
+ 148              		.file 2 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 149              		.section	.debug_info,"",%progbits
+ 150              	.Ldebug_info0:
+ 151 0000 94010000 		.4byte	0x194
+ 152 0004 0400     		.2byte	0x4
+ 153 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 154 000a 04       		.byte	0x4
+ 155 000b 01       		.uleb128 0x1
+ 156 000c 0D030000 		.4byte	.LASF47
+ 157 0010 0C       		.byte	0xc
+ 158 0011 33050000 		.4byte	.LASF48
+ 159 0015 42010000 		.4byte	.LASF49
+ 160 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 161 001d 00000000 		.4byte	0
+ 162 0021 00000000 		.4byte	.Ldebug_line0
+ 163 0025 02       		.uleb128 0x2
+ 164 0026 01       		.byte	0x1
+ 165 0027 06       		.byte	0x6
+ 166 0028 BC050000 		.4byte	.LASF0
+ 167 002c 02       		.uleb128 0x2
+ 168 002d 01       		.byte	0x1
+ 169 002e 08       		.byte	0x8
+ 170 002f 7E020000 		.4byte	.LASF1
+ 171 0033 02       		.uleb128 0x2
+ 172 0034 02       		.byte	0x2
+ 173 0035 05       		.byte	0x5
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 7
+
+
+ 174 0036 67050000 		.4byte	.LASF2
+ 175 003a 02       		.uleb128 0x2
+ 176 003b 02       		.byte	0x2
+ 177 003c 07       		.byte	0x7
+ 178 003d FA020000 		.4byte	.LASF3
+ 179 0041 02       		.uleb128 0x2
+ 180 0042 04       		.byte	0x4
+ 181 0043 05       		.byte	0x5
+ 182 0044 94050000 		.4byte	.LASF4
+ 183 0048 02       		.uleb128 0x2
+ 184 0049 04       		.byte	0x4
+ 185 004a 07       		.byte	0x7
+ 186 004b CE020000 		.4byte	.LASF5
+ 187 004f 02       		.uleb128 0x2
+ 188 0050 08       		.byte	0x8
+ 189 0051 05       		.byte	0x5
+ 190 0052 25050000 		.4byte	.LASF6
+ 191 0056 02       		.uleb128 0x2
+ 192 0057 08       		.byte	0x8
+ 193 0058 07       		.byte	0x7
+ 194 0059 67020000 		.4byte	.LASF7
+ 195 005d 03       		.uleb128 0x3
+ 196 005e 04       		.byte	0x4
+ 197 005f 05       		.byte	0x5
+ 198 0060 696E7400 		.ascii	"int\000"
+ 199 0064 02       		.uleb128 0x2
+ 200 0065 04       		.byte	0x4
+ 201 0066 07       		.byte	0x7
+ 202 0067 80040000 		.4byte	.LASF8
+ 203 006b 02       		.uleb128 0x2
+ 204 006c 04       		.byte	0x4
+ 205 006d 04       		.byte	0x4
+ 206 006e 87000000 		.4byte	.LASF9
+ 207 0072 02       		.uleb128 0x2
+ 208 0073 08       		.byte	0x8
+ 209 0074 04       		.byte	0x4
+ 210 0075 11040000 		.4byte	.LASF10
+ 211 0079 02       		.uleb128 0x2
+ 212 007a 01       		.byte	0x1
+ 213 007b 08       		.byte	0x8
+ 214 007c A6040000 		.4byte	.LASF11
+ 215 0080 02       		.uleb128 0x2
+ 216 0081 08       		.byte	0x8
+ 217 0082 04       		.byte	0x4
+ 218 0083 B0050000 		.4byte	.LASF12
+ 219 0087 02       		.uleb128 0x2
+ 220 0088 04       		.byte	0x4
+ 221 0089 07       		.byte	0x7
+ 222 008a 1C050000 		.4byte	.LASF13
+ 223 008e 04       		.uleb128 0x4
+ 224 008f 02       		.byte	0x2
+ 225 0090 3A000000 		.4byte	0x3a
+ 226 0094 02       		.byte	0x2
+ 227 0095 0204     		.2byte	0x402
+ 228 0097 67010000 		.4byte	0x167
+ 229 009b 05       		.uleb128 0x5
+ 230 009c DE010000 		.4byte	.LASF14
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 8
+
+
+ 231 00a0 00       		.byte	0
+ 232 00a1 05       		.uleb128 0x5
+ 233 00a2 AB040000 		.4byte	.LASF15
+ 234 00a6 01       		.byte	0x1
+ 235 00a7 05       		.uleb128 0x5
+ 236 00a8 20020000 		.4byte	.LASF16
+ 237 00ac 02       		.byte	0x2
+ 238 00ad 05       		.uleb128 0x5
+ 239 00ae 1A000000 		.4byte	.LASF17
+ 240 00b2 03       		.byte	0x3
+ 241 00b3 05       		.uleb128 0x5
+ 242 00b4 71050000 		.4byte	.LASF18
+ 243 00b8 04       		.byte	0x4
+ 244 00b9 05       		.uleb128 0x5
+ 245 00ba 3D040000 		.4byte	.LASF19
+ 246 00be 05       		.byte	0x5
+ 247 00bf 05       		.uleb128 0x5
+ 248 00c0 E0020000 		.4byte	.LASF20
+ 249 00c4 06       		.byte	0x6
+ 250 00c5 05       		.uleb128 0x5
+ 251 00c6 4A050000 		.4byte	.LASF21
+ 252 00ca 07       		.byte	0x7
+ 253 00cb 05       		.uleb128 0x5
+ 254 00cc C9040000 		.4byte	.LASF22
+ 255 00d0 08       		.byte	0x8
+ 256 00d1 05       		.uleb128 0x5
+ 257 00d2 C8050000 		.4byte	.LASF23
+ 258 00d6 09       		.byte	0x9
+ 259 00d7 05       		.uleb128 0x5
+ 260 00d8 00000000 		.4byte	.LASF24
+ 261 00dc 0A       		.byte	0xa
+ 262 00dd 05       		.uleb128 0x5
+ 263 00de 18040000 		.4byte	.LASF25
+ 264 00e2 0B       		.byte	0xb
+ 265 00e3 05       		.uleb128 0x5
+ 266 00e4 2B010000 		.4byte	.LASF26
+ 267 00e8 0C       		.byte	0xc
+ 268 00e9 05       		.uleb128 0x5
+ 269 00ea 5B040000 		.4byte	.LASF27
+ 270 00ee 0D       		.byte	0xd
+ 271 00ef 05       		.uleb128 0x5
+ 272 00f0 3E020000 		.4byte	.LASF28
+ 273 00f4 0E       		.byte	0xe
+ 274 00f5 05       		.uleb128 0x5
+ 275 00f6 D2000000 		.4byte	.LASF29
+ 276 00fa 0F       		.byte	0xf
+ 277 00fb 05       		.uleb128 0x5
+ 278 00fc E3030000 		.4byte	.LASF30
+ 279 0100 10       		.byte	0x10
+ 280 0101 05       		.uleb128 0x5
+ 281 0102 3F000000 		.4byte	.LASF31
+ 282 0106 11       		.byte	0x11
+ 283 0107 05       		.uleb128 0x5
+ 284 0108 AF000000 		.4byte	.LASF32
+ 285 010c 12       		.byte	0x12
+ 286 010d 05       		.uleb128 0x5
+ 287 010e 8C020000 		.4byte	.LASF33
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 9
+
+
+ 288 0112 13       		.byte	0x13
+ 289 0113 05       		.uleb128 0x5
+ 290 0114 8D000000 		.4byte	.LASF34
+ 291 0118 27       		.byte	0x27
+ 292 0119 05       		.uleb128 0x5
+ 293 011a 9B030000 		.4byte	.LASF35
+ 294 011e 28       		.byte	0x28
+ 295 011f 05       		.uleb128 0x5
+ 296 0120 0F010000 		.4byte	.LASF36
+ 297 0124 29       		.byte	0x29
+ 298 0125 05       		.uleb128 0x5
+ 299 0126 DD050000 		.4byte	.LASF37
+ 300 012a 2A       		.byte	0x2a
+ 301 012b 05       		.uleb128 0x5
+ 302 012c ED010000 		.4byte	.LASF38
+ 303 0130 2B       		.byte	0x2b
+ 304 0131 05       		.uleb128 0x5
+ 305 0132 F7000000 		.4byte	.LASF39
+ 306 0136 2C       		.byte	0x2c
+ 307 0137 05       		.uleb128 0x5
+ 308 0138 E7040000 		.4byte	.LASF40
+ 309 013c FE       		.byte	0xfe
+ 310 013d 05       		.uleb128 0x5
+ 311 013e 3A050000 		.4byte	.LASF41
+ 312 0142 FF       		.byte	0xff
+ 313 0143 06       		.uleb128 0x6
+ 314 0144 8D040000 		.4byte	.LASF42
+ 315 0148 0001     		.2byte	0x100
+ 316 014a 06       		.uleb128 0x6
+ 317 014b 03050000 		.4byte	.LASF43
+ 318 014f 0101     		.2byte	0x101
+ 319 0151 06       		.uleb128 0x6
+ 320 0152 C0030000 		.4byte	.LASF44
+ 321 0156 0201     		.2byte	0x102
+ 322 0158 06       		.uleb128 0x6
+ 323 0159 B4020000 		.4byte	.LASF45
+ 324 015d 0301     		.2byte	0x103
+ 325 015f 06       		.uleb128 0x6
+ 326 0160 70000000 		.4byte	.LASF46
+ 327 0164 0401     		.2byte	0x104
+ 328 0166 00       		.byte	0
+ 329 0167 07       		.uleb128 0x7
+ 330 0168 9D050000 		.4byte	.LASF50
+ 331 016c 02       		.byte	0x2
+ 332 016d 7104     		.2byte	0x471
+ 333 016f 8E000000 		.4byte	0x8e
+ 334 0173 08       		.uleb128 0x8
+ 335 0174 38040000 		.4byte	.LASF51
+ 336 0178 01       		.byte	0x1
+ 337 0179 1C       		.byte	0x1c
+ 338 017a 5D000000 		.4byte	0x5d
+ 339 017e 00000000 		.4byte	.LFB35
+ 340 0182 90000000 		.4byte	.LFE35-.LFB35
+ 341 0186 01       		.uleb128 0x1
+ 342 0187 9C       		.byte	0x9c
+ 343 0188 09       		.uleb128 0x9
+ 344 0189 63000000 		.4byte	.LASF52
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 10
+
+
+ 345 018d 01       		.byte	0x1
+ 346 018e 23       		.byte	0x23
+ 347 018f 67010000 		.4byte	0x167
+ 348 0193 02       		.uleb128 0x2
+ 349 0194 91       		.byte	0x91
+ 350 0195 6E       		.sleb128 -18
+ 351 0196 00       		.byte	0
+ 352 0197 00       		.byte	0
+ 353              		.section	.debug_abbrev,"",%progbits
+ 354              	.Ldebug_abbrev0:
+ 355 0000 01       		.uleb128 0x1
+ 356 0001 11       		.uleb128 0x11
+ 357 0002 01       		.byte	0x1
+ 358 0003 25       		.uleb128 0x25
+ 359 0004 0E       		.uleb128 0xe
+ 360 0005 13       		.uleb128 0x13
+ 361 0006 0B       		.uleb128 0xb
+ 362 0007 03       		.uleb128 0x3
+ 363 0008 0E       		.uleb128 0xe
+ 364 0009 1B       		.uleb128 0x1b
+ 365 000a 0E       		.uleb128 0xe
+ 366 000b 55       		.uleb128 0x55
+ 367 000c 17       		.uleb128 0x17
+ 368 000d 11       		.uleb128 0x11
+ 369 000e 01       		.uleb128 0x1
+ 370 000f 10       		.uleb128 0x10
+ 371 0010 17       		.uleb128 0x17
+ 372 0011 00       		.byte	0
+ 373 0012 00       		.byte	0
+ 374 0013 02       		.uleb128 0x2
+ 375 0014 24       		.uleb128 0x24
+ 376 0015 00       		.byte	0
+ 377 0016 0B       		.uleb128 0xb
+ 378 0017 0B       		.uleb128 0xb
+ 379 0018 3E       		.uleb128 0x3e
+ 380 0019 0B       		.uleb128 0xb
+ 381 001a 03       		.uleb128 0x3
+ 382 001b 0E       		.uleb128 0xe
+ 383 001c 00       		.byte	0
+ 384 001d 00       		.byte	0
+ 385 001e 03       		.uleb128 0x3
+ 386 001f 24       		.uleb128 0x24
+ 387 0020 00       		.byte	0
+ 388 0021 0B       		.uleb128 0xb
+ 389 0022 0B       		.uleb128 0xb
+ 390 0023 3E       		.uleb128 0x3e
+ 391 0024 0B       		.uleb128 0xb
+ 392 0025 03       		.uleb128 0x3
+ 393 0026 08       		.uleb128 0x8
+ 394 0027 00       		.byte	0
+ 395 0028 00       		.byte	0
+ 396 0029 04       		.uleb128 0x4
+ 397 002a 04       		.uleb128 0x4
+ 398 002b 01       		.byte	0x1
+ 399 002c 0B       		.uleb128 0xb
+ 400 002d 0B       		.uleb128 0xb
+ 401 002e 49       		.uleb128 0x49
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 11
+
+
+ 402 002f 13       		.uleb128 0x13
+ 403 0030 3A       		.uleb128 0x3a
+ 404 0031 0B       		.uleb128 0xb
+ 405 0032 3B       		.uleb128 0x3b
+ 406 0033 05       		.uleb128 0x5
+ 407 0034 01       		.uleb128 0x1
+ 408 0035 13       		.uleb128 0x13
+ 409 0036 00       		.byte	0
+ 410 0037 00       		.byte	0
+ 411 0038 05       		.uleb128 0x5
+ 412 0039 28       		.uleb128 0x28
+ 413 003a 00       		.byte	0
+ 414 003b 03       		.uleb128 0x3
+ 415 003c 0E       		.uleb128 0xe
+ 416 003d 1C       		.uleb128 0x1c
+ 417 003e 0B       		.uleb128 0xb
+ 418 003f 00       		.byte	0
+ 419 0040 00       		.byte	0
+ 420 0041 06       		.uleb128 0x6
+ 421 0042 28       		.uleb128 0x28
+ 422 0043 00       		.byte	0
+ 423 0044 03       		.uleb128 0x3
+ 424 0045 0E       		.uleb128 0xe
+ 425 0046 1C       		.uleb128 0x1c
+ 426 0047 05       		.uleb128 0x5
+ 427 0048 00       		.byte	0
+ 428 0049 00       		.byte	0
+ 429 004a 07       		.uleb128 0x7
+ 430 004b 16       		.uleb128 0x16
+ 431 004c 00       		.byte	0
+ 432 004d 03       		.uleb128 0x3
+ 433 004e 0E       		.uleb128 0xe
+ 434 004f 3A       		.uleb128 0x3a
+ 435 0050 0B       		.uleb128 0xb
+ 436 0051 3B       		.uleb128 0x3b
+ 437 0052 05       		.uleb128 0x5
+ 438 0053 49       		.uleb128 0x49
+ 439 0054 13       		.uleb128 0x13
+ 440 0055 00       		.byte	0
+ 441 0056 00       		.byte	0
+ 442 0057 08       		.uleb128 0x8
+ 443 0058 2E       		.uleb128 0x2e
+ 444 0059 01       		.byte	0x1
+ 445 005a 3F       		.uleb128 0x3f
+ 446 005b 19       		.uleb128 0x19
+ 447 005c 03       		.uleb128 0x3
+ 448 005d 0E       		.uleb128 0xe
+ 449 005e 3A       		.uleb128 0x3a
+ 450 005f 0B       		.uleb128 0xb
+ 451 0060 3B       		.uleb128 0x3b
+ 452 0061 0B       		.uleb128 0xb
+ 453 0062 49       		.uleb128 0x49
+ 454 0063 13       		.uleb128 0x13
+ 455 0064 11       		.uleb128 0x11
+ 456 0065 01       		.uleb128 0x1
+ 457 0066 12       		.uleb128 0x12
+ 458 0067 06       		.uleb128 0x6
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 12
+
+
+ 459 0068 40       		.uleb128 0x40
+ 460 0069 18       		.uleb128 0x18
+ 461 006a 9642     		.uleb128 0x2116
+ 462 006c 19       		.uleb128 0x19
+ 463 006d 00       		.byte	0
+ 464 006e 00       		.byte	0
+ 465 006f 09       		.uleb128 0x9
+ 466 0070 34       		.uleb128 0x34
+ 467 0071 00       		.byte	0
+ 468 0072 03       		.uleb128 0x3
+ 469 0073 0E       		.uleb128 0xe
+ 470 0074 3A       		.uleb128 0x3a
+ 471 0075 0B       		.uleb128 0xb
+ 472 0076 3B       		.uleb128 0x3b
+ 473 0077 0B       		.uleb128 0xb
+ 474 0078 49       		.uleb128 0x49
+ 475 0079 13       		.uleb128 0x13
+ 476 007a 02       		.uleb128 0x2
+ 477 007b 18       		.uleb128 0x18
+ 478 007c 00       		.byte	0
+ 479 007d 00       		.byte	0
+ 480 007e 00       		.byte	0
+ 481              		.section	.debug_aranges,"",%progbits
+ 482 0000 1C000000 		.4byte	0x1c
+ 483 0004 0200     		.2byte	0x2
+ 484 0006 00000000 		.4byte	.Ldebug_info0
+ 485 000a 04       		.byte	0x4
+ 486 000b 00       		.byte	0
+ 487 000c 0000     		.2byte	0
+ 488 000e 0000     		.2byte	0
+ 489 0010 00000000 		.4byte	.LFB35
+ 490 0014 90000000 		.4byte	.LFE35-.LFB35
+ 491 0018 00000000 		.4byte	0
+ 492 001c 00000000 		.4byte	0
+ 493              		.section	.debug_ranges,"",%progbits
+ 494              	.Ldebug_ranges0:
+ 495 0000 00000000 		.4byte	.LFB35
+ 496 0004 90000000 		.4byte	.LFE35
+ 497 0008 00000000 		.4byte	0
+ 498 000c 00000000 		.4byte	0
+ 499              		.section	.debug_line,"",%progbits
+ 500              	.Ldebug_line0:
+ 501 0000 82000000 		.section	.debug_str,"MS",%progbits,1
+ 501      02004300 
+ 501      00000201 
+ 501      FB0E0D00 
+ 501      01010101 
+ 502              	.LASF24:
+ 503 0000 4359424C 		.ascii	"CYBLE_ERROR_TX_POWER_READ\000"
+ 503      455F4552 
+ 503      524F525F 
+ 503      54585F50 
+ 503      4F574552 
+ 504              	.LASF17:
+ 505 001a 4359424C 		.ascii	"CYBLE_ERROR_MEMORY_ALLOCATION_FAILED\000"
+ 505      455F4552 
+ 505      524F525F 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 13
+
+
+ 505      4D454D4F 
+ 505      52595F41 
+ 506              	.LASF31:
+ 507 003f 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CHANNEL_NOT_FOUND\000"
+ 507      455F4552 
+ 507      524F525F 
+ 507      4C324341 
+ 507      505F4348 
+ 508              	.LASF52:
+ 509 0063 626C6541 		.ascii	"bleApiResult\000"
+ 509      70695265 
+ 509      73756C74 
+ 509      00
+ 510              	.LASF46:
+ 511 0070 4359424C 		.ascii	"CYBLE_ERROR_STACK_BUSY\000"
+ 511      455F4552 
+ 511      524F525F 
+ 511      53544143 
+ 511      4B5F4255 
+ 512              	.LASF9:
+ 513 0087 666C6F61 		.ascii	"float\000"
+ 513      7400
+ 514              	.LASF34:
+ 515 008d 4359424C 		.ascii	"CYBLE_ERROR_DEVICE_ALREADY_EXISTS\000"
+ 515      455F4552 
+ 515      524F525F 
+ 515      44455649 
+ 515      43455F41 
+ 516              	.LASF32:
+ 517 00af 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_IN_RANGE\000"
+ 517      455F4552 
+ 517      524F525F 
+ 517      4C324341 
+ 517      505F5053 
+ 518              	.LASF29:
+ 519 00d2 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_REGISTERED\000"
+ 519      455F4552 
+ 519      524F525F 
+ 519      4C324341 
+ 519      505F5053 
+ 520              	.LASF39:
+ 521 00f7 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE\000"
+ 521      455F4552 
+ 521      524F525F 
+ 521      464C4153 
+ 521      485F5752 
+ 522              	.LASF36:
+ 523 010f 4359424C 		.ascii	"CYBLE_ERROR_MIC_AUTH_FAILED\000"
+ 523      455F4552 
+ 523      524F525F 
+ 523      4D49435F 
+ 523      41555448 
+ 524              	.LASF26:
+ 525 012b 4359424C 		.ascii	"CYBLE_ERROR_SEC_FAILED\000"
+ 525      455F4552 
+ 525      524F525F 
+ 525      5345435F 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 14
+
+
+ 525      4641494C 
+ 526              	.LASF49:
+ 527 0142 433A5C55 		.ascii	"C:\\Users\\Benakapoi\\Desktop\\PSoC-4-BLE-master\\P"
+ 527      73657273 
+ 527      5C42656E 
+ 527      616B6170 
+ 527      6F695C44 
+ 528 0170 536F432D 		.ascii	"SoC-4-BLE-master\\100_Projects_in_100_Days\\Day020_"
+ 528      342D424C 
+ 528      452D6D61 
+ 528      73746572 
+ 528      5C313030 
+ 529 01a1 424C455F 		.ascii	"BLE_UART\\UART_to_BLE_peripheral\\UART_to_BLE_perip"
+ 529      55415254 
+ 529      5C554152 
+ 529      545F746F 
+ 529      5F424C45 
+ 530 01d2 68657261 		.ascii	"heral.cydsn\000"
+ 530      6C2E6379 
+ 530      64736E00 
+ 531              	.LASF14:
+ 532 01de 4359424C 		.ascii	"CYBLE_ERROR_OK\000"
+ 532      455F4552 
+ 532      524F525F 
+ 532      4F4B00
+ 533              	.LASF38:
+ 534 01ed 4359424C 		.ascii	"CYBLE_ERROR_UNSUPPORTED_FEATURE_OR_PARAMETER_VALUE\000"
+ 534      455F4552 
+ 534      524F525F 
+ 534      554E5355 
+ 534      50504F52 
+ 535              	.LASF16:
+ 536 0220 4359424C 		.ascii	"CYBLE_ERROR_INVALID_OPERATION\000"
+ 536      455F4552 
+ 536      524F525F 
+ 536      494E5641 
+ 536      4C49445F 
+ 537              	.LASF28:
+ 538 023e 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_ALREADY_REGISTERED\000"
+ 538      455F4552 
+ 538      524F525F 
+ 538      4C324341 
+ 538      505F5053 
+ 539              	.LASF7:
+ 540 0267 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 540      206C6F6E 
+ 540      6720756E 
+ 540      7369676E 
+ 540      65642069 
+ 541              	.LASF1:
+ 542 027e 756E7369 		.ascii	"unsigned char\000"
+ 542      676E6564 
+ 542      20636861 
+ 542      7200
+ 543              	.LASF33:
+ 544 028c 4359424C 		.ascii	"CYBLE_ERROR_GATT_DB_INVALID_ATTR_HANDLE\000"
+ 544      455F4552 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 15
+
+
+ 544      524F525F 
+ 544      47415454 
+ 544      5F44425F 
+ 545              	.LASF45:
+ 546 02b4 4359424C 		.ascii	"CYBLE_ERROR_INVALID_STATE\000"
+ 546      455F4552 
+ 546      524F525F 
+ 546      494E5641 
+ 546      4C49445F 
+ 547              	.LASF5:
+ 548 02ce 6C6F6E67 		.ascii	"long unsigned int\000"
+ 548      20756E73 
+ 548      69676E65 
+ 548      6420696E 
+ 548      7400
+ 549              	.LASF20:
+ 550 02e0 4359424C 		.ascii	"CYBLE_ERROR_NO_CONNECTION\000"
+ 550      455F4552 
+ 550      524F525F 
+ 550      4E4F5F43 
+ 550      4F4E4E45 
+ 551              	.LASF3:
+ 552 02fa 73686F72 		.ascii	"short unsigned int\000"
+ 552      7420756E 
+ 552      7369676E 
+ 552      65642069 
+ 552      6E7400
+ 553              	.LASF47:
+ 554 030d 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 554      43313120 
+ 554      352E342E 
+ 554      31203230 
+ 554      31363036 
+ 555 0340 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 555      20726576 
+ 555      6973696F 
+ 555      6E203233 
+ 555      37373135 
+ 556 0373 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 556      66756E63 
+ 556      74696F6E 
+ 556      2D736563 
+ 556      74696F6E 
+ 557              	.LASF35:
+ 558 039b 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE_NOT_PERMITED\000"
+ 558      455F4552 
+ 558      524F525F 
+ 558      464C4153 
+ 558      485F5752 
+ 559              	.LASF44:
+ 560 03c0 4359424C 		.ascii	"CYBLE_ERROR_CHAR_IS_NOT_DISCOVERED\000"
+ 560      455F4552 
+ 560      524F525F 
+ 560      43484152 
+ 560      5F49535F 
+ 561              	.LASF30:
+ 562 03e3 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CONNECTION_ENTITY_NOT_FOUND\000"
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 16
+
+
+ 562      455F4552 
+ 562      524F525F 
+ 562      4C324341 
+ 562      505F434F 
+ 563              	.LASF10:
+ 564 0411 646F7562 		.ascii	"double\000"
+ 564      6C6500
+ 565              	.LASF25:
+ 566 0418 4359424C 		.ascii	"CYBLE_ERROR_BT_ON_NOT_COMPLETED\000"
+ 566      455F4552 
+ 566      524F525F 
+ 566      42545F4F 
+ 566      4E5F4E4F 
+ 567              	.LASF51:
+ 568 0438 6D61696E 		.ascii	"main\000"
+ 568      00
+ 569              	.LASF19:
+ 570 043d 4359424C 		.ascii	"CYBLE_ERROR_OOB_NOT_AVAILABLE\000"
+ 570      455F4552 
+ 570      524F525F 
+ 570      4F4F425F 
+ 570      4E4F545F 
+ 571              	.LASF27:
+ 572 045b 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_WRONG_ENCODING\000"
+ 572      455F4552 
+ 572      524F525F 
+ 572      4C324341 
+ 572      505F5053 
+ 573              	.LASF8:
+ 574 0480 756E7369 		.ascii	"unsigned int\000"
+ 574      676E6564 
+ 574      20696E74 
+ 574      00
+ 575              	.LASF42:
+ 576 048d 4359424C 		.ascii	"CYBLE_ERROR_NTF_DISABLED\000"
+ 576      455F4552 
+ 576      524F525F 
+ 576      4E54465F 
+ 576      44495341 
+ 577              	.LASF11:
+ 578 04a6 63686172 		.ascii	"char\000"
+ 578      00
+ 579              	.LASF15:
+ 580 04ab 4359424C 		.ascii	"CYBLE_ERROR_INVALID_PARAMETER\000"
+ 580      455F4552 
+ 580      524F525F 
+ 580      494E5641 
+ 580      4C49445F 
+ 581              	.LASF22:
+ 582 04c9 4359424C 		.ascii	"CYBLE_ERROR_REPEATED_ATTEMPTS\000"
+ 582      455F4552 
+ 582      524F525F 
+ 582      52455045 
+ 582      41544544 
+ 583              	.LASF40:
+ 584 04e7 4359424C 		.ascii	"CYBLE_ERROR_CONTROLLER_BUSY\000"
+ 584      455F4552 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 17
+
+
+ 584      524F525F 
+ 584      434F4E54 
+ 584      524F4C4C 
+ 585              	.LASF43:
+ 586 0503 4359424C 		.ascii	"CYBLE_ERROR_IND_DISABLED\000"
+ 586      455F4552 
+ 586      524F525F 
+ 586      494E445F 
+ 586      44495341 
+ 587              	.LASF13:
+ 588 051c 73697A65 		.ascii	"sizetype\000"
+ 588      74797065 
+ 588      00
+ 589              	.LASF6:
+ 590 0525 6C6F6E67 		.ascii	"long long int\000"
+ 590      206C6F6E 
+ 590      6720696E 
+ 590      7400
+ 591              	.LASF48:
+ 592 0533 6D61696E 		.ascii	"main.c\000"
+ 592      2E6300
+ 593              	.LASF41:
+ 594 053a 4359424C 		.ascii	"CYBLE_ERROR_MAX\000"
+ 594      455F4552 
+ 594      524F525F 
+ 594      4D415800 
+ 595              	.LASF21:
+ 596 054a 4359424C 		.ascii	"CYBLE_ERROR_NO_DEVICE_ENTITY\000"
+ 596      455F4552 
+ 596      524F525F 
+ 596      4E4F5F44 
+ 596      45564943 
+ 597              	.LASF2:
+ 598 0567 73686F72 		.ascii	"short int\000"
+ 598      7420696E 
+ 598      7400
+ 599              	.LASF18:
+ 600 0571 4359424C 		.ascii	"CYBLE_ERROR_INSUFFICIENT_RESOURCES\000"
+ 600      455F4552 
+ 600      524F525F 
+ 600      494E5355 
+ 600      46464943 
+ 601              	.LASF4:
+ 602 0594 6C6F6E67 		.ascii	"long int\000"
+ 602      20696E74 
+ 602      00
+ 603              	.LASF50:
+ 604 059d 4359424C 		.ascii	"CYBLE_API_RESULT_T\000"
+ 604      455F4150 
+ 604      495F5245 
+ 604      53554C54 
+ 604      5F5400
+ 605              	.LASF12:
+ 606 05b0 6C6F6E67 		.ascii	"long double\000"
+ 606      20646F75 
+ 606      626C6500 
+ 607              	.LASF0:
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\ccguqkSe.s 			page 18
+
+
+ 608 05bc 7369676E 		.ascii	"signed char\000"
+ 608      65642063 
+ 608      68617200 
+ 609              	.LASF23:
+ 610 05c8 4359424C 		.ascii	"CYBLE_ERROR_GAP_ROLE\000"
+ 610      455F4552 
+ 610      524F525F 
+ 610      4741505F 
+ 610      524F4C45 
+ 611              	.LASF37:
+ 612 05dd 4359424C 		.ascii	"CYBLE_ERROR_HARDWARE_FAILURE\000"
+ 612      455F4552 
+ 612      524F525F 
+ 612      48415244 
+ 612      57415245 
+ 613              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

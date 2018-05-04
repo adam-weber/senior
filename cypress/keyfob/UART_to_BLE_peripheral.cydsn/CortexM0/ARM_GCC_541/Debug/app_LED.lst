@@ -1,0 +1,709 @@
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"app_LED.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.HandleLeds,"ax",%progbits
+  20              		.align	2
+  21              		.global	HandleLeds
+  22              		.code	16
+  23              		.thumb_func
+  24              		.type	HandleLeds, %function
+  25              	HandleLeds:
+  26              	.LFB35:
+  27              		.file 1 "app_LED.c"
+   1:app_LED.c     **** /*******************************************************************************
+   2:app_LED.c     **** * File Name: app_LED.c
+   3:app_LED.c     **** *
+   4:app_LED.c     **** * Description:
+   5:app_LED.c     **** *  Common BLE application code for client devices.
+   6:app_LED.c     **** *
+   7:app_LED.c     **** *******************************************************************************
+   8:app_LED.c     **** * Copyright 2015, Cypress Semiconductor Corporation.  All rights reserved.
+   9:app_LED.c     **** * You may use this file only in accordance with the license, terms, conditions,
+  10:app_LED.c     **** * disclaimers, and limitations in the end user license agreement accompanying
+  11:app_LED.c     **** * the software package with which this file was provided.
+  12:app_LED.c     **** *******************************************************************************/
+  13:app_LED.c     **** 
+  14:app_LED.c     **** #include "app_LED.h"
+  15:app_LED.c     **** 
+  16:app_LED.c     **** 
+  17:app_LED.c     **** /*******************************************************************************
+  18:app_LED.c     **** * Function Name: HandleLeds
+  19:app_LED.c     **** ********************************************************************************
+  20:app_LED.c     **** *
+  21:app_LED.c     **** * Summary:
+  22:app_LED.c     **** *  This function handles the toggling of Scan and Connection LED. 
+  23:app_LED.c     **** *
+  24:app_LED.c     **** * Parameters:
+  25:app_LED.c     **** *  None.
+  26:app_LED.c     **** *
+  27:app_LED.c     **** * Return:
+  28:app_LED.c     **** *   None.
+  29:app_LED.c     **** *
+  30:app_LED.c     **** *******************************************************************************/
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 2
+
+
+  31:app_LED.c     **** void HandleLeds(void)
+  32:app_LED.c     **** {
+  28              		.loc 1 32 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 80B5     		push	{r7, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 00AF     		add	r7, sp, #0
+  37              		.cfi_def_cfa_register 7
+  33:app_LED.c     ****     static uint8        ledState        = LED_OFF;
+  34:app_LED.c     ****     static uint32       advLedTimer     = ADV_LED_TIMEOUT;   
+  35:app_LED.c     ****     static uint32       connLedTimer    = CONN_LED_TIMEOUT;   
+  36:app_LED.c     ****     
+  37:app_LED.c     ****     switch (cyBle_state)
+  38              		.loc 1 37 0
+  39 0004 134B     		ldr	r3, .L7
+  40 0006 1B78     		ldrb	r3, [r3]
+  41 0008 022B     		cmp	r3, #2
+  42 000a 06D0     		beq	.L3
+  43 000c 032B     		cmp	r3, #3
+  44 000e 00D0     		beq	.L4
+  38:app_LED.c     ****     {
+  39:app_LED.c     ****         case CYBLE_STATE_ADVERTISING:
+  40:app_LED.c     ****             
+  41:app_LED.c     ****             Conn_LED_Write(LED_OFF);
+  42:app_LED.c     ****             #if DONGLE
+  43:app_LED.c     ****             if(--advLedTimer == 0u) 
+  44:app_LED.c     ****             {
+  45:app_LED.c     ****                 advLedTimer = ADV_LED_TIMEOUT;
+  46:app_LED.c     ****                 ledState ^= LED_OFF;
+  47:app_LED.c     ****                 
+  48:app_LED.c     ****                 Adv_LED_Write(ledState);
+  49:app_LED.c     ****             }
+  50:app_LED.c     ****             #endif 
+  51:app_LED.c     ****             
+  52:app_LED.c     ****             break;
+  53:app_LED.c     ****             
+  54:app_LED.c     ****         case CYBLE_STATE_CONNECTED: 
+  55:app_LED.c     ****             
+  56:app_LED.c     ****             #if DONGLE
+  57:app_LED.c     ****             Adv_LED_Write(LED_OFF);
+  58:app_LED.c     ****             #endif 
+  59:app_LED.c     ****             
+  60:app_LED.c     ****             if(--connLedTimer == 0u) 
+  61:app_LED.c     ****             {
+  62:app_LED.c     ****                 connLedTimer = CONN_LED_TIMEOUT;
+  63:app_LED.c     ****                 ledState    ^= LED_OFF;
+  64:app_LED.c     ****                 
+  65:app_LED.c     ****                 Conn_LED_Write(ledState);
+  66:app_LED.c     ****             }
+  67:app_LED.c     ****             
+  68:app_LED.c     ****         default:
+  69:app_LED.c     ****             break;
+  45              		.loc 1 69 0
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 3
+
+
+  46 0010 1BE0     		b	.L6
+  47              	.L4:
+  41:app_LED.c     ****             #if DONGLE
+  48              		.loc 1 41 0
+  49 0012 0120     		movs	r0, #1
+  50 0014 FFF7FEFF 		bl	Conn_LED_Write
+  52:app_LED.c     ****             
+  51              		.loc 1 52 0
+  52 0018 18E0     		b	.L5
+  53              	.L3:
+  60:app_LED.c     ****             {
+  54              		.loc 1 60 0
+  55 001a 0F4B     		ldr	r3, .L7+4
+  56 001c 1B68     		ldr	r3, [r3]
+  57 001e 5A1E     		subs	r2, r3, #1
+  58 0020 0D4B     		ldr	r3, .L7+4
+  59 0022 1A60     		str	r2, [r3]
+  60 0024 0C4B     		ldr	r3, .L7+4
+  61 0026 1B68     		ldr	r3, [r3]
+  62 0028 002B     		cmp	r3, #0
+  63 002a 0ED1     		bne	.L6
+  62:app_LED.c     ****                 ledState    ^= LED_OFF;
+  64              		.loc 1 62 0
+  65 002c 0A4B     		ldr	r3, .L7+4
+  66 002e 0B4A     		ldr	r2, .L7+8
+  67 0030 1A60     		str	r2, [r3]
+  63:app_LED.c     ****                 
+  68              		.loc 1 63 0
+  69 0032 0B4B     		ldr	r3, .L7+12
+  70 0034 1B78     		ldrb	r3, [r3]
+  71 0036 0122     		movs	r2, #1
+  72 0038 5340     		eors	r3, r2
+  73 003a DAB2     		uxtb	r2, r3
+  74 003c 084B     		ldr	r3, .L7+12
+  75 003e 1A70     		strb	r2, [r3]
+  65:app_LED.c     ****             }
+  76              		.loc 1 65 0
+  77 0040 074B     		ldr	r3, .L7+12
+  78 0042 1B78     		ldrb	r3, [r3]
+  79 0044 1800     		movs	r0, r3
+  80 0046 FFF7FEFF 		bl	Conn_LED_Write
+  81              	.L6:
+  82              		.loc 1 69 0
+  83 004a C046     		nop
+  84              	.L5:
+  70:app_LED.c     ****     }
+  71:app_LED.c     **** }
+  85              		.loc 1 71 0
+  86 004c C046     		nop
+  87 004e BD46     		mov	sp, r7
+  88              		@ sp needed
+  89 0050 80BD     		pop	{r7, pc}
+  90              	.L8:
+  91 0052 C046     		.align	2
+  92              	.L7:
+  93 0054 00000000 		.word	cyBle_state
+  94 0058 00000000 		.word	connLedTimer.7399
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 4
+
+
+  95 005c 50C30000 		.word	50000
+  96 0060 04000000 		.word	ledState.7397
+  97              		.cfi_endproc
+  98              	.LFE35:
+  99              		.size	HandleLeds, .-HandleLeds
+ 100              		.data
+ 101              		.align	2
+ 102              		.type	connLedTimer.7399, %object
+ 103              		.size	connLedTimer.7399, 4
+ 104              	connLedTimer.7399:
+ 105 0000 50C30000 		.word	50000
+ 106              		.type	ledState.7397, %object
+ 107              		.size	ledState.7397, 1
+ 108              	ledState.7397:
+ 109 0004 01       		.byte	1
+ 110 0005 000000   		.align	2
+ 111              		.type	advLedTimer.7398, %object
+ 112              		.size	advLedTimer.7398, 4
+ 113              	advLedTimer.7398:
+ 114 0008 30750000 		.word	30000
+ 115              		.text
+ 116              	.Letext0:
+ 117              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 118              		.file 3 "Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 119              		.section	.debug_info,"",%progbits
+ 120              	.Ldebug_info0:
+ 121 0000 30010000 		.4byte	0x130
+ 122 0004 0400     		.2byte	0x4
+ 123 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 124 000a 04       		.byte	0x4
+ 125 000b 01       		.uleb128 0x1
+ 126 000c 2D010000 		.4byte	.LASF25
+ 127 0010 0C       		.byte	0xc
+ 128 0011 4D020000 		.4byte	.LASF26
+ 129 0015 4E000000 		.4byte	.LASF27
+ 130 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 131 001d 00000000 		.4byte	0
+ 132 0021 00000000 		.4byte	.Ldebug_line0
+ 133 0025 02       		.uleb128 0x2
+ 134 0026 01       		.byte	0x1
+ 135 0027 06       		.byte	0x6
+ 136 0028 82020000 		.4byte	.LASF0
+ 137 002c 02       		.uleb128 0x2
+ 138 002d 01       		.byte	0x1
+ 139 002e 08       		.byte	0x8
+ 140 002f 07010000 		.4byte	.LASF1
+ 141 0033 02       		.uleb128 0x2
+ 142 0034 02       		.byte	0x2
+ 143 0035 05       		.byte	0x5
+ 144 0036 43020000 		.4byte	.LASF2
+ 145 003a 02       		.uleb128 0x2
+ 146 003b 02       		.byte	0x2
+ 147 003c 07       		.byte	0x7
+ 148 003d 3B000000 		.4byte	.LASF3
+ 149 0041 02       		.uleb128 0x2
+ 150 0042 04       		.byte	0x4
+ 151 0043 05       		.byte	0x5
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 5
+
+
+ 152 0044 6D020000 		.4byte	.LASF4
+ 153 0048 02       		.uleb128 0x2
+ 154 0049 04       		.byte	0x4
+ 155 004a 07       		.byte	0x7
+ 156 004b 15010000 		.4byte	.LASF5
+ 157 004f 02       		.uleb128 0x2
+ 158 0050 08       		.byte	0x8
+ 159 0051 05       		.byte	0x5
+ 160 0052 35020000 		.4byte	.LASF6
+ 161 0056 02       		.uleb128 0x2
+ 162 0057 08       		.byte	0x8
+ 163 0058 07       		.byte	0x7
+ 164 0059 F0000000 		.4byte	.LASF7
+ 165 005d 03       		.uleb128 0x3
+ 166 005e 04       		.byte	0x4
+ 167 005f 05       		.byte	0x5
+ 168 0060 696E7400 		.ascii	"int\000"
+ 169 0064 02       		.uleb128 0x2
+ 170 0065 04       		.byte	0x4
+ 171 0066 07       		.byte	0x7
+ 172 0067 E1010000 		.4byte	.LASF8
+ 173 006b 04       		.uleb128 0x4
+ 174 006c 27010000 		.4byte	.LASF9
+ 175 0070 02       		.byte	0x2
+ 176 0071 E401     		.2byte	0x1e4
+ 177 0073 2C000000 		.4byte	0x2c
+ 178 0077 04       		.uleb128 0x4
+ 179 0078 DA010000 		.4byte	.LASF10
+ 180 007c 02       		.byte	0x2
+ 181 007d E601     		.2byte	0x1e6
+ 182 007f 48000000 		.4byte	0x48
+ 183 0083 02       		.uleb128 0x2
+ 184 0084 04       		.byte	0x4
+ 185 0085 04       		.byte	0x4
+ 186 0086 EA000000 		.4byte	.LASF11
+ 187 008a 02       		.uleb128 0x2
+ 188 008b 08       		.byte	0x8
+ 189 008c 04       		.byte	0x4
+ 190 008d D3010000 		.4byte	.LASF12
+ 191 0091 02       		.uleb128 0x2
+ 192 0092 01       		.byte	0x1
+ 193 0093 08       		.byte	0x8
+ 194 0094 EE010000 		.4byte	.LASF13
+ 195 0098 02       		.uleb128 0x2
+ 196 0099 08       		.byte	0x8
+ 197 009a 04       		.byte	0x4
+ 198 009b 76020000 		.4byte	.LASF14
+ 199 009f 02       		.uleb128 0x2
+ 200 00a0 04       		.byte	0x4
+ 201 00a1 07       		.byte	0x7
+ 202 00a2 2C020000 		.4byte	.LASF15
+ 203 00a6 05       		.uleb128 0x5
+ 204 00a7 01       		.byte	0x1
+ 205 00a8 2C000000 		.4byte	0x2c
+ 206 00ac 03       		.byte	0x3
+ 207 00ad 5008     		.2byte	0x850
+ 208 00af D2000000 		.4byte	0xd2
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 6
+
+
+ 209 00b3 06       		.uleb128 0x6
+ 210 00b4 01020000 		.4byte	.LASF16
+ 211 00b8 00       		.byte	0
+ 212 00b9 06       		.uleb128 0x6
+ 213 00ba 8E020000 		.4byte	.LASF17
+ 214 00be 01       		.byte	0x1
+ 215 00bf 06       		.uleb128 0x6
+ 216 00c0 57020000 		.4byte	.LASF18
+ 217 00c4 02       		.byte	0x2
+ 218 00c5 06       		.uleb128 0x6
+ 219 00c6 BB010000 		.4byte	.LASF19
+ 220 00ca 03       		.byte	0x3
+ 221 00cb 06       		.uleb128 0x6
+ 222 00cc 0D000000 		.4byte	.LASF20
+ 223 00d0 04       		.byte	0x4
+ 224 00d1 00       		.byte	0
+ 225 00d2 04       		.uleb128 0x4
+ 226 00d3 F3010000 		.4byte	.LASF21
+ 227 00d7 03       		.byte	0x3
+ 228 00d8 5E08     		.2byte	0x85e
+ 229 00da A6000000 		.4byte	0xa6
+ 230 00de 07       		.uleb128 0x7
+ 231 00df 21020000 		.4byte	.LASF28
+ 232 00e3 01       		.byte	0x1
+ 233 00e4 1F       		.byte	0x1f
+ 234 00e5 00000000 		.4byte	.LFB35
+ 235 00e9 64000000 		.4byte	.LFE35-.LFB35
+ 236 00ed 01       		.uleb128 0x1
+ 237 00ee 9C       		.byte	0x9c
+ 238 00ef 27010000 		.4byte	0x127
+ 239 00f3 08       		.uleb128 0x8
+ 240 00f4 32000000 		.4byte	.LASF22
+ 241 00f8 01       		.byte	0x1
+ 242 00f9 21       		.byte	0x21
+ 243 00fa 6B000000 		.4byte	0x6b
+ 244 00fe 05       		.uleb128 0x5
+ 245 00ff 03       		.byte	0x3
+ 246 0100 04000000 		.4byte	ledState.7397
+ 247 0104 08       		.uleb128 0x8
+ 248 0105 26000000 		.4byte	.LASF23
+ 249 0109 01       		.byte	0x1
+ 250 010a 22       		.byte	0x22
+ 251 010b 77000000 		.4byte	0x77
+ 252 010f 05       		.uleb128 0x5
+ 253 0110 03       		.byte	0x3
+ 254 0111 08000000 		.4byte	advLedTimer.7398
+ 255 0115 08       		.uleb128 0x8
+ 256 0116 00000000 		.4byte	.LASF24
+ 257 011a 01       		.byte	0x1
+ 258 011b 23       		.byte	0x23
+ 259 011c 77000000 		.4byte	0x77
+ 260 0120 05       		.uleb128 0x5
+ 261 0121 03       		.byte	0x3
+ 262 0122 00000000 		.4byte	connLedTimer.7399
+ 263 0126 00       		.byte	0
+ 264 0127 09       		.uleb128 0x9
+ 265 0128 15020000 		.4byte	.LASF29
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 7
+
+
+ 266 012c 03       		.byte	0x3
+ 267 012d A90A     		.2byte	0xaa9
+ 268 012f D2000000 		.4byte	0xd2
+ 269 0133 00       		.byte	0
+ 270              		.section	.debug_abbrev,"",%progbits
+ 271              	.Ldebug_abbrev0:
+ 272 0000 01       		.uleb128 0x1
+ 273 0001 11       		.uleb128 0x11
+ 274 0002 01       		.byte	0x1
+ 275 0003 25       		.uleb128 0x25
+ 276 0004 0E       		.uleb128 0xe
+ 277 0005 13       		.uleb128 0x13
+ 278 0006 0B       		.uleb128 0xb
+ 279 0007 03       		.uleb128 0x3
+ 280 0008 0E       		.uleb128 0xe
+ 281 0009 1B       		.uleb128 0x1b
+ 282 000a 0E       		.uleb128 0xe
+ 283 000b 55       		.uleb128 0x55
+ 284 000c 17       		.uleb128 0x17
+ 285 000d 11       		.uleb128 0x11
+ 286 000e 01       		.uleb128 0x1
+ 287 000f 10       		.uleb128 0x10
+ 288 0010 17       		.uleb128 0x17
+ 289 0011 00       		.byte	0
+ 290 0012 00       		.byte	0
+ 291 0013 02       		.uleb128 0x2
+ 292 0014 24       		.uleb128 0x24
+ 293 0015 00       		.byte	0
+ 294 0016 0B       		.uleb128 0xb
+ 295 0017 0B       		.uleb128 0xb
+ 296 0018 3E       		.uleb128 0x3e
+ 297 0019 0B       		.uleb128 0xb
+ 298 001a 03       		.uleb128 0x3
+ 299 001b 0E       		.uleb128 0xe
+ 300 001c 00       		.byte	0
+ 301 001d 00       		.byte	0
+ 302 001e 03       		.uleb128 0x3
+ 303 001f 24       		.uleb128 0x24
+ 304 0020 00       		.byte	0
+ 305 0021 0B       		.uleb128 0xb
+ 306 0022 0B       		.uleb128 0xb
+ 307 0023 3E       		.uleb128 0x3e
+ 308 0024 0B       		.uleb128 0xb
+ 309 0025 03       		.uleb128 0x3
+ 310 0026 08       		.uleb128 0x8
+ 311 0027 00       		.byte	0
+ 312 0028 00       		.byte	0
+ 313 0029 04       		.uleb128 0x4
+ 314 002a 16       		.uleb128 0x16
+ 315 002b 00       		.byte	0
+ 316 002c 03       		.uleb128 0x3
+ 317 002d 0E       		.uleb128 0xe
+ 318 002e 3A       		.uleb128 0x3a
+ 319 002f 0B       		.uleb128 0xb
+ 320 0030 3B       		.uleb128 0x3b
+ 321 0031 05       		.uleb128 0x5
+ 322 0032 49       		.uleb128 0x49
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 8
+
+
+ 323 0033 13       		.uleb128 0x13
+ 324 0034 00       		.byte	0
+ 325 0035 00       		.byte	0
+ 326 0036 05       		.uleb128 0x5
+ 327 0037 04       		.uleb128 0x4
+ 328 0038 01       		.byte	0x1
+ 329 0039 0B       		.uleb128 0xb
+ 330 003a 0B       		.uleb128 0xb
+ 331 003b 49       		.uleb128 0x49
+ 332 003c 13       		.uleb128 0x13
+ 333 003d 3A       		.uleb128 0x3a
+ 334 003e 0B       		.uleb128 0xb
+ 335 003f 3B       		.uleb128 0x3b
+ 336 0040 05       		.uleb128 0x5
+ 337 0041 01       		.uleb128 0x1
+ 338 0042 13       		.uleb128 0x13
+ 339 0043 00       		.byte	0
+ 340 0044 00       		.byte	0
+ 341 0045 06       		.uleb128 0x6
+ 342 0046 28       		.uleb128 0x28
+ 343 0047 00       		.byte	0
+ 344 0048 03       		.uleb128 0x3
+ 345 0049 0E       		.uleb128 0xe
+ 346 004a 1C       		.uleb128 0x1c
+ 347 004b 0B       		.uleb128 0xb
+ 348 004c 00       		.byte	0
+ 349 004d 00       		.byte	0
+ 350 004e 07       		.uleb128 0x7
+ 351 004f 2E       		.uleb128 0x2e
+ 352 0050 01       		.byte	0x1
+ 353 0051 3F       		.uleb128 0x3f
+ 354 0052 19       		.uleb128 0x19
+ 355 0053 03       		.uleb128 0x3
+ 356 0054 0E       		.uleb128 0xe
+ 357 0055 3A       		.uleb128 0x3a
+ 358 0056 0B       		.uleb128 0xb
+ 359 0057 3B       		.uleb128 0x3b
+ 360 0058 0B       		.uleb128 0xb
+ 361 0059 27       		.uleb128 0x27
+ 362 005a 19       		.uleb128 0x19
+ 363 005b 11       		.uleb128 0x11
+ 364 005c 01       		.uleb128 0x1
+ 365 005d 12       		.uleb128 0x12
+ 366 005e 06       		.uleb128 0x6
+ 367 005f 40       		.uleb128 0x40
+ 368 0060 18       		.uleb128 0x18
+ 369 0061 9642     		.uleb128 0x2116
+ 370 0063 19       		.uleb128 0x19
+ 371 0064 01       		.uleb128 0x1
+ 372 0065 13       		.uleb128 0x13
+ 373 0066 00       		.byte	0
+ 374 0067 00       		.byte	0
+ 375 0068 08       		.uleb128 0x8
+ 376 0069 34       		.uleb128 0x34
+ 377 006a 00       		.byte	0
+ 378 006b 03       		.uleb128 0x3
+ 379 006c 0E       		.uleb128 0xe
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 9
+
+
+ 380 006d 3A       		.uleb128 0x3a
+ 381 006e 0B       		.uleb128 0xb
+ 382 006f 3B       		.uleb128 0x3b
+ 383 0070 0B       		.uleb128 0xb
+ 384 0071 49       		.uleb128 0x49
+ 385 0072 13       		.uleb128 0x13
+ 386 0073 02       		.uleb128 0x2
+ 387 0074 18       		.uleb128 0x18
+ 388 0075 00       		.byte	0
+ 389 0076 00       		.byte	0
+ 390 0077 09       		.uleb128 0x9
+ 391 0078 34       		.uleb128 0x34
+ 392 0079 00       		.byte	0
+ 393 007a 03       		.uleb128 0x3
+ 394 007b 0E       		.uleb128 0xe
+ 395 007c 3A       		.uleb128 0x3a
+ 396 007d 0B       		.uleb128 0xb
+ 397 007e 3B       		.uleb128 0x3b
+ 398 007f 05       		.uleb128 0x5
+ 399 0080 49       		.uleb128 0x49
+ 400 0081 13       		.uleb128 0x13
+ 401 0082 3F       		.uleb128 0x3f
+ 402 0083 19       		.uleb128 0x19
+ 403 0084 3C       		.uleb128 0x3c
+ 404 0085 19       		.uleb128 0x19
+ 405 0086 00       		.byte	0
+ 406 0087 00       		.byte	0
+ 407 0088 00       		.byte	0
+ 408              		.section	.debug_aranges,"",%progbits
+ 409 0000 1C000000 		.4byte	0x1c
+ 410 0004 0200     		.2byte	0x2
+ 411 0006 00000000 		.4byte	.Ldebug_info0
+ 412 000a 04       		.byte	0x4
+ 413 000b 00       		.byte	0
+ 414 000c 0000     		.2byte	0
+ 415 000e 0000     		.2byte	0
+ 416 0010 00000000 		.4byte	.LFB35
+ 417 0014 64000000 		.4byte	.LFE35-.LFB35
+ 418 0018 00000000 		.4byte	0
+ 419 001c 00000000 		.4byte	0
+ 420              		.section	.debug_ranges,"",%progbits
+ 421              	.Ldebug_ranges0:
+ 422 0000 00000000 		.4byte	.LFB35
+ 423 0004 64000000 		.4byte	.LFE35
+ 424 0008 00000000 		.4byte	0
+ 425 000c 00000000 		.4byte	0
+ 426              		.section	.debug_line,"",%progbits
+ 427              	.Ldebug_line0:
+ 428 0000 7F000000 		.section	.debug_str,"MS",%progbits,1
+ 428      02005A00 
+ 428      00000201 
+ 428      FB0E0D00 
+ 428      01010101 
+ 429              	.LASF24:
+ 430 0000 636F6E6E 		.ascii	"connLedTimer\000"
+ 430      4C656454 
+ 430      696D6572 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 10
+
+
+ 430      00
+ 431              	.LASF20:
+ 432 000d 4359424C 		.ascii	"CYBLE_STATE_DISCONNECTED\000"
+ 432      455F5354 
+ 432      4154455F 
+ 432      44495343 
+ 432      4F4E4E45 
+ 433              	.LASF23:
+ 434 0026 6164764C 		.ascii	"advLedTimer\000"
+ 434      65645469 
+ 434      6D657200 
+ 435              	.LASF22:
+ 436 0032 6C656453 		.ascii	"ledState\000"
+ 436      74617465 
+ 436      00
+ 437              	.LASF3:
+ 438 003b 73686F72 		.ascii	"short unsigned int\000"
+ 438      7420756E 
+ 438      7369676E 
+ 438      65642069 
+ 438      6E7400
+ 439              	.LASF27:
+ 440 004e 433A5C55 		.ascii	"C:\\Users\\Benakapoi\\Desktop\\PSoC-4-BLE-master\\P"
+ 440      73657273 
+ 440      5C42656E 
+ 440      616B6170 
+ 440      6F695C44 
+ 441 007c 536F432D 		.ascii	"SoC-4-BLE-master\\100_Projects_in_100_Days\\Day020_"
+ 441      342D424C 
+ 441      452D6D61 
+ 441      73746572 
+ 441      5C313030 
+ 442 00ad 424C455F 		.ascii	"BLE_UART\\UART_to_BLE_peripheral\\UART_to_BLE_perip"
+ 442      55415254 
+ 442      5C554152 
+ 442      545F746F 
+ 442      5F424C45 
+ 443 00de 68657261 		.ascii	"heral.cydsn\000"
+ 443      6C2E6379 
+ 443      64736E00 
+ 444              	.LASF11:
+ 445 00ea 666C6F61 		.ascii	"float\000"
+ 445      7400
+ 446              	.LASF7:
+ 447 00f0 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 447      206C6F6E 
+ 447      6720756E 
+ 447      7369676E 
+ 447      65642069 
+ 448              	.LASF1:
+ 449 0107 756E7369 		.ascii	"unsigned char\000"
+ 449      676E6564 
+ 449      20636861 
+ 449      7200
+ 450              	.LASF5:
+ 451 0115 6C6F6E67 		.ascii	"long unsigned int\000"
+ 451      20756E73 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 11
+
+
+ 451      69676E65 
+ 451      6420696E 
+ 451      7400
+ 452              	.LASF9:
+ 453 0127 75696E74 		.ascii	"uint8\000"
+ 453      3800
+ 454              	.LASF25:
+ 455 012d 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 455      43313120 
+ 455      352E342E 
+ 455      31203230 
+ 455      31363036 
+ 456 0160 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0 -mthumb -g -O"
+ 456      20726576 
+ 456      6973696F 
+ 456      6E203233 
+ 456      37373135 
+ 457 0193 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 457      66756E63 
+ 457      74696F6E 
+ 457      2D736563 
+ 457      74696F6E 
+ 458              	.LASF19:
+ 459 01bb 4359424C 		.ascii	"CYBLE_STATE_ADVERTISING\000"
+ 459      455F5354 
+ 459      4154455F 
+ 459      41445645 
+ 459      52544953 
+ 460              	.LASF12:
+ 461 01d3 646F7562 		.ascii	"double\000"
+ 461      6C6500
+ 462              	.LASF10:
+ 463 01da 75696E74 		.ascii	"uint32\000"
+ 463      333200
+ 464              	.LASF8:
+ 465 01e1 756E7369 		.ascii	"unsigned int\000"
+ 465      676E6564 
+ 465      20696E74 
+ 465      00
+ 466              	.LASF13:
+ 467 01ee 63686172 		.ascii	"char\000"
+ 467      00
+ 468              	.LASF21:
+ 469 01f3 4359424C 		.ascii	"CYBLE_STATE_T\000"
+ 469      455F5354 
+ 469      4154455F 
+ 469      5400
+ 470              	.LASF16:
+ 471 0201 4359424C 		.ascii	"CYBLE_STATE_STOPPED\000"
+ 471      455F5354 
+ 471      4154455F 
+ 471      53544F50 
+ 471      50454400 
+ 472              	.LASF29:
+ 473 0215 6379426C 		.ascii	"cyBle_state\000"
+ 473      655F7374 
+ 473      61746500 
+ARM GAS  C:\Users\BENAKA~1\AppData\Local\Temp\cc241f0I.s 			page 12
+
+
+ 474              	.LASF28:
+ 475 0221 48616E64 		.ascii	"HandleLeds\000"
+ 475      6C654C65 
+ 475      647300
+ 476              	.LASF15:
+ 477 022c 73697A65 		.ascii	"sizetype\000"
+ 477      74797065 
+ 477      00
+ 478              	.LASF6:
+ 479 0235 6C6F6E67 		.ascii	"long long int\000"
+ 479      206C6F6E 
+ 479      6720696E 
+ 479      7400
+ 480              	.LASF2:
+ 481 0243 73686F72 		.ascii	"short int\000"
+ 481      7420696E 
+ 481      7400
+ 482              	.LASF26:
+ 483 024d 6170705F 		.ascii	"app_LED.c\000"
+ 483      4C45442E 
+ 483      6300
+ 484              	.LASF18:
+ 485 0257 4359424C 		.ascii	"CYBLE_STATE_CONNECTED\000"
+ 485      455F5354 
+ 485      4154455F 
+ 485      434F4E4E 
+ 485      45435445 
+ 486              	.LASF4:
+ 487 026d 6C6F6E67 		.ascii	"long int\000"
+ 487      20696E74 
+ 487      00
+ 488              	.LASF14:
+ 489 0276 6C6F6E67 		.ascii	"long double\000"
+ 489      20646F75 
+ 489      626C6500 
+ 490              	.LASF0:
+ 491 0282 7369676E 		.ascii	"signed char\000"
+ 491      65642063 
+ 491      68617200 
+ 492              	.LASF17:
+ 493 028e 4359424C 		.ascii	"CYBLE_STATE_INITIALIZING\000"
+ 493      455F5354 
+ 493      4154455F 
+ 493      494E4954 
+ 493      49414C49 
+ 494              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
