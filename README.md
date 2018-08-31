@@ -4,7 +4,7 @@ PKE via BLE
 Directory Structure
 ---
 * pi - code that runs on the pi end
-* cypruss - code that runs on the cyprus via PSOC
+* cypress - code that runs on the cypress via PSOC
 
 **Team Members**
 * Henry Kipke
